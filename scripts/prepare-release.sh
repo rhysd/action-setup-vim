@@ -2,17 +2,22 @@
 
 set -e
 
-# TODO: Consider v2
-minor_version="$1"
-version="$2"
+major_version="$1"
+minor_version="$2"
+version="$3"
+
+if [[ "$major_version" == "" ]]; then
+    echo 'Major version must be given as first argument like "v1"' >&2
+    exit 1
+fi
 
 if [[ "$minor_version" == "" ]]; then
-    echo 'Minor version must be given as first argument like "v1.2"' >&2
+    echo 'Minor version must be given as second argument like "v1.2"' >&2
     exit 1
 fi
 
 if [[ "$version" == "" ]]; then
-    echo 'Version must be given as second argument like  "v1.2.3"' >&2
+    echo 'Version must be given as third argument like  "v1.2.3"' >&2
     exit 1
 fi
 
@@ -37,7 +42,7 @@ if [[ "$branch" != "master" ]]; then
     exit 1
 fi
 
-echo "Releasing to dev/v1 branch for ${minor_version} and ${version}..."
+echo "Releasing to dev/v1 branch for ${major_version}, ${minor_version} and ${version}..."
 
 set -x
 npm install
@@ -68,6 +73,8 @@ mv .release/node_modules .
 git add action.yml ./src/*.js package.json package-lock.json node_modules
 git commit -m "Release ${version} at ${sha}"
 
+git tag -d "$major_version" || true
+git tag "$major_version"
 git tag -d "$minor_version" || true
 git tag "$minor_version"
 git tag "$version"
