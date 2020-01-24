@@ -6,6 +6,7 @@ import { install as installOnWindows } from './install_windows';
 
 export interface Installed {
     executable: string;
+    bin: string;
 }
 
 export function install(config: Config): Promise<Installed> {

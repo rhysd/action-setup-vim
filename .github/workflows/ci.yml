@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   validate:
-    name: Validate action outputs
+    name: Validate outputs
     strategy:
       matrix:
         os: [ubuntu-latest]

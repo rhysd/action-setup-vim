@@ -1,10 +1,15 @@
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { Config } from './config';
+import { exec } from './shell';
 
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux');
-    throw new Error('Not implemented');
+    await exec('sudo', 'apt', 'install', '-y', 'vim-gnome');
+    return {
+        executable: '/usr/bin/vim',
+        bin: '/usr/bin',
+    };
 }
 
 async function installVimNightly(): Promise<Installed> {

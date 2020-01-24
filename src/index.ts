@@ -7,6 +7,9 @@ async function main() {
     console.log('Extracted configuration:', config);
 
     const installed = await install(config);
+    console.log(`::set-env name=PATH::${installed.bin}:${process.env.PATH}`);
+    core.debug(`'${installed.bin}' was set to $PATH`);
+
     core.setOutput('executable', installed.executable);
     console.log('Installation successfully done:', installed);
 }
