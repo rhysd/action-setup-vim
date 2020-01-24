@@ -8,10 +8,21 @@ import { makeTmpdir } from './utils';
 import { Os } from './config';
 import { exec } from './shell';
 
-function assetFileBase(os: Os) {
+function assetFileName(os: Os) {
     switch (os) {
         case 'macos':
-            return 'nvim-macos';
+            return 'nvim-macos.tar.gz';
+        case 'linux':
+            return `nvim-linux64.tar.gz`;
+        case 'windows':
+            return `nvim-win64.zip`;
+    }
+}
+
+function assetDirName(os: Os) {
+    switch (os) {
+        case 'macos':
+            return 'nvim-osx64';
         case 'linux':
             return 'nvim-linux64';
         case 'windows':
@@ -19,21 +30,11 @@ function assetFileBase(os: Os) {
     }
 }
 
-function assetFileName(os: Os) {
-    switch (os) {
-        case 'macos':
-        case 'linux':
-            return `${assetFileBase(os)}.tar.gz`;
-        case 'windows':
-            return `${assetFileBase(os)}.zip`;
-    }
-}
-
 async function unarchiveAsset(asset: string, os: Os): Promise<string> {
     if (asset.endsWith('.tar.gz')) {
         const dir = path.dirname(asset);
         await exec('tar', ['xzf', asset], { cwd: dir });
-        return path.join(dir, assetFileBase(os));
+        return path.join(dir, assetDirName(os));
     } else {
         throw new Error(`FATAL: Don't know how to unarchive ${asset}`);
     }
