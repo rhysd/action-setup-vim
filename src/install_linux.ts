@@ -56,20 +56,20 @@ export function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installVimStable();
-            case 'nightly':
-                return installVimNightly();
-            default:
-                return installVim(config.version);
-        }
-    } else {
-        switch (config.version) {
-            case 'stable':
                 return installNeovimStable();
             case 'nightly':
                 return installNeovimNightly();
             default:
                 return installNeovim(config.version);
+        }
+    } else {
+        switch (config.version) {
+            case 'stable':
+                return installVimStable();
+            case 'nightly':
+                return installVimNightly();
+            default:
+                return installVim(config.version);
         }
     }
 }
