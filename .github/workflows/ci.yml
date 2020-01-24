@@ -19,3 +19,4 @@ jobs:
         with:
           version: ${{ matrix.version }}
           neovim: ${{ matrix.neovim }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}

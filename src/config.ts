@@ -6,6 +6,7 @@ export interface Config {
     version: string;
     neovim: boolean;
     os: Os;
+    token: string | null;
 }
 
 function getOs(): Os {
@@ -26,5 +27,6 @@ export function loadConfigFromInputs(): Config {
     const version = getInput('version').toLowerCase() || 'stable';
     const neovim = getInput('neovim').toLowerCase() === 'true';
     const os = getOs();
-    return { version, neovim, os };
+    const token = getInput('github-token') || null;
+    return { version, neovim, os, token };
 }

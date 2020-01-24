@@ -5,15 +5,15 @@ import { Config } from './config';
 import { installNightlyVimOnWindows } from './vim';
 import { downloadNeovim } from './neovim';
 
-function installVimStable(): Promise<Installed> {
+function installVimStable(token: string): Promise<Installed> {
     core.debug('Installing stable Vim on Windows');
     core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
-    return installVimNightly();
+    return installVimNightly(token);
 }
 
-async function installVimNightly(): Promise<Installed> {
+async function installVimNightly(token: string): Promise<Installed> {
     core.debug('Installing nightly Vim on Windows');
-    const vimDir = await installNightlyVimOnWindows();
+    const vimDir = await installNightlyVimOnWindows(token);
     return {
         executable: path.join(vimDir, 'vim.exe'),
         bin: vimDir,
@@ -59,11 +59,15 @@ export function install(config: Config): Promise<Installed> {
                 return installNeovim(config.version);
         }
     } else {
+        const { token } = config;
+        if (token === null) {
+            throw new Error("Please set 'github-token' input to get the latest installer from official Vim release");
+        }
         switch (config.version) {
             case 'stable':
-                return installVimStable();
+                return installVimStable(token);
             case 'nightly':
-                return installVimNightly();
+                return installVimNightly(token);
             default:
                 return installVim(config.version);
         }

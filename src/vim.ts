@@ -46,13 +46,7 @@ async function getVimRootDirAt(dir: string): Promise<string> {
     );
 }
 
-export async function installNightlyVimOnWindows() {
-    console.log(process.env);
-    const token = process.env.GITHUB_TOKEN;
-    if (!token) {
-        throw new Error('Could not get release information from GitHub API because token is not found');
-    }
-
+export async function installNightlyVimOnWindows(token: string) {
     const client = new GitHub(token);
     const release = await client.repos.getLatestRelease({
         owner: 'vim',
