@@ -29,3 +29,6 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm ci
       - run: npm run lint
+      - uses: actions/setup-python@v1
+      - run: pip install yamllint
+      - run: yamllint --strict .github/workflows
