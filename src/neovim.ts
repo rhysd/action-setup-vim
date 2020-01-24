@@ -29,11 +29,11 @@ function assetFileName(os: Os) {
     }
 }
 
-async function unarchiveAsset(asset: string): Promise<string> {
+async function unarchiveAsset(asset: string, os: Os): Promise<string> {
     if (asset.endsWith('.tar.gz')) {
         const dir = path.dirname(asset);
         await exec('tar', ['xzf', asset], { cwd: dir });
-        return path.join(dir, path.basename(asset));
+        return path.join(dir, assetFileBase(os));
     } else {
         throw new Error(`FATAL: Don't know how to unarchive ${asset}`);
     }
@@ -54,7 +54,9 @@ export async function downloadNeovim(version: 'stable' | 'nightly', os: Os): Pro
         const response = await fetch(url);
         const buffer = await response.buffer();
         await fs.writeFile(asset, buffer, { encoding: null });
-        const unarchived = await unarchiveAsset(asset);
+        core.debug(`Downloaded asset ${asset}`);
+        const unarchived = await unarchiveAsset(asset, os);
+        core.debug(`Unarchived asset ${unarchived}`);
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
         return destDir;
