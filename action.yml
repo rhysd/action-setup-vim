@@ -1,0 +1,24 @@
+name: 'Setup Vim'
+author: 'rhysd <https://rhysd.github.io>'
+description: 'Setup Vim or Neovim text editor on GitHub Action'
+branding:
+  icon: 'fast-forward'
+  color: 'green'
+
+inputs:
+  version:
+    description: "Currently 'stable' or 'nightly' is available"
+    required: false
+    default: 'stable'
+  neovim:
+    description: 'Setting to true will install Neovim'
+    required: false
+    default: 'false'
+
+outputs:
+  executable:
+    description: 'Path to the installed executable'
+
+runs:
+  using: 'node12'
+  main: 'src/index.js'
