@@ -1,11 +1,13 @@
+import * as path from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { Config } from './config';
 import { exec } from './shell';
+import { buildVim } from './vim';
 
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux');
-    await exec('sudo', 'apt', 'install', '-y', 'vim-gnome');
+    await exec('sudo', ['apt', 'install', '-y', 'vim-gnome']);
     return {
         executable: '/usr/bin/vim',
         bin: '/usr/bin',
@@ -14,7 +16,11 @@ async function installVimStable(): Promise<Installed> {
 
 async function installVimNightly(): Promise<Installed> {
     core.debug('Installing nightly Vim on Linux');
-    throw new Error('Not implemented');
+    const vimDir = await buildVim(null);
+    return {
+        executable: path.join(vimDir, 'bin', 'vim'),
+        bin: path.join(vimDir, 'bin'),
+    };
 }
 
 async function installVim(ver: string): Promise<Installed> {

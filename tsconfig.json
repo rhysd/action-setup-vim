@@ -21,6 +21,9 @@
   },
   "files": [
     "src/config.ts",
+    "src/shell.ts",
+    "src/validate.ts",
+    "src/vim.ts",
     "src/install.ts",
     "src/install_linux.ts",
     "src/index.ts"

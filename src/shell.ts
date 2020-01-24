@@ -1,22 +1,29 @@
 import { exec as execCommand } from '@actions/exec';
 
-export async function exec(cmd: string, ...args: string[]): Promise<string> {
+interface Options {
+    cwd?: string;
+}
+
+export async function exec(cmd: string, args: string[], opts?: Options): Promise<string> {
     const res = {
         stdout: '',
         stderr: '',
         code: null,
     };
 
-    const code = await execCommand(cmd, args, {
+    const execOpts = {
+        ...opts,
         listeners: {
-            stdout(data) {
+            stdout(data: Buffer) {
                 res.stdout += data.toString();
             },
-            stderr(data) {
+            stderr(data: Buffer) {
                 res.stderr += data.toString();
             },
         },
-    });
+    };
+
+    const code = await execCommand(cmd, args, execOpts);
 
     if (code === 0) {
         return res.stdout;

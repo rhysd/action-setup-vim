@@ -15,7 +15,7 @@ export async function validateInstallation(installed: Installed) {
     core.debug(`Installed directory ${installed.bin} was validated`);
 
     try {
-        const ver = await exec(installed.executable, '--version');
+        const ver = await exec(installed.executable, ['--version']);
         console.log(`Installed version:\n${ver}`);
     } catch (err) {
         throw new Error(`Validation failed! Cannot get version with '${installed.executable}': ${err.message}`);
