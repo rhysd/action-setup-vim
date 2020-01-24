@@ -17,9 +17,7 @@ async function main() {
     console.log('Installation successfully done:', installed);
 }
 
-try {
-    main();
-} catch (e) {
+main().catch(e => {
     core.debug(e.stack);
     core.setFailed(e.message);
-}
+});
