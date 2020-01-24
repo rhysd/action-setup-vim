@@ -1,15 +1,28 @@
+import * as path from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { Config } from './config';
+import { exec } from './shell';
+import { buildVim } from './vim';
+import { downloadNeovim } from './neovim';
 
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on macOS');
+    await exec('brew', ['install', 'macvim']);
+    return {
+        executable: '/usr/local/bin/vim',
+        bin: '/usr/local/bin',
+    };
     throw new Error('Not implemented');
 }
 
 async function installVimNightly(): Promise<Installed> {
     core.debug('Installing nightly Vim on macOS');
-    throw new Error('Not implemented');
+    const vimDir = await buildVim(null);
+    return {
+        executable: path.join(vimDir, 'bin', 'vim'),
+        bin: path.join(vimDir, 'bin'),
+    };
 }
 
 async function installVim(ver: string): Promise<Installed> {
@@ -19,12 +32,20 @@ async function installVim(ver: string): Promise<Installed> {
 
 async function installNeovimStable(): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS');
-    throw new Error('Not implemented');
+    const nvimDir = await downloadNeovim('stable', 'macos');
+    return {
+        executable: path.join(nvimDir, 'bin', 'nvim'),
+        bin: path.join(nvimDir, 'bin'),
+    };
 }
 
 async function installNeovimNightly(): Promise<Installed> {
     core.debug('Installing nightly Neovim on macOS');
-    throw new Error('Not implemented');
+    const nvimDir = await downloadNeovim('nightly', 'macos');
+    return {
+        executable: path.join(nvimDir, 'bin', 'nvim'),
+        bin: path.join(nvimDir, 'bin'),
+    };
 }
 
 async function installNeovim(ver: string): Promise<Installed> {
