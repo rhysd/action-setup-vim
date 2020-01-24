@@ -2,16 +2,22 @@ import * as path from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { Config } from './config';
+import { installNightlyVimOnWindows } from './vim';
 import { downloadNeovim } from './neovim';
 
-async function installVimStable(): Promise<Installed> {
+function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Windows');
-    throw new Error('Not implemented');
+    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
+    return installVimNightly();
 }
 
 async function installVimNightly(): Promise<Installed> {
     core.debug('Installing nightly Vim on Windows');
-    throw new Error('Not implemented');
+    const vimDir = await installNightlyVimOnWindows();
+    return {
+        executable: path.join(vimDir, 'vim.exe'),
+        bin: vimDir,
+    };
 }
 
 async function installVim(ver: string): Promise<Installed> {

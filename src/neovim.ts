@@ -53,13 +53,19 @@ export async function downloadNeovim(version: 'stable' | 'nightly', os: Os): Pro
     try {
         core.debug(`Downloading asset ${asset}`);
         const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Downloading asset from ${url} failed: ${response.statusText}`);
+        }
         const buffer = await response.buffer();
         await fs.writeFile(asset, buffer, { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
+
         const unarchived = await unarchiveAsset(asset, os);
         core.debug(`Unarchived asset ${unarchived}`);
+
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
+
         return destDir;
     } catch (err) {
         core.debug(err.stack);
