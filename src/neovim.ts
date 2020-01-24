@@ -31,9 +31,12 @@ function assetDirName(os: Os) {
 }
 
 async function unarchiveAsset(asset: string, os: Os): Promise<string> {
+    const dir = path.dirname(asset);
     if (asset.endsWith('.tar.gz')) {
-        const dir = path.dirname(asset);
         await exec('tar', ['xzf', asset], { cwd: dir });
+        return path.join(dir, assetDirName(os));
+    } else if (asset.endsWith('.zip')) {
+        await exec('unzip', [asset], { cwd: dir });
         return path.join(dir, assetDirName(os));
     } else {
         throw new Error(`FATAL: Don't know how to unarchive ${asset}`);
