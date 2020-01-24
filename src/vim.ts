@@ -67,6 +67,8 @@ export async function installNightlyVimOnWindows(token: string) {
 
     const tmpdir = await makeTmpdir();
     const dlDir = path.join(tmpdir, 'vim-installer');
+    await io.mkdirP(dlDir);
+
     const assetFile = path.join(dlDir, asset.name);
     const url = asset.browser_download_url;
     try {
