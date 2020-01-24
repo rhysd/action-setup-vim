@@ -1,8 +1,7 @@
 name: Smoke test
 on:
-  push:
-    branches:
-      - master
+  schedule:
+    - cron: '* * * * 0'
 
 jobs:
   validate:
