@@ -8,6 +8,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         version: [stable, nightly]
+        neovim: [true, false]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
@@ -17,3 +18,4 @@ jobs:
       - uses: ./
         with:
           version: ${{ matrix.version }}
+          neovim: ${{ matrix.neovim }}

@@ -1,15 +1,8 @@
-import { tmpdir, homedir } from 'os';
+import { homedir } from 'os';
 import * as path from 'path';
 import * as core from '@actions/core';
-import { mkdirP } from '@actions/io';
 import { exec } from './shell';
-
-async function makeTmpdir(): Promise<string> {
-    const dir = tmpdir();
-    await mkdirP(dir);
-    core.debug(`Created temporary directory ${dir}`);
-    return dir;
-}
+import { makeTmpdir } from './utils';
 
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
 export async function buildVim(version: string | null): Promise<string> {

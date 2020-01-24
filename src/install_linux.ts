@@ -4,6 +4,7 @@ import { Installed } from './install';
 import { Config } from './config';
 import { exec } from './shell';
 import { buildVim } from './vim';
+import { downloadNeovim } from './neovim';
 
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux');
@@ -30,12 +31,20 @@ async function installVim(ver: string): Promise<Installed> {
 
 async function installNeovimStable(): Promise<Installed> {
     core.debug('Installing stable Neovim on Linux');
-    throw new Error('Not implemented');
+    const nvimDir = await downloadNeovim('stable', 'linux');
+    return {
+        executable: path.join(nvimDir, 'bin', 'nvim'),
+        bin: path.join(nvimDir, 'bin'),
+    };
 }
 
 async function installNeovimNightly(): Promise<Installed> {
     core.debug('Installing nightly Neovim on Linux');
-    throw new Error('Not implemented');
+    const nvimDir = await downloadNeovim('nightly', 'linux');
+    return {
+        executable: path.join(nvimDir, 'bin', 'nvim'),
+        bin: path.join(nvimDir, 'bin'),
+    };
 }
 
 async function installNeovim(ver: string): Promise<Installed> {

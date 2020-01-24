@@ -24,6 +24,8 @@
     "src/shell.ts",
     "src/validate.ts",
     "src/vim.ts",
+    "src/neovim.ts",
+    "src/utils.ts",
     "src/install.ts",
     "src/install_linux.ts",
     "src/index.ts"
