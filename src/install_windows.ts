@@ -5,12 +5,6 @@ import { Config } from './config';
 import { installNightlyVimOnWindows } from './vim';
 import { downloadNeovim } from './neovim';
 
-function installVimStable(token: string): Promise<Installed> {
-    core.debug('Installing stable Vim on Windows');
-    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
-    return installVimNightly(token);
-}
-
 async function installVimNightly(token: string): Promise<Installed> {
     core.debug('Installing nightly Vim on Windows');
     const vimDir = await installNightlyVimOnWindows(token);
@@ -18,6 +12,12 @@ async function installVimNightly(token: string): Promise<Installed> {
         executable: path.join(vimDir, 'vim.exe'),
         bin: vimDir,
     };
+}
+
+function installVimStable(token: string): Promise<Installed> {
+    core.debug('Installing stable Vim on Windows');
+    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
+    return installVimNightly(token);
 }
 
 async function installVim(ver: string): Promise<Installed> {

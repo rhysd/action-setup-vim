@@ -7,7 +7,9 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch --preserveWatchOutput",
-    "test": "echo 'not prepared yet' && exit 1"
+    "lint": "eslint ./src/*.ts",
+    "fix": "eslint --fix ./src/*.ts",
+    "test": "echo 'see https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI' && exit 1"
   },
   "repository": {
     "type": "git",
@@ -35,6 +37,12 @@
   "devDependencies": {
     "@types/node": "^13.5.0",
     "@types/node-fetch": "^2.5.4",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1",
     "typescript": "^3.7.5"
   }
 }

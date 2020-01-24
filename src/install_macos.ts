@@ -13,7 +13,6 @@ async function installVimStable(): Promise<Installed> {
         executable: '/usr/local/bin/vim',
         bin: '/usr/local/bin',
     };
-    throw new Error('Not implemented');
 }
 
 async function installVimNightly(): Promise<Installed> {
