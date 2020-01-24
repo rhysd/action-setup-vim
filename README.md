@@ -1,6 +1,7 @@
 GitHub Action to setup Vim and Neovim
 =====================================
 [![Build status][ci-badge]][ci]
+[![Action Marketplace][release-badge]][marketplace]
 
 [action-setup-vim][proj] is a [GitHub Action][github-action] to setup [Vim][vim] or [Neovim][neovim]
 on Linux, macOS and Windows. Both stable releases and nightly releases are supported.
@@ -121,6 +122,8 @@ Distributed under [the MIT license](./LICENSE.txt).
 
 [ci-badge]: https://github.com/rhysd/action-setup-vim/workflows/CI/badge.svg?branch=master&event=push
 [ci]: https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI+branch%3Amaster
+[release-badge]: https://img.shields.io/github/v/release/rhysd/action-setup-vim.svg
+[marketplace]: https://github.com/marketplace/actions/setup-vim
 [proj]: https://github.com/rhysd/action-setup-vim
 [github-action]: https://github.com/features/actions
 [vim]: https://github.com/vim/vim
