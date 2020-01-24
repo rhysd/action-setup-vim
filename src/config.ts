@@ -24,7 +24,7 @@ function getOs(): Os {
 export function loadConfigFromInputs(): Config {
     // TODO: Validate inputs
     const version = getInput('version') || 'stable';
-    const neovim = getInput('neovim').toLowerCase() == 'false' || false;
+    const neovim = getInput('neovim').toLowerCase() === 'true';
     const os = getOs();
     return { version, neovim, os };
 }
