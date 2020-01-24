@@ -22,6 +22,7 @@
   "files": [
     "src/config.ts",
     "src/install.ts",
+    "src/install_linux.ts",
     "src/index.ts"
   ]
 }
