@@ -30,7 +30,7 @@ async function getVimRootDirAt(dir: string): Promise<string> {
     // Search root Vim directory such as 'vim82' in unarchived directory
     const entries = await fs.readdir(dir);
     const re = /^vim\d+$/;
-    for (const entry in entries) {
+    for (const entry of entries) {
         if (!re.test(entry)) {
             continue;
         }
