@@ -62,6 +62,8 @@ for Neovim.
 Vim and Neovim are installed in the home directory (`$HOME/vim` and `$HOME/nvim`) and `bin`
 directories are added to `$PATH`.
 
+A real-world example is [a workflow in clver-f.vim][clever-f-workflow].
+
 ## Outputs
 
 This action sets installed executable path to the action's `executable` output. You can use it for
@@ -131,3 +133,4 @@ Distributed under [the MIT license](./LICENSE.txt).
 [win-inst]: https://github.com/vim/vim-win32-installer
 [nvim-stable]: https://github.com/neovim/neovim/releases/tag/stable
 [nvim-nightly]: https://github.com/neovim/neovim/releases/tag/nightly
+[clever-f-workflow]: https://github.com/rhysd/clever-f.vim/blob/master/.github/workflows/ci.yml
