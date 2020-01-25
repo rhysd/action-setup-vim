@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch --preserveWatchOutput",
-    "lint": "eslint ./**/*.ts",
+    "lint": "eslint --max-warnings 0 ./**/*.ts",
     "fix": "eslint --fix ./**/*.ts",
     "test": "echo 'see https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI' && exit 1"
   },
