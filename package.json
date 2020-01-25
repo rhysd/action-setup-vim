@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -p .",
+    "build:check": "tsc -p . --noEmit",
     "watch": "tsc -p . --watch --preserveWatchOutput",
     "lint": "eslint --max-warnings 0 ./**/*.ts",
     "fix": "eslint --fix ./**/*.ts",
@@ -32,7 +33,8 @@
     "@actions/exec": "^1.0.3",
     "@actions/github": "^2.1.0",
     "@actions/io": "^1.0.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "npm-run-all": "^4.1.5"
   },
   "devDependencies": {
     "@types/node": "^13.5.0",
@@ -48,7 +50,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm run lint"
+      "pre-push": "npm-run-all -p lint build:check"
     }
   }
 }
