@@ -2,22 +2,12 @@
 
 set -e
 
-major_version="$1"
-minor_version="$2"
-version="$3"
-
-if [[ "$major_version" == "" ]]; then
-    echo 'Major version must be given as first argument like "v1"' >&2
-    exit 1
-fi
-
-if [[ "$minor_version" == "" ]]; then
-    echo 'Minor version must be given as second argument like "v1.2"' >&2
-    exit 1
-fi
+version="$1"
+minor_version="${version%.*}"
+major_version="${minor_version%.*}"
 
 if [[ "$version" == "" ]]; then
-    echo 'Version must be given as third argument like  "v1.2.3"' >&2
+    echo 'Major version must be given as argument like "v1.2.3"' >&2
     exit 1
 fi
 
@@ -42,7 +32,7 @@ if [[ "$branch" != "master" ]]; then
     exit 1
 fi
 
-echo "Releasing to dev/v1 branch for ${major_version}, ${minor_version} and ${version}..."
+echo "Releasing to dev/v1 branch for ${version}... (minor=${minor_version}, major=${major_version})"
 
 set -x
 npm install
