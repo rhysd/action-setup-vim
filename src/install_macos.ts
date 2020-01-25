@@ -31,16 +31,16 @@ async function installVim(ver: string): Promise<Installed> {
 
 async function installNeovimStable(): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS');
-    const nvimDir = await downloadNeovim('stable', 'macos');
+    await exec('brew', ['install', 'neovim']);
     return {
-        executable: path.join(nvimDir, 'bin', 'nvim'),
-        bin: path.join(nvimDir, 'bin'),
+        executable: '/usr/local/bin/nvim',
+        bin: '/usr/local/bin',
     };
 }
 
 async function installNeovimNightly(): Promise<Installed> {
     core.debug('Installing nightly Neovim on macOS');
-    const nvimDir = await downloadNeovim('nightly', 'macos');
+    const nvimDir = await downloadNeovim('stable', 'macos');
     return {
         executable: path.join(nvimDir, 'bin', 'nvim'),
         bin: path.join(nvimDir, 'bin'),

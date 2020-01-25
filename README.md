@@ -100,13 +100,13 @@ For stable releases on all platforms and nightly on Windows, `gvim` executable i
 
 ### Neovim
 
-| OS      | Version   | Installation                                                  |
-|---------|-----------|---------------------------------------------------------------|
-| Linux   | `stable`  | Install from the latest [Neovim stable release][nvim-stable]  |
+| OS      | Version   | Installation                                                   |
+|---------|-----------|----------------------------------------------------------------|
+| Linux   | `stable`  | Install from the latest [Neovim stable release][nvim-stable]   |
 | Linux   | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
-| macOS   | `stable`  | Install from the latest [Neovim stable release][nvim-stable]  |
+| macOS   | `stable`  | `brew install neovim` using Homebrew                           |
 | macOS   | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
-| Windows | `stable`  | Install from the latest [Neovim stable release][nvim-stable]  |
+| Windows | `stable`  | Install from the latest [Neovim stable release][nvim-stable]   |
 | Windows | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
 
 Only on Windows, `nvim-qt.exe` executable is available for GUI.
