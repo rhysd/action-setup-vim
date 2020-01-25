@@ -11,11 +11,6 @@ const path = __importStar(require("path"));
 const core = __importStar(require("@actions/core"));
 const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
-function installVimStable(token) {
-    core.debug('Installing stable Vim on Windows');
-    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
-    return installVimNightly(token);
-}
 async function installVimNightly(token) {
     core.debug('Installing nightly Vim on Windows');
     const vimDir = await vim_1.installNightlyVimOnWindows(token);
@@ -23,6 +18,11 @@ async function installVimNightly(token) {
         executable: path.join(vimDir, 'vim.exe'),
         bin: vimDir,
     };
+}
+function installVimStable(token) {
+    core.debug('Installing stable Vim on Windows');
+    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
+    return installVimNightly(token);
 }
 async function installVim(ver) {
     core.debug(`Installing Vim version '${ver}' on Windows`);

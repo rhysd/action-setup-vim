@@ -19,7 +19,6 @@ async function installVimStable() {
         executable: '/usr/local/bin/vim',
         bin: '/usr/local/bin',
     };
-    throw new Error('Not implemented');
 }
 async function installVimNightly() {
     core.debug('Installing nightly Vim on macOS');
@@ -35,15 +34,15 @@ async function installVim(ver) {
 }
 async function installNeovimStable() {
     core.debug('Installing stable Neovim on macOS');
-    const nvimDir = await neovim_1.downloadNeovim('stable', 'macos');
+    await shell_1.exec('brew', ['install', 'neovim']);
     return {
-        executable: path.join(nvimDir, 'bin', 'nvim'),
-        bin: path.join(nvimDir, 'bin'),
+        executable: '/usr/local/bin/nvim',
+        bin: '/usr/local/bin',
     };
 }
 async function installNeovimNightly() {
     core.debug('Installing nightly Neovim on macOS');
-    const nvimDir = await neovim_1.downloadNeovim('nightly', 'macos');
+    const nvimDir = await neovim_1.downloadNeovim('stable', 'macos');
     return {
         executable: path.join(nvimDir, 'bin', 'nvim'),
         bin: path.join(nvimDir, 'bin'),
