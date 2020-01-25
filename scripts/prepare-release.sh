@@ -6,8 +6,13 @@ version="$1"
 minor_version="${version%.*}"
 major_version="${minor_version%.*}"
 
+if [[ "$#" != 1 ]]; then
+    echo 'Usage: prepare-release.sh {release-version}' >&2
+    exit 1
+fi
+
 if [[ "$version" == "" ]]; then
-    echo 'Major version must be given as argument like "v1.2.3"' >&2
+    echo 'Full version must be given as argument like "v1.2.3"' >&2
     exit 1
 fi
 
