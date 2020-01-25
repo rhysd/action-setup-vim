@@ -62,7 +62,7 @@ for Neovim.
 Vim and Neovim are installed in the home directory (`$HOME/vim` and `$HOME/nvim`) and `bin`
 directories are added to `$PATH`.
 
-A real-world example is [a workflow in clver-f.vim][clever-f-workflow].
+A real-world example is [a workflow in clever-f.vim][clever-f-workflow].
 
 ## Outputs
 
@@ -87,14 +87,14 @@ running Vim command in the steps later.
 
 ### Vim
 
-| OS      | Version   | Installation                                                     |
-|---------|-----------|------------------------------------------------------------------|
-| Linux   | `stable`  | Install `gvim-gnome` package via `apt` package manager           |
-| Linux   | `nightly` | Build the HEAD of [vim][vim] repository                          |
-| macOS   | `stable`  | Install MacVim via `brew install macvim`                         |
-| macOS   | `nightly` | Build the HEAD of [vim][vim] repository                          |
-| Widnows | `stable`  | There is no stable release for Windows so fall back to `nightly` |
-| Windows | `nightly` | Install the latest release from [installer repository][win-inst] |
+| OS      | Version   | Installation                                                        |
+|---------|-----------|---------------------------------------------------------------------|
+| Linux   | `stable`  | Install [`vim-gnome`][ubuntu-vim] package via `apt` package manager |
+| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                         |
+| macOS   | `stable`  | Install MacVim via `brew install macvim`                            |
+| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                         |
+| Widnows | `stable`  | There is no stable release for Windows so fall back to `nightly`    |
+| Windows | `nightly` | Install the latest release from [installer repository][win-inst]    |
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
@@ -111,11 +111,14 @@ For stable releases on all platforms and nightly on Windows, `gvim` executable i
 
 Only on Windows, `nvim-qt.exe` executable is available for GUI.
 
+**Note:** Ubuntu 18.04 supports official [`neovim` package][ubuntu-nvim] but this action does not
+install it. As of now, GitHub Actions also supports Ubuntu 16.04.
+
 ## Current limitation
 
 - Currently installation of specific version is not supported. Hence only `stable` or `nightly` is
-supported. This is sufficient for me, but if someone wants this feature, please make an issue or
-send a pull request.
+  supported. This is sufficient for me. If someone wants this feature, please make an issue or send
+  a pull request.
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.
 
 ## License
@@ -134,3 +137,5 @@ Distributed under [the MIT license](./LICENSE.txt).
 [nvim-stable]: https://github.com/neovim/neovim/releases/tag/stable
 [nvim-nightly]: https://github.com/neovim/neovim/releases/tag/nightly
 [clever-f-workflow]: https://github.com/rhysd/clever-f.vim/blob/master/.github/workflows/ci.yml
+[ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gnome
+[ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
