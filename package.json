@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc -p .",
     "watch": "tsc -p . --watch --preserveWatchOutput",
-    "lint": "eslint ./src/*.ts",
-    "fix": "eslint --fix ./src/*.ts",
+    "lint": "eslint ./**/*.ts",
+    "fix": "eslint --fix ./**/*.ts",
     "test": "echo 'see https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI' && exit 1"
   },
   "repository": {

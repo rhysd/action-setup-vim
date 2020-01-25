@@ -20,6 +20,9 @@ jobs:
           version: ${{ matrix.version }}
           neovim: ${{ matrix.neovim }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+        id: vim
+      - name: Validate action result
+        run: node ./scripts/post_action_check.js "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
 
   lint:
     name: Check linter

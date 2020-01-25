@@ -28,6 +28,7 @@
     "src/utils.ts",
     "src/install.ts",
     "src/install_linux.ts",
-    "src/index.ts"
+    "src/index.ts",
+    "scripts/post_action_check.ts"
   ]
 }
