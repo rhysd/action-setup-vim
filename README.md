@@ -16,14 +16,15 @@ For details of installation, please read following 'Installation details' sectio
 
 ## Usage
 
-Install latest stable Vim on macOS or Linux
+Install the latest stable Vim on macOS or Linux
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
 ```
 
-On Windows, `github-token` input is necessary to retrieve the latest release from official Vim
-installer repository.
+On Windows, `github-token` input is necessary to retrieve the latest release from the official Vim
+installer repository. Note that `secrets.GITHUB_TOKEN` is automatically prepared so you don't need
+to set your personal access token to it
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -31,7 +32,7 @@ installer repository.
     github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Install latest nightly Vim on macOS or Linux
+Install the latest nightly Vim on macOS or Linux
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -39,7 +40,7 @@ Install latest nightly Vim on macOS or Linux
     version: nightly
 ```
 
-Install latest stable Neovim on all platforms
+Install the latest stable Neovim on all platforms
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -47,7 +48,7 @@ Install latest stable Neovim on all platforms
     neovim: true
 ```
 
-Install latest nightly Neovim on all platforms
+Install the latest nightly Neovim on all platforms
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -56,13 +57,11 @@ Install latest nightly Neovim on all platforms
     version: nightly
 ```
 
-After the setup, `vim` executable will be available for Vim and `nvim` executable will be availabel
+After the setup, `vim` executable will be available for Vim and `nvim` executable will be available
 for Neovim.
 
-Vim and Neovim are installed in the home directory (`$HOME/vim` and `$HOME/nvim`) and `bin`
-directories are added to `$PATH`.
-
-A real-world example is [a workflow in clever-f.vim][clever-f-workflow].
+A real-world examples are workflows in [clever-f.vim][clever-f-workflow] and
+[git-messenger.vim][git-messenger-workflow].
 
 ## Outputs
 
@@ -98,6 +97,8 @@ running Vim command in the steps later.
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
+Without system's package manager, Vim is installed at `$HOME/vim`.
+
 ### Neovim
 
 | OS      | Version   | Installation                                                   |
@@ -110,6 +111,8 @@ For stable releases on all platforms and nightly on Windows, `gvim` executable i
 | Windows | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
 
 Only on Windows, `nvim-qt.exe` executable is available for GUI.
+
+Without system's package manager, Neovim is installed at `$HOME/nvim`.
 
 **Note:** Ubuntu 18.04 supports official [`neovim` package][ubuntu-nvim] but this action does not
 install it. As of now, GitHub Actions also supports Ubuntu 16.04.
@@ -137,5 +140,6 @@ Distributed under [the MIT license](./LICENSE.txt).
 [nvim-stable]: https://github.com/neovim/neovim/releases/tag/stable
 [nvim-nightly]: https://github.com/neovim/neovim/releases/tag/nightly
 [clever-f-workflow]: https://github.com/rhysd/clever-f.vim/blob/master/.github/workflows/ci.yml
+[git-messenger-workflow]: https://github.com/rhysd/git-messenger.vim/blob/master/.github/workflows/ci.yml
 [ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gnome
 [ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
