@@ -97,7 +97,7 @@ running Vim command in the steps later.
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
-Without system's package manager, Vim is installed at `$HOME/vim`.
+When installing without system's package manager, Vim is installed at `$HOME/vim`.
 
 ### Neovim
 
@@ -112,7 +112,7 @@ Without system's package manager, Vim is installed at `$HOME/vim`.
 
 Only on Windows, `nvim-qt.exe` executable is available for GUI.
 
-Without system's package manager, Neovim is installed at `$HOME/nvim`.
+When installing without system's package manager, Neovim is installed at `$HOME/nvim`.
 
 **Note:** Ubuntu 18.04 supports official [`neovim` package][ubuntu-nvim] but this action does not
 install it. As of now, GitHub Actions also supports Ubuntu 16.04.

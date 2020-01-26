@@ -16,7 +16,7 @@ async function installVimNightly(token: string): Promise<Installed> {
 
 function installVimStable(token: string): Promise<Installed> {
     core.debug('Installing stable Vim on Windows');
-    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
+    core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
     return installVimNightly(token);
 }
 
