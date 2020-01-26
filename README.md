@@ -63,10 +63,14 @@ for Neovim.
 A real-world examples are workflows in [clever-f.vim][clever-f-workflow] and
 [git-messenger.vim][git-messenger-workflow].
 
+For comprehensive list of inputs and outputs, please refer [action.yml](./action.yml).
+
 ## Outputs
 
 This action sets installed executable path to the action's `executable` output. You can use it for
 running Vim command in the steps later.
+
+Here is an example to set Vim executable to run unit tests with [themis.vim][vim-themis].
 
 ```yaml
 - uses: actions/checkout@v2
@@ -143,3 +147,4 @@ Distributed under [the MIT license](./LICENSE.txt).
 [git-messenger-workflow]: https://github.com/rhysd/git-messenger.vim/blob/master/.github/workflows/ci.yml
 [ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gnome
 [ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
+[vim-themis]: https://github.com/thinca/vim-themis
