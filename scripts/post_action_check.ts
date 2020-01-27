@@ -77,8 +77,8 @@ function main() {
     const args = parseArgs(process.argv);
     log('Command line arguments:', args);
 
-    log('Validating output');
     const exe = expectedExecutable(args.neovim, args.isStable);
+    log('Validating output. Expected executable:', exe);
     assert.equal(exe, args.output);
 
     log('Validating executable');
@@ -89,11 +89,8 @@ function main() {
     const ver = spawnSync(exe, ['--version']);
     assert.equal(ver.status, 0);
     const stdout = ver.stdout.toString();
-    if (args.neovim) {
-        assert.ok(stdout.includes('NVIM'), `stdout: ${stdout}`);
-    } else {
-        assert.ok(stdout.includes('Vi IMproved'), `stdout: ${stdout}`);
-    }
+    const editorName = args.neovim ? 'NVIM' : 'Vi IMproved';
+    assert.ok(stdout.includes(editorName), `'${editorName}' should be included in stdout: ${stdout}`);
 
     log('OK');
 }
