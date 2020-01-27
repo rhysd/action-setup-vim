@@ -60,10 +60,10 @@ Install the latest nightly Neovim on all platforms
 After the setup, `vim` executable will be available for Vim and `nvim` executable will be available
 for Neovim.
 
-A real-world examples are workflows in [clever-f.vim][clever-f-workflow] and
+Real-world examples are workflows in [clever-f.vim][clever-f-workflow] and
 [git-messenger.vim][git-messenger-workflow].
 
-For comprehensive list of inputs and outputs, please refer [action.yml](./action.yml).
+For comprehensive lists of inputs and outputs, please refer [action.yml](./action.yml).
 
 ## Outputs
 
