@@ -9,6 +9,17 @@ export interface Config {
     token: string | null;
 }
 
+function getBoolean(input: string, def: boolean): boolean {
+    const v = getInput(input).toLowerCase();
+    if (v === '') {
+        return def;
+    }
+    if (v === 'true' || v === 'false') {
+        return v === 'true';
+    }
+    throw new Error(`'${input}' input only accepts boolean value 'true' or 'false' but got '${v}'`);
+}
+
 function getOs(): Os {
     switch (process.platform) {
         case 'darwin':
@@ -22,11 +33,30 @@ function getOs(): Os {
     }
 }
 
+function getVersion(): string {
+    const v = getInput('version').toLowerCase();
+    if (v === '') {
+        return 'stable';
+    }
+    if (v === 'stable' || v === 'nightly') {
+        return v;
+    }
+    throw new Error(`For now 'version' input only accepts 'stable' or 'nightly' but got '${v}'`);
+}
+
+function getNeovim(): boolean {
+    return getBoolean('neovim', false);
+}
+
+function getGitHubToken(): string | null {
+    return getInput('github-token') || null;
+}
+
 export function loadConfigFromInputs(): Config {
-    // TODO: Validate inputs
-    const version = getInput('version').toLowerCase() || 'stable';
-    const neovim = getInput('neovim').toLowerCase() === 'true';
-    const os = getOs();
-    const token = getInput('github-token') || null;
-    return { version, neovim, os, token };
+    return {
+        version: getVersion(),
+        neovim: getNeovim(),
+        os: getOs(),
+        token: getGitHubToken(),
+    };
 }
