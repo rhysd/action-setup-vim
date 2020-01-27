@@ -4,6 +4,23 @@ interface Options {
     cwd?: string;
 }
 
+type Env = { [k: string]: string };
+
+// Avoid leaking $INPUT_* variables to subprocess
+//   ref: https://github.com/actions/toolkit/issues/309
+function getEnv(): Env {
+    const ret: Env = {};
+    for (const key of Object.keys(process.env)) {
+        if (!key.startsWith('INPUT_')) {
+            const v = process.env[key];
+            if (v !== undefined) {
+                ret[key] = v;
+            }
+        }
+    }
+    return ret;
+}
+
 export async function exec(cmd: string, args: string[], opts?: Options): Promise<string> {
     const res = {
         stdout: '',
@@ -13,6 +30,7 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
 
     const execOpts = {
         ...opts,
+        env: getEnv(),
         listeners: {
             stdout(data: Buffer) {
                 res.stdout += data.toString();
