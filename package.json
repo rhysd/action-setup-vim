@@ -6,11 +6,11 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -p .",
-    "build:check": "tsc -p . --noEmit",
     "watch": "tsc -p . --watch --preserveWatchOutput",
     "lint": "eslint --max-warnings 0 ./**/*.ts",
-    "fix": "eslint --fix ./**/*.ts",
-    "test": "echo 'see https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI' && exit 1"
+    "fix": "eslint --fix './**/*.ts'",
+    "mocha": "mocha ./test",
+    "test": "npm-run-all build mocha"
   },
   "repository": {
     "type": "git",
@@ -33,24 +33,27 @@
     "@actions/exec": "^1.0.3",
     "@actions/github": "^2.1.0",
     "@actions/io": "^1.0.2",
-    "node-fetch": "^2.6.0",
-    "npm-run-all": "^4.1.5"
+    "node-fetch": "^2.6.0"
   },
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
     "@types/node": "^13.5.0",
     "@types/node-fetch": "^2.5.4",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
     "@typescript-eslint/parser": "^2.17.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-mocha": "^6.2.2",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.2.1",
+    "mocha": "^7.0.1",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
     "typescript": "^3.7.5"
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm-run-all -p lint build:check"
+      "pre-push": "npm-run-all -p lint test"
     }
   }
 }

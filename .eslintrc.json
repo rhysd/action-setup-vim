@@ -16,7 +16,8 @@
     ],
     "env": {
         "es6": true,
-        "node": true
+        "node": true,
+        "mocha": true
     },
     "rules": {
         "prefer-spread": "off",
@@ -37,5 +38,26 @@
         "@typescript-eslint/prefer-string-starts-ends-with": "error",
         "@typescript-eslint/prefer-readonly": "error",
         "@typescript-eslint/no-non-null-asserted-optional-chain": "error"
-    }
+    },
+    "overrides": [
+        {
+            "files": [
+                "test/*.ts"
+            ],
+            "plugins": [
+                "mocha"
+            ],
+            "extends": [
+                "plugin:mocha/recommended"
+            ],
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off",
+                "@typescript-eslint/no-var-requires": "off",
+                "@typescript-eslint/camelcase": "off",
+                "mocha/no-setup-in-describe": "off",
+                "mocha/no-hooks-for-single-case": "off",
+                "mocha/no-exclusive-tests": "error"
+            }
+        }
+    ]
 }
