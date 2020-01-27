@@ -24,13 +24,14 @@ jobs:
       - name: Validate action result
         run: node ./scripts/post_action_check.js "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
 
-  lint:
-    name: Check linter
+  test-and-lint:
+    name: Check unit tests and linter
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
+      - run: npm test
       - run: npm run lint
       - uses: actions/setup-python@v1
       - run: pip install yamllint
