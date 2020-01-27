@@ -6,10 +6,9 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -p .",
-    "build:check": "tsc -p . --noEmit",
     "watch": "tsc -p . --watch --preserveWatchOutput",
     "lint": "eslint --max-warnings 0 ./**/*.ts",
-    "fix": "eslint --fix ./**/*.ts",
+    "fix": "eslint --fix './**/*.ts'",
     "mocha": "mocha ./test",
     "test": "npm-run-all build mocha"
   },
@@ -44,6 +43,7 @@
     "@typescript-eslint/parser": "^2.17.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-mocha": "^6.2.2",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.2.1",
     "mocha": "^7.0.1",
@@ -53,7 +53,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm-run-all -p lint build:check"
+      "pre-push": "npm-run-all -p lint test"
     }
   }
 }
