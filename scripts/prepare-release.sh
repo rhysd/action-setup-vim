@@ -37,7 +37,7 @@ if [[ "$branch" != "master" ]]; then
     exit 1
 fi
 
-echo "Releasing to dev/v1 branch for ${version}... (minor=${minor_version}, major=${major_version})"
+echo "Releasing to dev/${major_version} branch for ${version}... (minor=${minor_version}, major=${major_version})"
 
 set -x
 npm install
@@ -52,7 +52,7 @@ cp -R node_modules .release/node_modules
 
 sha="$(git rev-parse HEAD)"
 
-git checkout "dev/v1"
+git checkout "dev/${major_version}"
 git pull
 if [ -d node_modules ]; then
     git rm -rf node_modules || true
