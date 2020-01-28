@@ -1,3 +1,14 @@
+<a name="v1.0.2"></a>
+# [v1.0.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.2) - 28 Jan 2020
+
+- **Improve:** Now all input environment variables (starting with `INPUT_`) are filtered on executing subprocesses ([actions/toolkit#309](https://github.com/actions/toolkit/issues/309))
+- **Improve:** Unit tests were added for validation of inputs and outputs
+- **Improve:** Better validation error messages
+- **Improve:** Better descriptions in README.md
+
+[Changes][v1.0.2]
+
+
 <a name="v1.0.1"></a>
 # [v1.0.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.1) - 25 Jan 2020
 
@@ -16,6 +27,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.0.2]: https://github.com/rhysd/action-setup-vim/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/rhysd/action-setup-vim/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/rhysd/action-setup-vim/tree/v1.0.0
 
