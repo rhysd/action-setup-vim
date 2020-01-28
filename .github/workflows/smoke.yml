@@ -2,6 +2,9 @@ name: Smoke test
 on:
   schedule:
     - cron: '0 0 * * 0'
+  push:
+    tags:
+      - v1
 
 jobs:
   validate:
