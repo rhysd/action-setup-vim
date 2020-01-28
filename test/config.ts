@@ -46,13 +46,6 @@ describe('loadConfigFromInputs()', function() {
         expected: RegExp;
     }> = [
         {
-            what: 'wrong version input',
-            inputs: {
-                version: 'foo!',
-            },
-            expected: /'version' input only accepts 'stable' or 'nightly' but got 'foo!'/,
-        },
-        {
             what: 'wrong neovim input',
             inputs: {
                 neovim: 'undetermined',

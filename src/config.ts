@@ -41,7 +41,10 @@ function getVersion(): string {
     if (v === 'stable' || v === 'nightly') {
         return v;
     }
-    throw new Error(`For now 'version' input only accepts 'stable' or 'nightly' but got '${v}'`);
+    // TODO: Check tag name
+    // For Vim, tag names conform 'v1.2.0003' format
+    // For Neovim, tag names conform 'v1.2.3' format
+    return v;
 }
 
 function getNeovim(): boolean {
