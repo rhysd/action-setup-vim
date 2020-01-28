@@ -1,6 +1,6 @@
 import { homedir } from 'os';
 import { join } from 'path';
-import { strict as assert, match as assertMatch } from 'assert';
+import { strict as assert } from 'assert';
 import { spawnSync } from 'child_process';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -99,7 +99,11 @@ function main() {
             const l = `VIM - Vi IMproved ${major}`;
             assert.ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
 
-            assertMatch(stdout, new RegExp(`Included patches: .*${patch}`));
+            // assert.match is not available since it is experimental
+            assert.ok(
+                stdout.match(new RegExp(`Included patches: .*${patch}`)),
+                `Patch ${patch} should be included in stdout: ${stdout}`,
+            );
         }
     } else {
         const editorName = args.neovim ? 'NVIM' : 'VIM - Vi IMproved';

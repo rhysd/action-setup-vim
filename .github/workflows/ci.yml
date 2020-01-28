@@ -42,8 +42,8 @@ jobs:
         id: vim
       - name: Validate action result
         run: node ./scripts/post_action_check.js "false" "v8.1.2424" "${{ steps.vim.outputs.executable }}"
-  nvim-v0_4_0:
-    name: Neovim v0.4.0
+  nvim-v0_4_2:
+    name: Neovim v0.4.2
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -56,10 +56,10 @@ jobs:
       - uses: ./
         with:
           neovim: true
-          version: v0.4.0
+          version: v0.4.2
         id: neovim
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "true" "v0.4.0" "${{ steps.neovim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js "true" "v0.4.2" "${{ steps.neovim.outputs.executable }}"
 
   test-and-lint:
     name: Check unit tests and linter
