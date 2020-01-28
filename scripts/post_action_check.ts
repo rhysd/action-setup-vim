@@ -1,6 +1,6 @@
 import { homedir } from 'os';
 import { join } from 'path';
-import { strict as assert } from 'assert';
+import { strict as assert, match as assertMatch } from 'assert';
 import { spawnSync } from 'child_process';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -8,9 +8,13 @@ function log(...args: any[]) {
     console.log('[post_action_check]:', ...args);
 }
 
+function ok(x: unknown): asserts x {
+    assert.ok(x);
+}
+
 interface Args {
     neovim: boolean;
-    isStable: boolean;
+    version: string;
     output: string;
 }
 
@@ -20,28 +24,18 @@ function parseArgs(args: string[]): Args {
     }
 
     const neovim = args[2].toLowerCase() === 'true';
-    let isStable;
-    switch (args[3]) {
-        case 'stable':
-            isStable = true;
-            break;
-        case 'nightly':
-            isStable = false;
-            break;
-        default:
-            throw new Error(`version value is unexpected: ${args[3]}`);
-    }
 
-    return { neovim, isStable, output: args[4] };
+    return { neovim, version: args[3], output: args[4] };
 }
 
-function expectedExecutable(neovim: boolean, isStable: boolean): string {
+function expectedExecutable(neovim: boolean, ver: string): string {
     if (neovim) {
         switch (process.platform) {
             case 'darwin':
-                if (isStable) {
+                if (ver === 'stable') {
                     return '/usr/local/bin/nvim';
                 } else {
+                    // nightly or specific version
                     return join(homedir(), 'nvim/bin/nvim');
                 }
             case 'linux':
@@ -53,15 +47,17 @@ function expectedExecutable(neovim: boolean, isStable: boolean): string {
         // vim
         switch (process.platform) {
             case 'darwin':
-                if (isStable) {
+                if (ver === 'stable') {
                     return '/usr/local/bin/vim';
                 } else {
+                    // nightly or specific version
                     return join(homedir(), 'vim/bin/vim');
                 }
             case 'linux':
-                if (isStable) {
+                if (ver === 'stable') {
                     return '/usr/bin/vim';
                 } else {
+                    // nightly or specific version
                     return join(homedir(), 'vim/bin/vim');
                 }
             case 'win32':
@@ -77,7 +73,7 @@ function main() {
     const args = parseArgs(process.argv);
     log('Command line arguments:', args);
 
-    const exe = expectedExecutable(args.neovim, args.isStable);
+    const exe = expectedExecutable(args.neovim, args.version);
     log('Validating output. Expected executable:', exe);
     assert.equal(exe, args.output);
 
@@ -89,8 +85,26 @@ function main() {
     const ver = spawnSync(exe, ['--version']);
     assert.equal(ver.status, 0);
     const stdout = ver.stdout.toString();
-    const editorName = args.neovim ? 'NVIM' : 'Vi IMproved';
-    assert.ok(stdout.includes(editorName), `'${editorName}' should be included in stdout: ${stdout}`);
+
+    if (args.version !== 'stable' && args.version !== 'nightly') {
+        if (args.neovim) {
+            const l = `NVIM ${args.version}`;
+            assert.ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
+        } else {
+            const m = args.version.match(/^v(\d+\.\d+)\.(\d+)$/);
+            ok(m);
+            const major = m[1];
+            const patch = m[2];
+
+            const l = `VIM - Vi IMproved ${major}`;
+            assert.ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
+
+            assertMatch(stdout, new RegExp(`Included patches: .*${patch}`));
+        }
+    } else {
+        const editorName = args.neovim ? 'NVIM' : 'VIM - Vi IMproved';
+        assert.ok(stdout.includes(editorName), `Editor name '${editorName}' should be included in stdout: ${stdout}`);
+    }
 
     log('OK');
 }
