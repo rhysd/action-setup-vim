@@ -90,10 +90,10 @@ async function installVimAssetOnWindows(file: string, url: string) {
     const assetFile = path.join(dlDir, file);
 
     try {
-        core.debug(`Downloading ${url} to ${dlDir}`);
+        core.debug(`Downloading asset at ${url} to ${dlDir}`);
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Downloading asset from ${url} failed: ${response.statusText}`);
+            throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
         const buffer = await response.buffer();
         await fs.writeFile(assetFile, buffer, { encoding: null });
