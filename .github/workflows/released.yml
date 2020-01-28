@@ -1,4 +1,4 @@
-name: Smoke test on v1
+name: Post-release check
 on:
   schedule:
     - cron: '0 0 * * 0'
