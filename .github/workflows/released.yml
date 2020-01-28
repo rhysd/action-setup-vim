@@ -2,8 +2,9 @@ name: Post-release check
 on:
   schedule:
     - cron: '0 0 * * 0'
-  release:
-    types: [published]
+  push:
+    paths:
+      - 'CHANGELOG.md'
 
 jobs:
   validate:
