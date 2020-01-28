@@ -38,6 +38,14 @@ async function installNeovim(ver: string): Promise<Installed> {
     };
 }
 
+function ensureToken(token: string | null): asserts token is string {
+    if (token === null) {
+        throw new Error(
+            "Please set 'github-token' input to get the 'stable' or 'nightly' installer from official Vim release on Windows",
+        );
+    }
+}
+
 export function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
@@ -50,13 +58,12 @@ export function install(config: Config): Promise<Installed> {
         }
     } else {
         const { token } = config;
-        if (token === null) {
-            throw new Error("Please set 'github-token' input to get the latest installer from official Vim release");
-        }
         switch (config.version) {
             case 'stable':
+                ensureToken(token);
                 return installVimStable(token);
             case 'nightly':
+                ensureToken(token);
                 return installVimNightly(token);
             default:
                 return installVim(config.version);
