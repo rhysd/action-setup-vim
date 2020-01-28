@@ -10,12 +10,24 @@ jobs:
         version: [stable, nightly, v8.1.2424, v0.4.0]
         neovim: [true, false]
         exclude:
-          - { neovim: true, version: v8.1.2424, os: ubuntu-latest }
-          - { neovim: true, version: v8.1.2424, os: macos-latest }
-          - { neovim: true, version: v8.1.2424, os: windows-latest }
-          - { neovim: false, version: v0.4.0, os: ubuntu-latest }
-          - { neovim: false, version: v0.4.0, os: macos-latest }
-          - { neovim: false, version: v0.4.0, os: windows-latest }
+          - neovim: true
+            version: v8.1.2424
+            os: ubuntu-latest
+          - neovim: true
+            version: v8.1.2424
+            os: macos-latest
+          - neovim: true
+            version: v8.1.2424
+            os: windows-latest
+          - neovim: false
+            version: v0.4.0
+            os: ubuntu-latest
+          - neovim: false
+            version: v0.4.0
+            os: macos-latest
+          - neovim: false
+            version: v0.4.0
+            os: windows-latest
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
