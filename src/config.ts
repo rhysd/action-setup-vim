@@ -33,7 +33,7 @@ function getOs(): Os {
     }
 }
 
-function getVersion(): string {
+function getVersion(neovim: boolean): string {
     const v = getInput('version').toLowerCase();
     if (v === '') {
         return 'stable';
@@ -41,9 +41,15 @@ function getVersion(): string {
     if (v === 'stable' || v === 'nightly') {
         return v;
     }
-    // TODO: Check tag name
-    // For Vim, tag names conform 'v1.2.0003' format
-    // For Neovim, tag names conform 'v1.2.3' format
+    const re = neovim ? /^v\d+\.\d+\.\d$/ : /^v\d+\.\d+\.\d{4}$/;
+
+    if (!re.test(v)) {
+        const repo = neovim ? 'neovim/neovim' : 'vim/vim';
+        throw new Error(
+            `'version' input is not a format of Git tags in ${repo} repository. It should match to regex /${re}/`,
+        );
+    }
+
     return v;
 }
 
@@ -56,9 +62,10 @@ function getGitHubToken(): string | null {
 }
 
 export function loadConfigFromInputs(): Config {
+    const neovim = getNeovim();
     return {
-        version: getVersion(),
-        neovim: getNeovim(),
+        version: getVersion(neovim),
+        neovim,
         os: getOs(),
         token: getGitHubToken(),
     };
