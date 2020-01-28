@@ -21,7 +21,7 @@ async function installVimNightly(token) {
 }
 function installVimStable(token) {
     core.debug('Installing stable Vim on Windows');
-    core.warning('No stable Vim release is officially created for Windows. Install nightly instead');
+    core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
     return installVimNightly(token);
 }
 async function installVim(ver) {
