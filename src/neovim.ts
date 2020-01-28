@@ -44,7 +44,7 @@ async function unarchiveAsset(asset: string, os: Os): Promise<string> {
 }
 
 // version = 'stable' or 'nightly' or version string
-export async function downloadNeovim(version: 'stable' | 'nightly', os: Os): Promise<string> {
+export async function downloadNeovim(version: string, os: Os): Promise<string> {
     const file = assetFileName(os);
     const destDir = path.join(homedir(), 'nvim');
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
@@ -57,7 +57,7 @@ export async function downloadNeovim(version: 'stable' | 'nightly', os: Os): Pro
         core.debug(`Downloading asset ${asset}`);
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Downloading asset from ${url} failed: ${response.statusText}`);
+            throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
         const buffer = await response.buffer();
         await fs.writeFile(asset, buffer, { encoding: null });
