@@ -3,8 +3,14 @@ on:
   schedule:
     - cron: '0 0 * * 0'
   push:
-    tags:
-      - v1
+    branches:
+      - dev/v*
+
+# push:
+#   tags:
+#     - v*
+#
+# seems not working when `git push --force origin v1`
 
 jobs:
   validate:
