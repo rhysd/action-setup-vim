@@ -3,10 +3,10 @@ import { getInput } from '@actions/core';
 export type Os = 'macos' | 'linux' | 'windows';
 
 export interface Config {
-    version: string;
-    neovim: boolean;
-    os: Os;
-    token: string | null;
+    readonly version: string;
+    readonly neovim: boolean;
+    readonly os: Os;
+    readonly token: string | null;
 }
 
 function getBoolean(input: string, def: boolean): boolean {

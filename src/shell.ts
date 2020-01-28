@@ -1,7 +1,7 @@
 import { exec as execCommand } from '@actions/exec';
 
 interface Options {
-    cwd?: string;
+    readonly cwd?: string;
 }
 
 type Env = { [k: string]: string };
