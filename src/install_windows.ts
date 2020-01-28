@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { Config } from './config';
-import { installNightlyVimOnWindows } from './vim';
+import { installNightlyVimOnWindows, installVimOnWindowsWithTag } from './vim';
 import { downloadNeovim } from './neovim';
 
 async function installVimNightly(token: string): Promise<Installed> {
@@ -22,7 +22,11 @@ function installVimStable(token: string): Promise<Installed> {
 
 async function installVim(ver: string): Promise<Installed> {
     core.debug(`Installing Vim version '${ver}' on Windows`);
-    throw new Error(`Installing Vim of specific version '${ver}' is not supported yet`);
+    const vimDir = await installVimOnWindowsWithTag(ver);
+    return {
+        executable: path.join(vimDir, 'vim.exe'),
+        bin: vimDir,
+    };
 }
 
 async function installNeovim(ver: string): Promise<Installed> {

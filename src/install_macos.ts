@@ -15,18 +15,13 @@ async function installVimStable(): Promise<Installed> {
     };
 }
 
-async function installVimNightly(): Promise<Installed> {
-    core.debug('Installing nightly Vim on macOS');
-    const vimDir = await buildVim(null);
+async function installVim(ver: string | null): Promise<Installed> {
+    core.debug(`Installing Vim version '${ver ?? 'HEAD'}' on macOS`);
+    const vimDir = await buildVim(ver);
     return {
         executable: path.join(vimDir, 'bin', 'vim'),
         bin: path.join(vimDir, 'bin'),
     };
-}
-
-async function installVim(ver: string): Promise<Installed> {
-    core.debug(`Installing Vim version '${ver}' on macOS`);
-    throw new Error(`Installing Vim of specific version '${ver}' is not supported yet`);
 }
 
 async function installNeovimStable(): Promise<Installed> {
@@ -62,7 +57,7 @@ export function install(config: Config): Promise<Installed> {
             case 'stable':
                 return installVimStable();
             case 'nightly':
-                return installVimNightly();
+                return installVim(null);
             default:
                 return installVim(config.version);
         }
