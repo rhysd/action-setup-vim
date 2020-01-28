@@ -1,1 +1,4 @@
 *.js.map
+/test/*.js
+/scripts/*.js
+/node_modules/.bin
