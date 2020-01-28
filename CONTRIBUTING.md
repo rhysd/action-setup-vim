@@ -5,8 +5,14 @@ Thank you for contributing to [action-setup-vim][proj]. This document is for dev
 
 ## Testing
 
-Tests are done in [CI workflow][ci] in E2E testing manner. There is no unit test yet, but all
-combinations are tested on CI triggered by `push` and `pull_request` events.
+For validation for inputs and outputs, run unit tests:
+
+```
+$ npm run test
+```
+
+Tests for installation logic are done in [CI workflow][ci] in E2E testing manner. There is no unit
+test yet, but all combinations are tested on CI triggered by `push` and `pull_request` events.
 
 After building and running `action-setup-vim` action, the workflow verifies the post conditions
 with [post_action_check.ts](./scripts/post_action_check.ts).
