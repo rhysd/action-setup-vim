@@ -1,16 +1,9 @@
-name: Smoke test
+name: Smoke test on v1
 on:
   schedule:
     - cron: '0 0 * * 0'
-  push:
-    branches:
-      - dev/v*
-
-# push:
-#   tags:
-#     - v*
-#
-# seems not working when `git push --force origin v1`
+  release:
+    types: [published]
 
 jobs:
   validate:
