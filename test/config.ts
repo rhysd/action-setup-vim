@@ -93,7 +93,7 @@ describe('loadConfigFromInputs()', function() {
             inputs: {
                 neovim: 'latest',
             },
-            expected: /'neovim' input only accepts boolean value 'true' or 'false' but got 'latest'/,
+            expected: /'neovim' input only accepts boolean values 'true' or 'false' but got 'latest'/,
         },
         {
             what: 'vim version with wrong number of digits in patch version',

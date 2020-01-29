@@ -10,14 +10,17 @@ export interface Config {
 }
 
 function getBoolean(input: string, def: boolean): boolean {
-    const v = getInput(input).toLowerCase();
-    if (v === '') {
-        return def;
+    const i = getInput(input).toLowerCase();
+    switch (i) {
+        case '':
+            return def;
+        case 'true':
+            return true;
+        case 'false':
+            return false;
+        default:
+            throw new Error(`'${input}' input only accepts boolean values 'true' or 'false' but got '${i}'`);
     }
-    if (v === 'true' || v === 'false') {
-        return v === 'true';
-    }
-    throw new Error(`'${input}' input only accepts boolean value 'true' or 'false' but got '${v}'`);
 }
 
 function getOs(): Os {
@@ -34,15 +37,17 @@ function getOs(): Os {
 }
 
 function getVersion(neovim: boolean): string {
-    const v = getInput('version').toLowerCase();
+    const v = getInput('version');
     if (v === '') {
         return 'stable';
     }
-    if (v === 'stable' || v === 'nightly') {
-        return v;
-    }
-    const re = neovim ? /^v\d+\.\d+\.\d+$/ : /^v\d+\.\d+\.\d{4}$/;
 
+    const l = v.toLowerCase();
+    if (l === 'stable' || l === 'nightly') {
+        return l;
+    }
+
+    const re = neovim ? /^v\d+\.\d+\.\d+$/ : /^v\d+\.\d+\.\d{4}$/;
     if (!re.test(v)) {
         const repo = neovim ? 'neovim/neovim' : 'vim/vim';
         throw new Error(
