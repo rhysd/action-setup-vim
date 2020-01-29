@@ -1,3 +1,11 @@
+<a name="v1.1.0"></a>
+# [v1.1.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.0) - 29 Jan 2020
+
+- **New:** Specific version tag can be set to `version` input like `version: v8.2.0126`. Please read [documentation](https://github.com/rhysd/action-setup-vim#readme) for more details.
+
+[Changes][v1.1.0]
+
+
 <a name="v1.0.2"></a>
 # [v1.0.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.2) - 28 Jan 2020
 
@@ -27,6 +35,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.1.0]: https://github.com/rhysd/action-setup-vim/compare/v1.0.2...v1.1.0
 [v1.0.2]: https://github.com/rhysd/action-setup-vim/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/rhysd/action-setup-vim/compare/v1.0.0...v1.0.1
 [v1.0.0]: https://github.com/rhysd/action-setup-vim/tree/v1.0.0
