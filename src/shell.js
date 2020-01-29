@@ -32,13 +32,15 @@ async function exec(cmd, args, opts) {
                 res.stderr += data.toString();
             },
         },
+        ignoreReturnCode: true,
     };
     const code = await exec_1.exec(cmd, args, execOpts);
     if (code === 0) {
         return res.stdout;
     }
     else {
-        throw new Error(`Command '${cmd} ${args.join(' ')}' exited non-zero status ${code}: ${res.stderr}`);
+        const stderr = res.stderr.replace(/\r?\n/g, ' ');
+        throw new Error(`Command '${cmd} ${args.join(' ')}' exited non-zero status ${code}: ${stderr}`);
     }
 }
 exports.exec = exec;

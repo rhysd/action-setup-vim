@@ -2,14 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@actions/core");
 function getBoolean(input, def) {
-    const v = core_1.getInput(input).toLowerCase();
-    if (v === '') {
-        return def;
+    const i = core_1.getInput(input).toLowerCase();
+    switch (i) {
+        case '':
+            return def;
+        case 'true':
+            return true;
+        case 'false':
+            return false;
+        default:
+            throw new Error(`'${input}' input only accepts boolean values 'true' or 'false' but got '${i}'`);
     }
-    if (v === 'true' || v === 'false') {
-        return v === 'true';
-    }
-    throw new Error(`'${input}' input only accepts boolean value 'true' or 'false' but got '${v}'`);
 }
 function getOs() {
     switch (process.platform) {
@@ -23,15 +26,21 @@ function getOs() {
             throw new Error(`Platform '${process.platform}' is not supported`);
     }
 }
-function getVersion() {
-    const v = core_1.getInput('version').toLowerCase();
+function getVersion(neovim) {
+    const v = core_1.getInput('version');
     if (v === '') {
         return 'stable';
     }
-    if (v === 'stable' || v === 'nightly') {
-        return v;
+    const l = v.toLowerCase();
+    if (l === 'stable' || l === 'nightly') {
+        return l;
     }
-    throw new Error(`For now 'version' input only accepts 'stable' or 'nightly' but got '${v}'`);
+    const re = neovim ? /^v\d+\.\d+\.\d+$/ : /^v\d+\.\d+\.\d{4}$/;
+    if (!re.test(v)) {
+        const repo = neovim ? 'neovim/neovim' : 'vim/vim';
+        throw new Error(`'version' input '${v}' is not a format of Git tags in ${repo} repository. It should match to regex /${re}/`);
+    }
+    return v;
 }
 function getNeovim() {
     return getBoolean('neovim', false);
@@ -40,9 +49,10 @@ function getGitHubToken() {
     return core_1.getInput('github-token') || null;
 }
 function loadConfigFromInputs() {
+    const neovim = getNeovim();
     return {
-        version: getVersion(),
-        neovim: getNeovim(),
+        version: getVersion(neovim),
+        neovim,
         os: getOs(),
         token: getGitHubToken(),
     };

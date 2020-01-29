@@ -22,10 +22,17 @@ const utils_1 = require("./utils");
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
 async function buildVim(version) {
     const installDir = path.join(os_1.homedir(), 'vim');
-    core.debug(`Building and installing Vim to ${installDir} (version=${version})`);
+    core.debug(`Building and installing Vim to ${installDir} (version=${(version !== null && version !== void 0 ? version : 'HEAD')})`);
     const dir = path.join(await utils_1.makeTmpdir(), 'vim');
-    await shell_1.exec('git', ['clone', '--depth=1', '--single-branch', '--no-tags', 'https://github.com/vim/vim', dir]);
-    // TODO: Checkout specific version
+    const args = ['clone', '--depth=1', '--single-branch'];
+    if (version === null) {
+        args.push('--no-tags');
+    }
+    else {
+        args.push('--branch', version);
+    }
+    args.push('https://github.com/vim/vim', dir);
+    await shell_1.exec('git', args);
     const opts = { cwd: dir };
     await shell_1.exec('./configure', [`--prefix=${installDir}`, '--with-features=huge', '--enable-fail-if-missing'], opts);
     await shell_1.exec('make', ['-j'], opts);
@@ -51,7 +58,7 @@ async function getVimRootDirAt(dir) {
     }
     throw new Error(`Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
 }
-async function installNightlyVimOnWindows(token) {
+async function detectNightlyAssetUrl(token) {
     const client = new github_1.GitHub(token);
     const release = await client.repos.getLatestRelease({
         owner: 'vim',
@@ -62,16 +69,21 @@ async function installNightlyVimOnWindows(token) {
         throw new Error(`Could not get installer asset in releases of vim/vim-win32-installer: ${JSON.stringify(release.data.assets, null, 2)}`);
     }
     core.debug(`Found installer asset: ${JSON.stringify(asset, null, 2)}`);
+    return {
+        file: asset.name,
+        url: asset.browser_download_url,
+    };
+}
+async function installVimAssetOnWindows(file, url) {
     const tmpdir = await utils_1.makeTmpdir();
     const dlDir = path.join(tmpdir, 'vim-installer');
     await io.mkdirP(dlDir);
-    const assetFile = path.join(dlDir, asset.name);
-    const url = asset.browser_download_url;
+    const assetFile = path.join(dlDir, file);
     try {
-        core.debug(`Downloading ${url} to ${dlDir}`);
+        core.debug(`Downloading asset at ${url} to ${dlDir}`);
         const response = await node_fetch_1.default(url);
         if (!response.ok) {
-            throw new Error(`Downloading asset from ${url} failed: ${response.statusText}`);
+            throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
         const buffer = await response.buffer();
         await fs_1.promises.writeFile(assetFile, buffer, { encoding: null });
@@ -90,5 +102,17 @@ async function installNightlyVimOnWindows(token) {
     core.debug(`Vim was installed to ${destDir}`);
     return destDir;
 }
+async function installNightlyVimOnWindows(token) {
+    const { file, url } = await detectNightlyAssetUrl(token);
+    return installVimAssetOnWindows(file, url);
+}
 exports.installNightlyVimOnWindows = installNightlyVimOnWindows;
+async function installVimOnWindowsWithTag(tag) {
+    const ver = tag.slice(1); // Strip 'v' prefix
+    // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
+    const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
+    const file = `gvim_${ver}_x64.zip`;
+    return installVimAssetOnWindows(file, url);
+}
+exports.installVimOnWindowsWithTag = installVimOnWindowsWithTag;
 //# sourceMappingURL=vim.js.map

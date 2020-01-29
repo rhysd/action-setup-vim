@@ -20,17 +20,13 @@ async function installVimStable() {
         bin: '/usr/local/bin',
     };
 }
-async function installVimNightly() {
-    core.debug('Installing nightly Vim on macOS');
-    const vimDir = await vim_1.buildVim(null);
+async function installVim(ver) {
+    core.debug(`Installing Vim version '${(ver !== null && ver !== void 0 ? ver : 'HEAD')}' on macOS`);
+    const vimDir = await vim_1.buildVim(ver);
     return {
         executable: path.join(vimDir, 'bin', 'vim'),
         bin: path.join(vimDir, 'bin'),
     };
-}
-async function installVim(ver) {
-    core.debug(`Installing Vim version '${ver}' on macOS`);
-    throw new Error(`Installing Vim of specific version '${ver}' is not supported yet`);
 }
 async function installNeovimStable() {
     core.debug('Installing stable Neovim on macOS');
@@ -40,17 +36,13 @@ async function installNeovimStable() {
         bin: '/usr/local/bin',
     };
 }
-async function installNeovimNightly() {
-    core.debug('Installing nightly Neovim on macOS');
-    const nvimDir = await neovim_1.downloadNeovim('stable', 'macos');
+async function installNeovim(ver) {
+    core.debug(`Installing Neovim version '${ver}' on macOS`);
+    const nvimDir = await neovim_1.downloadNeovim(ver, 'macos');
     return {
         executable: path.join(nvimDir, 'bin', 'nvim'),
         bin: path.join(nvimDir, 'bin'),
     };
-}
-async function installNeovim(ver) {
-    core.debug(`Installing Neovim version '${ver}' on macOS`);
-    throw new Error(`Installing NeoVim of specific version '${ver}' is not supported yet`);
 }
 function install(config) {
     if (config.neovim) {
@@ -58,7 +50,7 @@ function install(config) {
             case 'stable':
                 return installNeovimStable();
             case 'nightly':
-                return installNeovimNightly();
+                return installNeovim('nightly');
             default:
                 return installNeovim(config.version);
         }
@@ -68,7 +60,7 @@ function install(config) {
             case 'stable':
                 return installVimStable();
             case 'nightly':
-                return installVimNightly();
+                return installVim(null);
             default:
                 return installVim(config.version);
         }

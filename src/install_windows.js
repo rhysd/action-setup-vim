@@ -26,48 +26,44 @@ function installVimStable(token) {
 }
 async function installVim(ver) {
     core.debug(`Installing Vim version '${ver}' on Windows`);
-    throw new Error(`Installing Vim of specific version '${ver}' is not supported yet`);
-}
-async function installNeovimStable() {
-    core.debug('Installing stable Neovim on Windows');
-    const nvimDir = await neovim_1.downloadNeovim('stable', 'windows');
+    const vimDir = await vim_1.installVimOnWindowsWithTag(ver);
     return {
-        executable: path.join(nvimDir, 'bin', 'nvim.exe'),
-        bin: path.join(nvimDir, 'bin'),
-    };
-}
-async function installNeovimNightly() {
-    core.debug('Installing nightly Neovim on Windows');
-    const nvimDir = await neovim_1.downloadNeovim('nightly', 'windows');
-    return {
-        executable: path.join(nvimDir, 'bin', 'nvim.exe'),
-        bin: path.join(nvimDir, 'bin'),
+        executable: path.join(vimDir, 'vim.exe'),
+        bin: vimDir,
     };
 }
 async function installNeovim(ver) {
     core.debug(`Installing Neovim version '${ver}' on Windows`);
-    throw new Error(`Installing NeoVim of specific version '${ver}' is not supported yet`);
+    const nvimDir = await neovim_1.downloadNeovim(ver, 'windows');
+    return {
+        executable: path.join(nvimDir, 'bin', 'nvim.exe'),
+        bin: path.join(nvimDir, 'bin'),
+    };
+}
+function ensureToken(token) {
+    if (token === null) {
+        throw new Error("Please set 'github-token' input to get the 'stable' or 'nightly' installer from official Vim release on Windows");
+    }
 }
 function install(config) {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installNeovimStable();
+                return installNeovim('stable');
             case 'nightly':
-                return installNeovimNightly();
+                return installNeovim('nightly');
             default:
                 return installNeovim(config.version);
         }
     }
     else {
         const { token } = config;
-        if (token === null) {
-            throw new Error("Please set 'github-token' input to get the latest installer from official Vim release");
-        }
         switch (config.version) {
             case 'stable':
+                ensureToken(token);
                 return installVimStable(token);
             case 'nightly':
+                ensureToken(token);
                 return installVimNightly(token);
             default:
                 return installVim(config.version);

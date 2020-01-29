@@ -64,7 +64,7 @@ async function downloadNeovim(version, os) {
         core.debug(`Downloading asset ${asset}`);
         const response = await node_fetch_1.default(url);
         if (!response.ok) {
-            throw new Error(`Downloading asset from ${url} failed: ${response.statusText}`);
+            throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
         const buffer = await response.buffer();
         await fs_1.promises.writeFile(asset, buffer, { encoding: null });
