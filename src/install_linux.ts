@@ -15,50 +15,31 @@ async function installVimStable(): Promise<Installed> {
     };
 }
 
-async function installVimNightly(): Promise<Installed> {
-    core.debug('Installing nightly Vim on Linux');
-    const vimDir = await buildVim(null);
+async function installVim(ver: string | null): Promise<Installed> {
+    core.debug(`Installing Vim version '${ver ?? 'HEAD'}' on Linux`);
+    const vimDir = await buildVim(ver);
     return {
         executable: path.join(vimDir, 'bin', 'vim'),
         bin: path.join(vimDir, 'bin'),
     };
 }
 
-async function installVim(ver: string): Promise<Installed> {
-    core.debug(`Installing Vim version '${ver}' on Linux`);
-    throw new Error(`Installing Vim of specific version '${ver}' is not supported yet`);
-}
-
-async function installNeovimStable(): Promise<Installed> {
-    core.debug('Installing stable Neovim on Linux');
-    const nvimDir = await downloadNeovim('stable', 'linux');
-    return {
-        executable: path.join(nvimDir, 'bin', 'nvim'),
-        bin: path.join(nvimDir, 'bin'),
-    };
-}
-
-async function installNeovimNightly(): Promise<Installed> {
-    core.debug('Installing nightly Neovim on Linux');
-    const nvimDir = await downloadNeovim('nightly', 'linux');
-    return {
-        executable: path.join(nvimDir, 'bin', 'nvim'),
-        bin: path.join(nvimDir, 'bin'),
-    };
-}
-
 async function installNeovim(ver: string): Promise<Installed> {
     core.debug(`Installing Neovim version '${ver}' on Linux`);
-    throw new Error(`Installing NeoVim of specific version '${ver}' is not supported yet`);
+    const nvimDir = await downloadNeovim(ver, 'linux');
+    return {
+        executable: path.join(nvimDir, 'bin', 'nvim'),
+        bin: path.join(nvimDir, 'bin'),
+    };
 }
 
 export function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installNeovimStable();
+                return installNeovim('stable');
             case 'nightly':
-                return installNeovimNightly();
+                return installNeovim('nightly');
             default:
                 return installNeovim(config.version);
         }
@@ -67,7 +48,7 @@ export function install(config: Config): Promise<Installed> {
             case 'stable':
                 return installVimStable();
             case 'nightly':
-                return installVimNightly();
+                return installVim(null);
             default:
                 return installVim(config.version);
         }

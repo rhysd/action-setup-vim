@@ -1,7 +1,7 @@
 import { exec as execCommand } from '@actions/exec';
 
 interface Options {
-    cwd?: string;
+    readonly cwd?: string;
 }
 
 type Env = { [k: string]: string };
@@ -39,6 +39,7 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
                 res.stderr += data.toString();
             },
         },
+        ignoreReturnCode: true, // Check exit status by myself for better error message
     };
 
     const code = await execCommand(cmd, args, execOpts);
@@ -46,6 +47,7 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
     if (code === 0) {
         return res.stdout;
     } else {
-        throw new Error(`Command '${cmd} ${args.join(' ')}' exited non-zero status ${code}: ${res.stderr}`);
+        const stderr = res.stderr.replace(/\r?\n/g, ' ');
+        throw new Error(`Command '${cmd} ${args.join(' ')}' exited non-zero status ${code}: ${stderr}`);
     }
 }

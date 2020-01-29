@@ -40,24 +40,127 @@ describe('loadConfigFromInputs()', function() {
         A.equal(c.token, 'this is token');
     });
 
+    const specificVersions: Array<{
+        neovim: boolean;
+        version: string;
+    }> = [
+        {
+            neovim: false,
+            version: 'v8.1.1111',
+        },
+        {
+            neovim: false,
+            version: 'v8.2.0001',
+        },
+        {
+            neovim: false,
+            version: 'v10.10.0001',
+        },
+        {
+            neovim: true,
+            version: 'v0.4.3',
+        },
+        {
+            neovim: true,
+            version: 'v1.0.0',
+        },
+        {
+            neovim: true,
+            version: 'v10.10.10',
+        },
+    ];
+
+    for (const t of specificVersions) {
+        const editor = t.neovim ? 'Neovim' : 'Vim';
+        it(`verifies correct ${editor} version ${t.version}`, function() {
+            setInputs({
+                version: t.version,
+                neovim: t.neovim.toString(),
+            });
+            const c = loadConfigFromInputs();
+            A.equal(c.version, t.version);
+            A.equal(c.neovim, t.neovim);
+        });
+    }
+
     const errorCases: Array<{
         what: string;
         inputs: { [k: string]: string };
         expected: RegExp;
     }> = [
         {
-            what: 'wrong version input',
-            inputs: {
-                version: 'foo!',
-            },
-            expected: /'version' input only accepts 'stable' or 'nightly' but got 'foo!'/,
-        },
-        {
             what: 'wrong neovim input',
             inputs: {
-                neovim: 'undetermined',
+                neovim: 'latest',
             },
-            expected: /'neovim' input only accepts boolean value 'true' or 'false' but got 'undetermined'/,
+            expected: /'neovim' input only accepts boolean values 'true' or 'false' but got 'latest'/,
+        },
+        {
+            what: 'vim version with wrong number of digits in patch version',
+            inputs: {
+                version: 'v8.2.100',
+            },
+            expected: /'version' input 'v8\.2\.100' is not a format of Git tags in vim\/vim repository/,
+        },
+        {
+            what: 'vim version without prefix "v"',
+            inputs: {
+                version: '8.2.0100',
+            },
+            expected: /'version' input '8\.2\.0100' is not a format of Git tags in vim\/vim repository/,
+        },
+        {
+            what: 'vim version with patch version',
+            inputs: {
+                version: 'v8.2',
+            },
+            expected: /'version' input 'v8\.2' is not a format of Git tags in vim\/vim repository/,
+        },
+        {
+            what: 'vim version with only major version',
+            inputs: {
+                version: 'v8',
+            },
+            expected: /'version' input 'v8' is not a format of Git tags in vim\/vim repository/,
+        },
+        {
+            what: 'vim version with wrong tag name',
+            inputs: {
+                version: 'latest',
+            },
+            expected: /'version' input 'latest' is not a format of Git tags in vim\/vim repository/,
+        },
+        {
+            what: 'neovim version without prefix "v"',
+            inputs: {
+                neovim: 'true',
+                version: '0.4.3',
+            },
+            expected: /'version' input '0\.4\.3' is not a format of Git tags in neovim\/neovim repository/,
+        },
+        {
+            what: 'neovim version without patch version',
+            inputs: {
+                neovim: 'true',
+                version: 'v0.4',
+            },
+            expected: /'version' input 'v0\.4' is not a format of Git tags in neovim\/neovim repository/,
+        },
+        {
+            what: 'neovim version with only major version',
+            inputs: {
+                neovim: 'true',
+                version: 'v1',
+            },
+            expected: /'version' input 'v1' is not a format of Git tags in neovim\/neovim repository/,
+        },
+        {
+            what: 'neovim version with wrong tag name',
+            inputs: {
+                neovim: 'true',
+                version: 'latest',
+            },
+            expected: /'version' input 'latest' is not a format of Git tags in neovim\/neovim repository/,
         },
     ];
 
