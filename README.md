@@ -40,6 +40,16 @@ Install the latest nightly Vim on macOS or Linux
     version: nightly
 ```
 
+Install the latest Vim v8.1.123 on all platforms. The version is a tag name in [vim/vim][vim]
+repository. For installing specific version, `github-token` input is unnecessary on Windows.
+Please see following 'Choose specific version' also
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  with:
+    version: v8.1.0123
+```
+
 Install the latest stable Neovim on all platforms
 
 ```yaml
@@ -55,6 +65,16 @@ Install the latest nightly Neovim on all platforms
   with:
     neovim: true
     version: nightly
+```
+
+Install the Neovim v0.4.3 on all platforms.
+Please see following 'Choose specific version' also
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  with:
+    neovim: true
+    version: v0.4.3
 ```
 
 After the setup, `vim` executable will be available for Vim and `nvim` executable will be available
@@ -90,14 +110,19 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 ### Vim
 
-| OS      | Version   | Installation                                                        |
-|---------|-----------|---------------------------------------------------------------------|
-| Linux   | `stable`  | Install [`vim-gnome`][ubuntu-vim] package via `apt` package manager |
-| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                         |
-| macOS   | `stable`  | Install MacVim via `brew install macvim`                            |
-| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                         |
-| Widnows | `stable`  | There is no stable release for Windows so fall back to `nightly`    |
-| Windows | `nightly` | Install the latest release from [installer repository][win-inst]    |
+`vX.Y.Z` represents a specific version such as `v8.2.0100`.
+
+| OS      | Version   | Installation                                                                       |
+|---------|-----------|------------------------------------------------------------------------------------|
+| Linux   | `stable`  | Install [`vim-gnome`][ubuntu-vim] package via `apt` package manager                |
+| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                        |
+| Linux   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                |
+| macOS   | `stable`  | Install MacVim via `brew install macvim`                                           |
+| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                        |
+| macOS   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                |
+| Widnows | `stable`  | There is no stable release for Windows so fall back to `nightly`                   |
+| Windows | `nightly` | Install the latest release from [installer repository][win-inst]                   |
+| Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [installer repository][win-inst] repository |
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
@@ -105,14 +130,19 @@ When installing without system's package manager, Vim is installed at `$HOME/vim
 
 ### Neovim
 
-| OS      | Version   | Installation                                                   |
-|---------|-----------|----------------------------------------------------------------|
-| Linux   | `stable`  | Install from the latest [Neovim stable release][nvim-stable]   |
-| Linux   | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
-| macOS   | `stable`  | `brew install neovim` using Homebrew                           |
-| macOS   | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
-| Windows | `stable`  | Install from the latest [Neovim stable release][nvim-stable]   |
-| Windows | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly] |
+`vX.Y.Z` represents a specific version such as `v0.4.3`.
+
+| OS      | Version   | Installation                                                              |
+|---------|-----------|---------------------------------------------------------------------------|
+| Linux   | `stable`  | Install from the latest [Neovim stable release][nvim-stable]              |
+| Linux   | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly]            |
+| Linux   | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [neovim/neovim][neovim] repository |
+| macOS   | `stable`  | `brew install neovim` using Homebrew                                      |
+| macOS   | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly]            |
+| macOS   | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [neovim/neovim][neovim] repository |
+| Windows | `stable`  | Install from the latest [Neovim stable release][nvim-stable]              |
+| Windows | `nightly` | Install from the latest [Neovim nightly release][nvim-nightly]            |
+| Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [neovim/neovim][neovim] repository |
 
 Only on Windows, `nvim-qt.exe` executable is available for GUI.
 
@@ -121,11 +151,26 @@ When installing without system's package manager, Neovim is installed at `$HOME/
 **Note:** Ubuntu 18.04 supports official [`neovim` package][ubuntu-nvim] but this action does not
 install it. As of now, GitHub Actions also supports Ubuntu 16.04.
 
+## Choose specific version
+
+### Vim
+
+If Vim is built from source, any tag version should be available.
+
+If Vim is installed via release asset (on Windows), please check
+[vim-win32-installer releases page][win-inst-release] to know which versions are available.
+The repository makes a release once per day (nightly).
+
+### Neovim
+
+This action installs specific version of Neovim from release assets.
+Please check [neovim/neovim releases page][neovim-release] to know which versions have release assets.
+For example, [Neovim 0.4.0](https://github.com/neovim/neovim/releases/tag/v0.4.0) has no Windows
+releases so it is not available for installing Neovim on Windows.
+
+
 ## Current limitation
 
-- Currently installation of specific version is not supported. Hence only `stable` or `nightly` is
-  supported. This is sufficient for me. If someone wants this feature, please make an issue or send
-  a pull request.
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.
 
 ## License
@@ -148,3 +193,5 @@ Distributed under [the MIT license](./LICENSE.txt).
 [ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gnome
 [ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
 [vim-themis]: https://github.com/thinca/vim-themis
+[win-inst-release]: https://github.com/vim/vim-win32-installer/releases
+[neovim-release]: https://github.com/neovim/neovim/releases
