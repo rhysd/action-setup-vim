@@ -3,7 +3,7 @@ import * as path from 'path';
 import { promises as fs } from 'fs';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
-import { GitHub } from '@actions/github';
+import Octokit, { Options as OctokitOptions } from '@octokit/rest';
 import * as io from '@actions/io';
 import { exec } from './shell';
 import { makeTmpdir } from './utils';
@@ -59,11 +59,11 @@ interface Asset {
 }
 
 async function detectNightlyAssetUrl(token: string | null): Promise<Asset> {
-    const opts: { auth?: string } = {};
+    const opts: OctokitOptions = {};
     if (token !== null) {
         opts.auth = token;
     }
-    const client = new GitHub(opts);
+    const client = new Octokit(opts);
     const release = await client.repos.getLatestRelease({
         owner: 'vim',
         repo: 'vim-win32-installer',
