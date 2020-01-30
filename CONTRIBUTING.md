@@ -5,14 +5,14 @@ Thank you for contributing to [action-setup-vim][proj]. This document is for dev
 
 ## Testing
 
-For validation for inputs and outputs, run unit tests:
+For testing validation for inputs and outputs, run unit tests:
 
 ```
 $ npm run test
 ```
 
-Tests for installation logic are done in [CI workflow][ci] in E2E testing manner. There is no unit
-test yet, but all combinations are tested on CI triggered by `push` and `pull_request` events.
+Tests for installation logic are done in [CI workflows][ci] in E2E testing manner. All combinations
+of inputs are tested on the workflows triggered by `push` and `pull_request` events.
 
 After building and running `action-setup-vim` action, the workflow verifies the post conditions
 with [post_action_check.ts](./scripts/post_action_check.ts).
@@ -29,5 +29,11 @@ When releasing v1.2.3:
    Or push tags with `git push --force origin v1 && git push --force origin v1.2 && git push origin v1.2.3`
    more safely.
 
+## Post release check
+
+[Post-release check workflow][post-release] runs to check released `rhysd/action-setup-vim@v1` action.
+The workflow runs when modifying `CHANGELOG.md` and also runs on every Sunday 00:00 UTC.
+
 [proj]: https://github.com/rhysd/action-setup-vim
 [ci]: https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI
+[post-release]: https://github.com/rhysd/action-setup-vim/actions?query=workflow%3A%22Post-release+check%22+branch%3Amaster
