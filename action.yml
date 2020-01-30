@@ -7,20 +7,20 @@ branding:
 
 inputs:
   version:
-    description: "Currently 'stable' or 'nightly' is available"
+    description: "Version of Vim or Neovim to install. Valid values are 'stable', 'nightly' or version tag such as 'v8.2.0126'"
     required: false
     default: 'stable'
   neovim:
     description: 'Setting to true will install Neovim'
     required: false
-    default: 'false'
+    default: false
   github-token:
-    description: 'GitHub API token to get the latest Vim release. Maybe necessary for Windows'
+    description: 'Optional GitHub API token to get the latest Vim release. Maybe necessary for Windows'
     required: false
 
 outputs:
   executable:
-    description: 'Path to the installed executable'
+    description: 'Absolute file path to the installed executable'
 
 runs:
   using: 'node12'
