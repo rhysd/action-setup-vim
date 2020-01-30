@@ -12,7 +12,7 @@ since it is faster than building from source.
 For nightly release, this action basically installs the nightly release of Vim or Neovim from
 official releases. If unavailable, it builds executables from source.
 
-For details of installation, please read following 'Installation details' section.
+For details of installation, please read the following 'Installation details' section.
 
 ## Usage
 
@@ -31,7 +31,7 @@ Install the latest nightly Vim
 ```
 
 Install the latest Vim v8.1.123. The version is a tag name in [vim/vim][vim] repository. Please see
-following 'Choose specific version' section also
+the following 'Choose specific version' section also
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -56,7 +56,7 @@ Install the latest nightly Neovim
     version: nightly
 ```
 
-Install the Neovim v0.4.3. Please see following 'Choose specific version' section also
+Install the Neovim v0.4.3. Please see the following 'Choose specific version' section also
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -69,7 +69,8 @@ After the setup, `vim` executable will be available for Vim and `nvim` executabl
 for Neovim.
 
 Real-world examples are workflows in [clever-f.vim][clever-f-workflow] and
-[git-messenger.vim][git-messenger-workflow].
+[git-messenger.vim][git-messenger-workflow]. And you can see [this repository's CI workflows][ci].
+They run this action with all combinations of the inputs.
 
 For comprehensive lists of inputs and outputs, please refer [action.yml](./action.yml).
 
@@ -151,10 +152,11 @@ The repository makes a release once per day (nightly).
 
 ### Neovim
 
-This action installs specific version of Neovim from release assets.
-Please check [neovim/neovim releases page][neovim-release] to know which versions have release assets.
-For example, [Neovim 0.4.0](https://github.com/neovim/neovim/releases/tag/v0.4.0) has no Windows
-releases so it is not available for installing Neovim on Windows.
+When installing the specific version of Neovim, this action downloads release assets from
+[neovim/neovim][neovim]. Please check [neovim/neovim releases page][neovim-release] to know which
+versions have release assets. For example,
+[Neovim 0.4.0](https://github.com/neovim/neovim/releases/tag/v0.4.0) has no Windows releases so it
+is not available for installing Neovim on Windows.
 
 ## Using GitHub API token
 
