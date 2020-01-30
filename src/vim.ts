@@ -58,8 +58,12 @@ interface Asset {
     url: string;
 }
 
-async function detectNightlyAssetUrl(token: string): Promise<Asset> {
-    const client = new GitHub(token);
+async function detectNightlyAssetUrl(token: string | null): Promise<Asset> {
+    const opts: { auth?: string } = {};
+    if (token !== null) {
+        opts.auth = token;
+    }
+    const client = new GitHub(opts);
     const release = await client.repos.getLatestRelease({
         owner: 'vim',
         repo: 'vim-win32-installer',
@@ -116,7 +120,7 @@ async function installVimAssetOnWindows(file: string, url: string) {
     return destDir;
 }
 
-export async function installNightlyVimOnWindows(token: string): Promise<string> {
+export async function installNightlyVimOnWindows(token: string | null): Promise<string> {
     const { file, url } = await detectNightlyAssetUrl(token);
     return installVimAssetOnWindows(file, url);
 }

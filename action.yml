@@ -15,7 +15,7 @@ inputs:
     required: false
     default: 'false'
   github-token:
-    description: 'GitHub API token to get the latest Vim release. Only necessary for Windows'
+    description: 'GitHub API token to get the latest Vim release. Maybe necessary for Windows'
     required: false
 
 outputs:
