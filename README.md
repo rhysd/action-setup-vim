@@ -16,23 +16,13 @@ For details of installation, please read following 'Installation details' sectio
 
 ## Usage
 
-Install the latest stable Vim on macOS or Linux
+Install the latest stable Vim
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
 ```
 
-On Windows, `github-token` input is necessary to retrieve the latest release from the official Vim
-installer repository. Note that `secrets.GITHUB_TOKEN` is automatically prepared so you don't need
-to set your personal access token to it
-
-```yaml
-- uses: rhysd/action-setup-vim@v1
-  with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
-```
-
-Install the latest nightly Vim on macOS or Linux
+Install the latest nightly Vim
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -40,9 +30,8 @@ Install the latest nightly Vim on macOS or Linux
     version: nightly
 ```
 
-Install the latest Vim v8.1.123 on all platforms. The version is a tag name in [vim/vim][vim]
-repository. For installing specific version, `github-token` input is unnecessary on Windows.
-Please see following 'Choose specific version' also
+Install the latest Vim v8.1.123. The version is a tag name in [vim/vim][vim] repository. Please see
+following 'Choose specific version' section also
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -50,7 +39,7 @@ Please see following 'Choose specific version' also
     version: v8.1.0123
 ```
 
-Install the latest stable Neovim on all platforms
+Install the latest stable Neovim
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -58,7 +47,7 @@ Install the latest stable Neovim on all platforms
     neovim: true
 ```
 
-Install the latest nightly Neovim on all platforms
+Install the latest nightly Neovim
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -67,8 +56,7 @@ Install the latest nightly Neovim on all platforms
     version: nightly
 ```
 
-Install the Neovim v0.4.3 on all platforms.
-Please see following 'Choose specific version' also
+Install the Neovim v0.4.3. Please see following 'Choose specific version' section also
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -168,6 +156,23 @@ Please check [neovim/neovim releases page][neovim-release] to know which version
 For example, [Neovim 0.4.0](https://github.com/neovim/neovim/releases/tag/v0.4.0) has no Windows
 releases so it is not available for installing Neovim on Windows.
 
+## Using GitHub API token
+
+Only when installing Vim on Windows, this action sends GitHub API request to know the latest assets
+released at [vim-win32-installer][win-inst].
+By default, this action sends the API request without API token. It should be OK in most cases.
+However, when you run this action very frequently, it may run out of API rate limit without API token
+(60/hour).
+
+To boost the rate limit to 5000/hour, this action supports `github-token` input as follows. If you're
+facing the API rate limit issue, the input would be useful to avoid it. Note that `secrets.GITHUB_TOKEN`
+is automatically prepared so you don't need to set your personal access token to it
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  with:
+    github-token: ${{ secrets.GITHUB_TOKEN }}
+```
 
 ## Current limitation
 
