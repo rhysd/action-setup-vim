@@ -44,6 +44,9 @@ npm install
 npm run build
 npm prune --production
 
+# Remove all type definitions from node_modules since @octokit/rest/index.d.ts is very big (1.3MB)
+find ./node_modules/ -name '*.d.ts' -exec rm '{}' \;
+
 rm -rf .release
 mkdir -p .release
 
