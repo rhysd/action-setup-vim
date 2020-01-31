@@ -10,7 +10,7 @@ async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on macOS');
     await exec('brew', ['install', 'macvim']);
     return {
-        executable: '/usr/local/bin/vim',
+        executable: 'vim',
         bin: '/usr/local/bin',
     };
 }
@@ -19,7 +19,7 @@ async function installVim(ver: string | null): Promise<Installed> {
     core.debug(`Installing Vim version '${ver ?? 'HEAD'}' on macOS`);
     const vimDir = await buildVim(ver);
     return {
-        executable: path.join(vimDir, 'bin', 'vim'),
+        executable: 'vim',
         bin: path.join(vimDir, 'bin'),
     };
 }
@@ -28,7 +28,7 @@ async function installNeovimStable(): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS');
     await exec('brew', ['install', 'neovim']);
     return {
-        executable: '/usr/local/bin/nvim',
+        executable: 'nvim',
         bin: '/usr/local/bin',
     };
 }
@@ -37,7 +37,7 @@ async function installNeovim(ver: string): Promise<Installed> {
     core.debug(`Installing Neovim version '${ver}' on macOS`);
     const nvimDir = await downloadNeovim(ver, 'macos');
     return {
-        executable: path.join(nvimDir, 'bin', 'nvim'),
+        executable: 'nvim',
         bin: path.join(nvimDir, 'bin'),
     };
 }

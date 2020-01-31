@@ -5,8 +5,9 @@ import { Installed } from '../src/install';
 
 function getFakedInstallation(): Installed {
     // Use node executable instead of Vim or Neovim binaries
-    const executable = process.argv[0];
-    const bin = path.dirname(executable);
+    const fullPath = process.argv[0];
+    const executable = path.basename(fullPath);
+    const bin = path.dirname(fullPath);
     return { executable, bin };
 }
 

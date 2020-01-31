@@ -1,4 +1,5 @@
 import { promises as fs } from 'fs';
+import { join } from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { exec } from './shell';
@@ -14,13 +15,12 @@ export async function validateInstallation(installed: Installed) {
     }
     core.debug(`Installed directory '${installed.bin}' was validated`);
 
+    const fullPath = join(installed.bin, installed.executable);
     try {
-        const ver = await exec(installed.executable, ['--version']);
+        const ver = await exec(fullPath, ['--version']);
         console.log(`Installed version:\n${ver}`);
     } catch (err) {
-        throw new Error(
-            `Validation failed! Could not get version from executable '${installed.executable}': ${err.message}`,
-        );
+        throw new Error(`Validation failed! Could not get version from executable '${fullPath}': ${err.message}`);
     }
-    core.debug(`Installed executable '${installed.executable}' was validated`);
+    core.debug(`Installed executable '${fullPath}' was validated`);
 }
