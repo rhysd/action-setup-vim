@@ -57,6 +57,14 @@ describe('loadConfigFromInputs()', function() {
             version: 'v10.10.0001',
         },
         {
+            neovim: false,
+            version: 'v7.4.100',
+        },
+        {
+            neovim: false,
+            version: 'v7.4',
+        },
+        {
             neovim: true,
             version: 'v0.4.3',
         },
