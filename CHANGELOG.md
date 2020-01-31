@@ -1,3 +1,12 @@
+<a name="v1.1.1"></a>
+# [v1.1.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.1) - 31 Jan 2020
+
+- **Improve:** `github-token` input is now optional even if you install Vim on Windows worker
+- **Improve:** Update dev-dependencies
+
+[Changes][v1.1.1]
+
+
 <a name="v1.1.0"></a>
 # [v1.1.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.0) - 29 Jan 2020
 
@@ -35,6 +44,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.1.1]: https://github.com/rhysd/action-setup-vim/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/rhysd/action-setup-vim/compare/v1.0.2...v1.1.0
 [v1.0.2]: https://github.com/rhysd/action-setup-vim/compare/v1.0.1...v1.0.2
 [v1.0.1]: https://github.com/rhysd/action-setup-vim/compare/v1.0.0...v1.0.1
