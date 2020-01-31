@@ -10,10 +10,10 @@ async function main() {
 
     const pathSep = process.platform === 'win32' ? ';' : ':';
     const installed = await install(config);
+    await validateInstallation(installed);
+
     console.log(`::set-env name=PATH::${installed.bin}${pathSep}${process.env.PATH}`);
     core.debug(`'${installed.bin}' was set to $PATH`);
-
-    await validateInstallation(installed);
 
     const fullPath = join(installed.bin, installed.executable);
     core.setOutput('executable', fullPath);
