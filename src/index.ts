@@ -12,7 +12,7 @@ async function main() {
     const installed = await install(config);
     await validateInstallation(installed);
 
-    console.log(`::set-env name=PATH::${installed.bin}${pathSep}${process.env.PATH}`);
+    core.exportVariable('PATH', `${installed.bin}${pathSep}${process.env.PATH}`);
     core.debug(`'${installed.bin}' was set to $PATH`);
 
     const fullPath = join(installed.bin, installed.executable);
