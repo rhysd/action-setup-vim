@@ -15,7 +15,7 @@ const path = __importStar(require("path"));
 const fs_1 = require("fs");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const core = __importStar(require("@actions/core"));
-const github_1 = require("@actions/github");
+const rest_1 = __importDefault(require("@octokit/rest"));
 const io = __importStar(require("@actions/io"));
 const shell_1 = require("./shell");
 const utils_1 = require("./utils");
@@ -59,7 +59,11 @@ async function getVimRootDirAt(dir) {
     throw new Error(`Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
 }
 async function detectNightlyAssetUrl(token) {
-    const client = new github_1.GitHub(token);
+    const opts = {};
+    if (token !== null) {
+        opts.auth = token;
+    }
+    const client = new rest_1.default(opts);
     const release = await client.repos.getLatestRelease({
         owner: 'vim',
         repo: 'vim-win32-installer',

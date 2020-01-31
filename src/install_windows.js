@@ -40,11 +40,6 @@ async function installNeovim(ver) {
         bin: path.join(nvimDir, 'bin'),
     };
 }
-function ensureToken(token) {
-    if (token === null) {
-        throw new Error("Please set 'github-token' input to get the 'stable' or 'nightly' installer from official Vim release on Windows");
-    }
-}
 function install(config) {
     if (config.neovim) {
         switch (config.version) {
@@ -60,10 +55,8 @@ function install(config) {
         const { token } = config;
         switch (config.version) {
             case 'stable':
-                ensureToken(token);
                 return installVimStable(token);
             case 'nightly':
-                ensureToken(token);
                 return installVimNightly(token);
             default:
                 return installVim(config.version);
