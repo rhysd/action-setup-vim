@@ -1,3 +1,11 @@
+<a name="v1.1.2"></a>
+# [v1.1.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.2) - 31 Jan 2020
+
+- **Fix:** GitHub API call may fail relying on IP address of the worker (ref: [actions/setup-go#16](https://github.com/actions/setup-go/issues/16))
+
+[Changes][v1.1.2]
+
+
 <a name="v1.1.1"></a>
 # [v1.1.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.1) - 31 Jan 2020
 
@@ -44,6 +52,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.1.2]: https://github.com/rhysd/action-setup-vim/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/rhysd/action-setup-vim/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/rhysd/action-setup-vim/compare/v1.0.2...v1.1.0
 [v1.0.2]: https://github.com/rhysd/action-setup-vim/compare/v1.0.1...v1.0.2
