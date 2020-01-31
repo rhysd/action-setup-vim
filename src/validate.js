@@ -8,6 +8,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
+const path_1 = require("path");
 const core = __importStar(require("@actions/core"));
 const shell_1 = require("./shell");
 async function validateInstallation(installed) {
@@ -21,14 +22,15 @@ async function validateInstallation(installed) {
         throw new Error(`Validation failed! Could not stat installed directory '${installed.bin}': ${err.message}`);
     }
     core.debug(`Installed directory '${installed.bin}' was validated`);
+    const fullPath = path_1.join(installed.bin, installed.executable);
     try {
-        const ver = await shell_1.exec(installed.executable, ['--version']);
+        const ver = await shell_1.exec(fullPath, ['--version']);
         console.log(`Installed version:\n${ver}`);
     }
     catch (err) {
-        throw new Error(`Validation failed! Could not get version from executable '${installed.executable}': ${err.message}`);
+        throw new Error(`Validation failed! Could not get version from executable '${fullPath}': ${err.message}`);
     }
-    core.debug(`Installed executable '${installed.executable}' was validated`);
+    core.debug(`Installed executable '${fullPath}' was validated`);
 }
 exports.validateInstallation = validateInstallation;
 //# sourceMappingURL=validate.js.map

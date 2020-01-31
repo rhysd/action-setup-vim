@@ -35,7 +35,7 @@ function getVersion(neovim) {
     if (l === 'stable' || l === 'nightly') {
         return l;
     }
-    const re = neovim ? /^v\d+\.\d+\.\d+$/ : /^v\d+\.\d+\.\d{4}$/;
+    const re = neovim ? /^v\d+\.\d+\.\d+$/ : /^v7\.\d+(?:\.\d+)?$|^v\d+\.\d+\.\d{4}$/;
     if (!re.test(v)) {
         const repo = neovim ? 'neovim/neovim' : 'vim/vim';
         throw new Error(`'version' input '${v}' is not a format of Git tags in ${repo} repository. It should match to regex /${re}/`);

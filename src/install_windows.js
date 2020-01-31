@@ -15,7 +15,7 @@ async function installVimNightly(token) {
     core.debug('Installing nightly Vim on Windows');
     const vimDir = await vim_1.installNightlyVimOnWindows(token);
     return {
-        executable: path.join(vimDir, 'vim.exe'),
+        executable: 'vim.exe',
         bin: vimDir,
     };
 }
@@ -28,7 +28,7 @@ async function installVim(ver) {
     core.debug(`Installing Vim version '${ver}' on Windows`);
     const vimDir = await vim_1.installVimOnWindowsWithTag(ver);
     return {
-        executable: path.join(vimDir, 'vim.exe'),
+        executable: 'vim.exe',
         bin: vimDir,
     };
 }
@@ -36,7 +36,7 @@ async function installNeovim(ver) {
     core.debug(`Installing Neovim version '${ver}' on Windows`);
     const nvimDir = await neovim_1.downloadNeovim(ver, 'windows');
     return {
-        executable: path.join(nvimDir, 'bin', 'nvim.exe'),
+        executable: 'nvim.exe',
         bin: path.join(nvimDir, 'bin'),
     };
 }
