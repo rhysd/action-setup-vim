@@ -1,5 +1,5 @@
 import { homedir } from 'os';
-import { join } from 'path';
+import * as path from 'path';
 import { strict as assert } from 'assert';
 import { spawnSync } from 'child_process';
 
@@ -8,8 +8,8 @@ function log(...args: any[]) {
     console.log('[post_action_check]:', ...args);
 }
 
-function ok(x: unknown): asserts x {
-    assert.ok(x);
+function ok(x: unknown, m?: string): asserts x {
+    assert.ok(x, m);
 }
 
 interface Args {
@@ -36,12 +36,12 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                     return '/usr/local/bin/nvim';
                 } else {
                     // nightly or specific version
-                    return join(homedir(), 'nvim/bin/nvim');
+                    return path.join(homedir(), 'nvim/bin/nvim');
                 }
             case 'linux':
-                return join(homedir(), 'nvim/bin/nvim');
+                return path.join(homedir(), 'nvim/bin/nvim');
             case 'win32':
-                return join(homedir(), 'nvim/bin/nvim.exe');
+                return path.join(homedir(), 'nvim/bin/nvim.exe');
         }
     } else {
         // vim
@@ -51,17 +51,17 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                     return '/usr/local/bin/vim';
                 } else {
                     // nightly or specific version
-                    return join(homedir(), 'vim/bin/vim');
+                    return path.join(homedir(), 'vim/bin/vim');
                 }
             case 'linux':
                 if (ver === 'stable') {
                     return '/usr/bin/vim';
                 } else {
                     // nightly or specific version
-                    return join(homedir(), 'vim/bin/vim');
+                    return path.join(homedir(), 'vim/bin/vim');
                 }
             case 'win32':
-                return join(homedir(), 'vim/vim.exe');
+                return path.join(homedir(), 'vim/vim.exe');
         }
     }
     throw new Error(`Unexpected platform '${process.platform}'`);
@@ -77,6 +77,13 @@ function main() {
     log('Validating output. Expected executable:', exe);
     assert.equal(exe, args.output);
 
+    const bin = path.dirname(exe);
+    log(`Validating '${bin}' is in $PATH`);
+    ok(process.env.PATH);
+    const pathSep = process.platform === 'win32' ? ';' : ':';
+    const paths = process.env.PATH.split(pathSep);
+    ok(paths.includes(bin), `'${bin}' is not included in '${process.env.PATH}'`);
+
     log('Validating executable');
     const proc = spawnSync(exe, ['-N', '-c', 'quit']);
     assert.equal(proc.status, 0);
@@ -89,7 +96,7 @@ function main() {
     if (args.version !== 'stable' && args.version !== 'nightly') {
         if (args.neovim) {
             const l = `NVIM ${args.version}`;
-            assert.ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
+            ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
         } else {
             const m = args.version.match(/^v(\d+\.\d+)\.(\d+)$/);
             ok(m);
@@ -97,17 +104,17 @@ function main() {
             const patch = m[2];
 
             const l = `VIM - Vi IMproved ${major}`;
-            assert.ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
+            ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
 
             // assert.match is not available since it is experimental
-            assert.ok(
+            ok(
                 stdout.match(new RegExp(`Included patches: .*${patch}`)),
                 `Patch ${patch} should be included in stdout: ${stdout}`,
             );
         }
     } else {
         const editorName = args.neovim ? 'NVIM' : 'VIM - Vi IMproved';
-        assert.ok(stdout.includes(editorName), `Editor name '${editorName}' should be included in stdout: ${stdout}`);
+        ok(stdout.includes(editorName), `Editor name '${editorName}' should be included in stdout: ${stdout}`);
     }
 
     log('OK');
