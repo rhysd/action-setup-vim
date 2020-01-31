@@ -161,19 +161,18 @@ is not available for installing Neovim on Windows.
 ## Using GitHub API token
 
 Only when installing Vim on Windows, this action sends GitHub API request to know the latest assets
-released at [vim-win32-installer][win-inst].
-By default, this action sends the API request without API token. It should be OK in most cases.
-However, when you run this action very frequently, it may run out of API rate limit without API token
-(60/hour).
+released at [vim-win32-installer][win-inst]. By default, this action receives workflow's token. If
+you don't want to pass a token which has some permissions, please make your personal access token
+[from here][generate-pat] with no scope and set it as [a secret][gh-action-secrets] of your
+repository.
 
-To boost the rate limit to 5000/hour, this action supports `github-token` input as follows. If you're
-facing the API rate limit issue, the input would be useful to avoid it. Note that `secrets.GITHUB_TOKEN`
-is automatically prepared so you don't need to set your personal access token to it
+For example, the following is a step when you put your personal access token to
+`PERSONAL_ACCESS_TOKEN` secret.
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
   with:
-    github-token: ${{ secrets.GITHUB_TOKEN }}
+    github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 ```
 
 ## Current limitation
@@ -202,3 +201,5 @@ Distributed under [the MIT license](./LICENSE.txt).
 [vim-themis]: https://github.com/thinca/vim-themis
 [win-inst-release]: https://github.com/vim/vim-win32-installer/releases
 [neovim-release]: https://github.com/neovim/neovim/releases
+[generate-pat]: https://github.com/settings/tokens/new
+[gh-action-secrets]: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets
