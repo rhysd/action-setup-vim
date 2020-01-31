@@ -1,3 +1,13 @@
+<a name="v1.1.3"></a>
+# [v1.1.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.3) - 31 Jan 2020
+
+- **Fix:** `version` input check was not correct for Vim 7.x (e.g. `7.4.100`, `7.4`). [Thanks @itchyny!](https://github.com/rhysd/action-setup-vim/pull/1)
+- **Fix:** Path separator was not correct on Windows
+- **Improve:** Better post-action validation on CI and internal refactoring
+
+[Changes][v1.1.3]
+
+
 <a name="v1.1.2"></a>
 # [v1.1.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.2) - 31 Jan 2020
 
@@ -52,6 +62,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.1.3]: https://github.com/rhysd/action-setup-vim/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/rhysd/action-setup-vim/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/rhysd/action-setup-vim/compare/v1.1.0...v1.1.1
 [v1.1.0]: https://github.com/rhysd/action-setup-vim/compare/v1.0.2...v1.1.0
