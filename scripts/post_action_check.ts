@@ -3,8 +3,7 @@ import * as path from 'path';
 import { strict as assert } from 'assert';
 import { spawnSync } from 'child_process';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function log(...args: any[]) {
+function log(...args: unknown[]) {
     console.log('[post_action_check]:', ...args);
 }
 

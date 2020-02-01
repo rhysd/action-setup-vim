@@ -24,6 +24,6 @@ jobs:
           version: ${{ matrix.version }}
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      - run: npm install -g ts-node typescript
+      - run: npm install -g ts-node typescript @types/node
       - name: Validate action result
-        run: ts-node --project . ./scripts/post_action_check.ts "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
+        run: ts-node ./scripts/post_action_check.ts "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
