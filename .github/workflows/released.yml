@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - 'CHANGELOG.md'
+      - '.github/workflows/released.yml'
 
 jobs:
   validate:
@@ -13,9 +14,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         neovim: [true, false]
+        version: [stable, nightly]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: rhysd/action-setup-vim@v1
+        id: vim
         with:
           neovim: ${{ matrix.neovim }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          version: ${{ matrix.version }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: npm install -g ts-node typescript
+      - name: Validate action result
+        run: ts-node --project . ./scripts/post_action_check.ts "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
