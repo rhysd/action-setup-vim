@@ -37,7 +37,8 @@
         "@typescript-eslint/prefer-for-of": "error",
         "@typescript-eslint/prefer-string-starts-ends-with": "error",
         "@typescript-eslint/prefer-readonly": "error",
-        "@typescript-eslint/no-non-null-asserted-optional-chain": "error"
+        "@typescript-eslint/no-non-null-asserted-optional-chain": "error",
+        "@typescript-eslint/await-thenable": "error"
     },
     "overrides": [
         {
