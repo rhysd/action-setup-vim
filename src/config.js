@@ -45,16 +45,12 @@ function getVersion(neovim) {
 function getNeovim() {
     return getBoolean('neovim', false);
 }
-function getGitHubToken() {
-    return core_1.getInput('github-token') || null;
-}
 function loadConfigFromInputs() {
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),
         neovim,
         os: getOs(),
-        token: getGitHubToken(),
     };
 }
 exports.loadConfigFromInputs = loadConfigFromInputs;

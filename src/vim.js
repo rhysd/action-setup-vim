@@ -15,7 +15,6 @@ const path = __importStar(require("path"));
 const fs_1 = require("fs");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const core = __importStar(require("@actions/core"));
-const rest_1 = __importDefault(require("@octokit/rest"));
 const io = __importStar(require("@actions/io"));
 const shell_1 = require("./shell");
 const utils_1 = require("./utils");
@@ -58,26 +57,34 @@ async function getVimRootDirAt(dir) {
     }
     throw new Error(`Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
 }
-async function detectNightlyAssetUrl(token) {
-    const opts = {};
-    if (token !== null) {
-        opts.auth = token;
+async function detectLatestWindowsReleaseTag() {
+    const url = 'https://github.com/vim/vim-win32-installer/releases/latest';
+    try {
+        const req = await node_fetch_1.default(url, {
+            method: 'HEAD',
+            redirect: 'manual',
+        });
+        if (req.status !== 302) {
+            throw new Error(`Expected status 302 (Redirect) but got ${req.status} (${req.statusText})`);
+        }
+        const location = req.headers.get('location');
+        if (!location) {
+            throw new Error(`'Location' header is not included in a response: ${JSON.stringify(req.headers.raw())}`);
+        }
+        const m = location.match(/\/releases\/tag\/(.+)$/);
+        if (m === null) {
+            throw new Error(`Unexpected redirect to ${location}. Redirected URL is not for release`);
+        }
+        core.debug(`Latest Vim relese tag ${m[1]} was extracted from redirect`);
+        return m[1];
     }
-    const client = new rest_1.default(opts);
-    const release = await client.repos.getLatestRelease({
-        owner: 'vim',
-        repo: 'vim-win32-installer',
-    });
-    const asset = release.data.assets.find(asset => asset.name.endsWith('_x64.zip'));
-    if (!asset) {
-        throw new Error(`Could not get installer asset in releases of vim/vim-win32-installer: ${JSON.stringify(release.data.assets, null, 2)}`);
+    catch (err) {
+        core.error(err.message);
+        core.debug(err.stack);
+        throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
     }
-    core.debug(`Found installer asset: ${JSON.stringify(asset, null, 2)}`);
-    return {
-        file: asset.name,
-        url: asset.browser_download_url,
-    };
 }
+exports.detectLatestWindowsReleaseTag = detectLatestWindowsReleaseTag;
 async function installVimAssetOnWindows(file, url) {
     const tmpdir = await utils_1.makeTmpdir();
     const dlDir = path.join(tmpdir, 'vim-installer');
@@ -106,17 +113,17 @@ async function installVimAssetOnWindows(file, url) {
     core.debug(`Vim was installed to ${destDir}`);
     return destDir;
 }
-async function installNightlyVimOnWindows(token) {
-    const { file, url } = await detectNightlyAssetUrl(token);
-    return installVimAssetOnWindows(file, url);
-}
-exports.installNightlyVimOnWindows = installNightlyVimOnWindows;
-async function installVimOnWindowsWithTag(tag) {
+async function installVimOnWindows(tag) {
     const ver = tag.slice(1); // Strip 'v' prefix
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
     return installVimAssetOnWindows(file, url);
 }
-exports.installVimOnWindowsWithTag = installVimOnWindowsWithTag;
+exports.installVimOnWindows = installVimOnWindows;
+async function installNightlyVimOnWindows() {
+    const latestTag = await detectLatestWindowsReleaseTag();
+    return installVimOnWindows(latestTag);
+}
+exports.installNightlyVimOnWindows = installNightlyVimOnWindows;
 //# sourceMappingURL=vim.js.map
