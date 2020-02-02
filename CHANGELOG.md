@@ -1,3 +1,12 @@
+<a name="v1.2.0"></a>
+# [v1.2.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.0) - 02 Feb 2020
+
+- **Improve:** `github-token` input was removed since it is no longer necessary. This is not a breaking change since `github-token` input is now simply ignored.
+  - GitHub API token was used only for getting the latest release of vim-win32-installer repository on Windows. But now the latest release is detected from redirect URL.
+
+[Changes][v1.2.0]
+
+
 <a name="v1.1.3"></a>
 # [v1.1.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.3) - 31 Jan 2020
 
@@ -62,6 +71,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.0]: https://github.com/rhysd/action-setup-vim/compare/v1.1.3...v1.2.0
 [v1.1.3]: https://github.com/rhysd/action-setup-vim/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/rhysd/action-setup-vim/compare/v1.1.1...v1.1.2
 [v1.1.1]: https://github.com/rhysd/action-setup-vim/compare/v1.1.0...v1.1.1
