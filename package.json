@@ -37,8 +37,8 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^13.5.1",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.0",
     "@types/node-fetch": "^2.5.4",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
