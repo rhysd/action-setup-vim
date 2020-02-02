@@ -7,11 +7,14 @@ branding:
 
 inputs:
   version:
-    description: "Version of Vim or Neovim to install. Valid values are 'stable', 'nightly' or version tag such as 'v8.2.0126'"
+    description: >
+      Version of Vim or Neovim to install. Valid values are 'stable', 'nightly' or version tag such
+      as 'v8.2.0126'. Note that this value must exactly match to a tag name when installing the
+      specific version.
     required: false
     default: 'stable'
   neovim:
-    description: 'Setting to true will install Neovim'
+    description: 'Setting to true will install Neovim.'
     required: false
     default: false
 

@@ -99,7 +99,7 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 ### Vim
 
-`vX.Y.Z` represents a specific version such as `v8.2.0100`.
+`vX.Y.Z` represents a specific version such as `v8.2.0126`.
 
 | OS      | Version   | Installation                                                                       |
 |---------|-----------|------------------------------------------------------------------------------------|
@@ -149,6 +149,9 @@ If Vim is built from source, any tag version should be available.
 If Vim is installed via release asset (on Windows), please check
 [vim-win32-installer releases page][win-inst-release] to know which versions are available.
 The repository makes a release once per day (nightly).
+
+Note that Vim's patch number in version tags is in 4-digits like `v8.2.0126`. Omitting leading
+zeros such as `v8.2.126` or `v8.2.1` is not allowed.
 
 ### Neovim
 
