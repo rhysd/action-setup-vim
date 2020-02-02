@@ -116,7 +116,7 @@ async function installVimAssetOnWindows(file: string, url: string) {
     return destDir;
 }
 
-export async function installVimOnWindowsWithTag(tag: string): Promise<string> {
+export async function installVimOnWindows(tag: string): Promise<string> {
     const ver = tag.slice(1); // Strip 'v' prefix
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
@@ -126,5 +126,5 @@ export async function installVimOnWindowsWithTag(tag: string): Promise<string> {
 
 export async function installNightlyVimOnWindows(): Promise<string> {
     const latestTag = await detectLatestWindowsReleaseTag();
-    return installVimOnWindowsWithTag(latestTag);
+    return installVimOnWindows(latestTag);
 }

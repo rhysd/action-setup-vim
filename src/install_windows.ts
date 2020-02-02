@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
 import { Config } from './config';
-import { installNightlyVimOnWindows, installVimOnWindowsWithTag } from './vim';
+import { installNightlyVimOnWindows, installVimOnWindows } from './vim';
 import { downloadNeovim } from './neovim';
 
 async function installVimNightly(): Promise<Installed> {
@@ -22,7 +22,7 @@ function installVimStable(): Promise<Installed> {
 
 async function installVim(ver: string): Promise<Installed> {
     core.debug(`Installing Vim version '${ver}' on Windows`);
-    const vimDir = await installVimOnWindowsWithTag(ver);
+    const vimDir = await installVimOnWindows(ver);
     return {
         executable: 'vim.exe',
         bin: vimDir,
