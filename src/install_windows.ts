@@ -5,19 +5,19 @@ import { Config } from './config';
 import { installNightlyVimOnWindows, installVimOnWindowsWithTag } from './vim';
 import { downloadNeovim } from './neovim';
 
-async function installVimNightly(token: string | null): Promise<Installed> {
+async function installVimNightly(): Promise<Installed> {
     core.debug('Installing nightly Vim on Windows');
-    const vimDir = await installNightlyVimOnWindows(token);
+    const vimDir = await installNightlyVimOnWindows();
     return {
         executable: 'vim.exe',
         bin: vimDir,
     };
 }
 
-function installVimStable(token: string | null): Promise<Installed> {
+function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Windows');
     core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
-    return installVimNightly(token);
+    return installVimNightly();
 }
 
 async function installVim(ver: string): Promise<Installed> {
@@ -49,12 +49,11 @@ export function install(config: Config): Promise<Installed> {
                 return installNeovim(config.version);
         }
     } else {
-        const { token } = config;
         switch (config.version) {
             case 'stable':
-                return installVimStable(token);
+                return installVimStable();
             case 'nightly':
-                return installVimNightly(token);
+                return installVimNightly();
             default:
                 return installVim(config.version);
         }
