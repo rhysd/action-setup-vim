@@ -158,23 +158,6 @@ versions have release assets. For example,
 [Neovim 0.4.0](https://github.com/neovim/neovim/releases/tag/v0.4.0) has no Windows releases so it
 is not available for installing Neovim on Windows.
 
-## Using GitHub API token
-
-Only when installing Vim on Windows, this action sends GitHub API request to know the latest assets
-released at [vim-win32-installer][win-inst]. By default, this action receives workflow's token. If
-you don't want to pass a token which has some permissions, please make your personal access token
-[from here][generate-pat] with no scope and set it as [a secret][gh-action-secrets] of your
-repository.
-
-For example, the following is a step when you put your personal access token to
-`PERSONAL_ACCESS_TOKEN` secret.
-
-```yaml
-- uses: rhysd/action-setup-vim@v1
-  with:
-    github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-```
-
 ## Current limitation
 
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.

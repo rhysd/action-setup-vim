@@ -6,7 +6,6 @@ export interface Config {
     readonly version: string;
     readonly neovim: boolean;
     readonly os: Os;
-    readonly token: string | null;
 }
 
 function getBoolean(input: string, def: boolean): boolean {
@@ -62,16 +61,11 @@ function getNeovim(): boolean {
     return getBoolean('neovim', false);
 }
 
-function getGitHubToken(): string | null {
-    return getInput('github-token') || null;
-}
-
 export function loadConfigFromInputs(): Config {
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),
         neovim,
         os: getOs(),
-        token: getGitHubToken(),
     };
 }

@@ -14,9 +14,6 @@ inputs:
     description: 'Setting to true will install Neovim'
     required: false
     default: false
-  github-token:
-    description: 'Optional GitHub API token to get the latest Vim release via GitHub API. Necessary for Windows'
-    default: ${{ github.token }}
 
 outputs:
   executable:

@@ -28,9 +28,12 @@
     "src/utils.ts",
     "src/install.ts",
     "src/install_linux.ts",
+    "src/install_macos.ts",
+    "src/install_windows.ts",
     "src/index.ts",
     "test/config.ts",
     "test/validate.ts",
+    "test/vim.ts",
     "scripts/post_action_check.ts"
   ]
 }

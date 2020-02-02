@@ -24,20 +24,17 @@ describe('loadConfigFromInputs()', function() {
         A.equal(c.version, 'stable');
         A.equal(c.neovim, false);
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
-        A.equal(c.token, null);
     });
 
     it('returns validated configurations with user inputs', function() {
         setInputs({
             version: 'nightly',
             neovim: 'true',
-            'github-token': 'this is token',
         });
         const c = loadConfigFromInputs();
         A.equal(c.version, 'nightly');
         A.equal(c.neovim, true);
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
-        A.equal(c.token, 'this is token');
     });
 
     const specificVersions: Array<{
