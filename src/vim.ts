@@ -52,7 +52,7 @@ async function getVimRootDirAt(dir: string): Promise<string> {
     );
 }
 
-async function detectLatestWindowsReleaseTag(): Promise<string> {
+export async function detectLatestWindowsReleaseTag(): Promise<string> {
     const url = 'https://github.com/vim/vim-win32-installer/releases/latest';
     try {
         const req = await fetch(url, {
