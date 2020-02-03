@@ -7,8 +7,9 @@ if [[ "$#" != 1 ]] && [[ "$#" != 2 ]] || [[ "$1" == '--help' ]]; then
     echo 'Usage: prepare-release.sh {release-version} [--done]' >&2
     echo '' >&2
     echo "  Release version must be in format 'v{major}.{minor}.{patch}'." >&2
-    echo "  After making changes, add --done option and run this script again. It will" >&2
-    echo "  push generated tags to remote for release." >&2
+    echo '  After making changes, add --done option and run this script again. It will' >&2
+    echo '  push generated tags to remote for release.' >&2
+    echo '  Note that --done must be the second argument.' >&2
     echo '' >&2
     exit 1
 fi
@@ -48,6 +49,7 @@ current_branch="$(git symbolic-ref --short HEAD)"
 
 # Deploy release branch
 if [[ "$#" == 2 ]] && [[ "$2" == "--done" ]]; then
+    echo "Deploying ${target_branch} branch and ${version}, ${minor_version}, ${major_version} tags to 'origin' remote"
     if [[ "$current_branch" != "${target_branch}" ]]; then
         echo "--done must be run in target branch '${target_branch}' but actually run in '${current_branch}'" >&2
         exit 1
