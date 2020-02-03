@@ -2,3 +2,4 @@
 /test/*.js
 /scripts/*.js
 /node_modules/.bin
+/prepare-release.sh
