@@ -41,6 +41,8 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                 return path.join(homedir(), 'nvim/bin/nvim');
             case 'win32':
                 return path.join(homedir(), 'nvim/bin/nvim.exe');
+            default:
+                break;
         }
     } else {
         // vim
@@ -61,6 +63,8 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                 }
             case 'win32':
                 return path.join(homedir(), 'vim/vim.exe');
+            default:
+                break;
         }
     }
     throw new Error(`Unexpected platform '${process.platform}'`);
