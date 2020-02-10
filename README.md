@@ -14,6 +14,18 @@ official releases. If unavailable, it builds executables from source.
 
 For details of installation, please read the following 'Installation details' section.
 
+## Why?
+
+Since preparing Vim editor is highly depending on a platform. On Linux, Vim is usually installed via
+system's package manager like `apt`. On macOS, MacVim is the most popular Vim distribution and
+usually installed via Homebrew. On Windows, [official installers][win-inst] are provided.
+
+Neovim provides releases [on GitHub][neovim-release] and system package managers.
+
+If you're a Vim and/or Neovim plugin author and your plugin has some tests, you'd like to run them
+across platforms both on Vim and Neovim (if it supports both). action-setup-vim will help you with
+only one step. You don't need to separate workflow jobs for each platforms and Vim/Neovim.
+
 ## Usage
 
 Install the latest stable Vim
