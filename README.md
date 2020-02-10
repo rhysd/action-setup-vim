@@ -22,9 +22,9 @@ usually installed via Homebrew. On Windows, [official installers][win-inst] are 
 
 Neovim provides releases [on GitHub][neovim-release] and system package managers.
 
-If you're a Vim and/or Neovim plugin author and your plugin has some tests, you'd like to run them
-across platforms both on Vim and Neovim (if it supports both). action-setup-vim will help you with
-only one step. You don't need to separate workflow jobs for each platforms and Vim/Neovim.
+If you're an author of Vim and/or Neovim plugin and your plugin has some tests, you'd like to run
+them across platforms on Vim and/or Neovim. action-setup-vim will help installation with only one
+step. You don't need to separate workflow jobs for each platforms and Vim/Neovim.
 
 ## Usage
 
