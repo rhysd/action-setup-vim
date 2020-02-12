@@ -59,6 +59,7 @@
                 "@typescript-eslint/camelcase": "off",
                 "mocha/no-setup-in-describe": "off",
                 "mocha/no-hooks-for-single-case": "off",
+                "mocha/max-top-level-suites": "off",
                 "mocha/no-exclusive-tests": "error"
             }
         }

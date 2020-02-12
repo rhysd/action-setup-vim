@@ -39,7 +39,7 @@ async function unarchiveAsset(asset: string, os: Os): Promise<string> {
         await exec('unzip', [asset], { cwd: dir });
         return path.join(dir, assetDirName(os));
     } else {
-        throw new Error(`FATAL: Don't know how to unarchive ${asset}`);
+        throw new Error(`FATAL: Don't know how to unarchive ${asset} on ${os}`);
     }
 }
 

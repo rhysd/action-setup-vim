@@ -34,6 +34,7 @@
     "test/config.ts",
     "test/validate.ts",
     "test/vim.ts",
+    "test/neovim.ts",
     "scripts/post_action_check.ts"
   ]
 }
