@@ -1,6 +1,6 @@
 name: 'Setup Vim'
 author: 'rhysd <https://rhysd.github.io>'
-description: 'Setup Vim or Neovim text editor on GitHub Action'
+description: 'Setup Vim or Neovim text editors on GitHub Actions'
 branding:
   icon: 'edit'
   color: 'green'

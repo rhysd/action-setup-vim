@@ -3,16 +3,18 @@ GitHub Action to setup Vim and Neovim
 [![Build status][ci-badge]][ci]
 [![Action Marketplace][release-badge]][marketplace]
 
-[action-setup-vim][proj] is a [GitHub Action][github-action] to setup [Vim][vim] or [Neovim][neovim]
-on Linux, macOS and Windows. Both stable releases and nightly releases are supported.
+[action-setup-vim][proj] is an action for [GitHub Actions][github-actions] to setup [Vim][vim] or
+[Neovim][neovim] on Linux, macOS and Windows. Stable releases, nightly releases and specifying
+versions are supported.
 
-For stable release, this action will install Vim or Neovim from package manager or official releases
-since it is faster than building from source.
+For stable releases, this action will install Vim or Neovim from system's package manager or
+official releases since it is the most popular way to install them and it's faster than building
+from source.
 
 For nightly release, this action basically installs the nightly release of Vim or Neovim from
-official releases. If unavailable, it builds executables from source.
+official releases. If unavailable, it builds executables from sources.
 
-For details of installation, please read the following 'Installation details' section.
+For more details, please read the following 'Installation details' section.
 
 ## Why?
 
@@ -23,8 +25,8 @@ usually installed via Homebrew. On Windows, [official installers][win-inst] are 
 Neovim provides releases [on GitHub][neovim-release] and system package managers.
 
 If you're an author of Vim and/or Neovim plugin and your plugin has some tests, you'd like to run
-them across platforms on Vim and/or Neovim. action-setup-vim will help installation with only one
-step. You don't need to separate workflow jobs for each platforms and Vim/Neovim.
+them across platforms on Vim and/or Neovim. action-setup-vim will help the installation with only
+one step. You don't need to separate workflow jobs for each platforms and Vim/Neovim.
 
 ## Usage
 
@@ -186,7 +188,7 @@ Distributed under [the MIT license](./LICENSE.txt).
 [release-badge]: https://img.shields.io/github/v/release/rhysd/action-setup-vim.svg
 [marketplace]: https://github.com/marketplace/actions/setup-vim
 [proj]: https://github.com/rhysd/action-setup-vim
-[github-action]: https://github.com/features/actions
+[github-actions]: https://github.com/features/actions
 [vim]: https://github.com/vim/vim
 [neovim]: https://github.com/neovim/neovim
 [win-inst]: https://github.com/vim/vim-win32-installer
