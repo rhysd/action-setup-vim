@@ -27,8 +27,22 @@ describe('validateInstallation()', function() {
         await A.rejects(() => validateInstallation(installed), /is not a directory for executable/);
     });
 
-    it('throws an error when running executable failed', async function() {
-        const installed = { ...getFakedInstallation(), executable: __filename };
+    it("throws an error when 'executable' file does not exist in 'bin' directory", async function() {
+        const installed = { bin: __dirname, executable: 'this-file-does-not-exist-probably' };
+        await A.rejects(() => validateInstallation(installed), /Could not access the installed executable/);
+    });
+
+    it("throws an error when file specified with 'executable' is actually not executable", async function() {
+        // This file exists but not executable
+        const installed = { executable: path.basename(__filename), bin: __dirname };
+        await A.rejects(() => validateInstallation(installed), /Could not access the installed executable/);
+    });
+
+    it('throws an error when getting version from executable failed', async function() {
+        // prepare-release.sh exists and executable but does not support --version option
+        const bin = path.join(path.dirname(__dirname), 'scripts');
+        const executable = 'prepare-release.sh';
+        const installed = { executable, bin };
         await A.rejects(() => validateInstallation(installed), /Could not get version from executable/);
     });
 });

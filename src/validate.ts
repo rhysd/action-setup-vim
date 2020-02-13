@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import { promises as fs, constants as fsconsts } from 'fs';
 import { join } from 'path';
 import * as core from '@actions/core';
 import { Installed } from './install';
@@ -16,6 +16,13 @@ export async function validateInstallation(installed: Installed) {
     core.debug(`Installed directory '${installed.bin}' was validated`);
 
     const fullPath = join(installed.bin, installed.executable);
+
+    try {
+        await fs.access(fullPath, fsconsts.X_OK);
+    } catch (err) {
+        throw new Error(`Validation failed! Could not access the installed executable '${fullPath}': ${err.message}`);
+    }
+
     try {
         const ver = await exec(fullPath, ['--version']);
         console.log(`Installed version:\n${ver}`);
