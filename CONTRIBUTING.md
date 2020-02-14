@@ -22,12 +22,11 @@ with [post_action_check.ts](./scripts/post_action_check.ts).
 When releasing v1.2.3:
 
 1. Run `$ bash scripts/prepare-release.sh v1.2.3`. It builds everything and prunes `node_modules`
-   for removing all dev-dependencies. Then it copies built artifacts to `dev/v1` branch and makes a new commit.
-   Finally it rearrange `v1` and `v1.2` tags to point the new commit.
+   for removing all dev-dependencies. Then it copies built artifacts to `dev/v1` branch and makes
+   a new commit and tag `v1.2.3`. Finally it rearrange `v1` and `v1.2` tags to point the new commit.
 2. Check changes in the created commit with `git show`.
-3. If ok, push a new commit with `git push origin dev/v1` and push tags with `git push --force --tags`.
-   Or push tags with `git push --force origin v1 && git push --force origin v1.2 && git push origin v1.2.3`
-   more safely.
+3. If ok, run `$ bash ./prepare-release.sh v1.2.3 --done` to apply the release to the remote. The
+   script will push the branch and the new tag, then force-push the existing tags.
 
 ## Post release check
 
