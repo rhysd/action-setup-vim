@@ -1,3 +1,11 @@
+<a name="v1.2.1"></a>
+# [v1.2.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.1) - 15 Feb 2020
+
+- **Improve:** Validate the executable file before getting `--version` output
+
+[Changes][v1.2.1]
+
+
 <a name="v1.2.0"></a>
 # [v1.2.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.0) - 02 Feb 2020
 
@@ -71,6 +79,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.1]: https://github.com/rhysd/action-setup-vim/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/rhysd/action-setup-vim/compare/v1.1.3...v1.2.0
 [v1.1.3]: https://github.com/rhysd/action-setup-vim/compare/v1.1.2...v1.1.3
 [v1.1.2]: https://github.com/rhysd/action-setup-vim/compare/v1.1.1...v1.1.2
