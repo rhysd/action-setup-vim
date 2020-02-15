@@ -178,6 +178,12 @@ is not available for installing Neovim on Windows.
 ## Current limitation
 
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.
+- Building Vim is not configurale. For example, arguments cannot be passed to `./configure`.
+- Installing Vim/Neovim from system's package manager is not configurable. For example, arguments cannot be passed to `brew install`.
+- Cannot build Neovim from sources in favor of [neovim releases][neovim-release].
+
+These are basically not a technical limitation. Please let me know by creating an issue if you want
+some of them.
 
 ## License
 
