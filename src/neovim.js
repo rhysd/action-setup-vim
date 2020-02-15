@@ -49,7 +49,7 @@ async function unarchiveAsset(asset, os) {
         return path.join(dir, assetDirName(os));
     }
     else {
-        throw new Error(`FATAL: Don't know how to unarchive ${asset}`);
+        throw new Error(`FATAL: Don't know how to unarchive ${asset} on ${os}`);
     }
 }
 // version = 'stable' or 'nightly' or version string

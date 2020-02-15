@@ -24,6 +24,12 @@ async function validateInstallation(installed) {
     core.debug(`Installed directory '${installed.bin}' was validated`);
     const fullPath = path_1.join(installed.bin, installed.executable);
     try {
+        await fs_1.promises.access(fullPath, fs_1.constants.X_OK);
+    }
+    catch (err) {
+        throw new Error(`Validation failed! Could not access the installed executable '${fullPath}': ${err.message}`);
+    }
+    try {
         const ver = await shell_1.exec(fullPath, ['--version']);
         console.log(`Installed version:\n${ver}`);
     }
