@@ -58,8 +58,8 @@ if [[ "$#" == 2 ]] && [[ "$2" == "--done" ]]; then
     set -x
     git push origin "${target_branch}"
     git push origin "${version}"
-    git push origin "${minor_version}" --force-with-lease
-    git push origin "${major_version}" --force-with-lease
+    git push origin "${minor_version}" --force
+    git push origin "${major_version}" --force
     # Remove copied prepare-release.sh in target branch
     rm -rf ./prepare-release.sh
     set +x
