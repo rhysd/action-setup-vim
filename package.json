@@ -12,7 +12,8 @@
     "lint": "eslint --max-warnings 0 ./**/*.ts",
     "fix": "eslint --fix './**/*.ts'",
     "mocha": "mocha ./test",
-    "test": "npm-run-all build mocha"
+    "test": "npm-run-all build mocha",
+    "cov": "nyc --reporter=lcov --reporter=text-summary npm test && open ./coverage/lcov-report/index.html"
   },
   "repository": {
     "type": "git",
@@ -34,7 +35,8 @@
     "@actions/core": "^1.2.2",
     "@actions/exec": "^1.0.3",
     "@actions/io": "^1.0.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "nyc": "^15.0.0"
   },
   "devDependencies": {
     "@types/mocha": "^7.0.1",
