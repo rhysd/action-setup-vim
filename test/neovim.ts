@@ -11,14 +11,14 @@ describe('downloadNeovim()', function() {
     context('with mocking fetch()', function() {
         let downloadNeovim: (tag: string, os: string) => Promise<unknown>;
 
-        before(() => {
+        before(function() {
             mock('node-fetch', async (url: string) =>
                 Promise.resolve(new Response(`dummy response for ${url}`, { status: 404, statusText: 'Not found' })),
             );
             downloadNeovim = mock.reRequire('../src/neovim').downloadNeovim;
         });
 
-        after(() => {
+        after(function() {
             mock.stop('../src/neovim');
         });
 

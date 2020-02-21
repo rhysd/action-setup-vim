@@ -20,11 +20,11 @@ describe('detectLatestWindowsReleaseTag()', function() {
     context('with mocking fetch()', function() {
         let detectLatestWindowsReleaseTagMocked: typeof detectLatestWindowsReleaseTag;
 
-        before(() => {
+        before(function() {
             detectLatestWindowsReleaseTagMocked = mockFetch().detectLatestWindowsReleaseTag;
         });
 
-        after(() => {
+        after(function() {
             mock.stop('../src/vim');
         });
 
@@ -45,11 +45,11 @@ describe('installVimOnWindows()', function() {
     context('with mocking fetch()', function() {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
 
-        before(() => {
+        before(function() {
             installVimOnWindowsMocked = mockFetch().installVimOnWindows;
         });
 
-        after(() => {
+        after(function() {
             mock.stop('../src/vim');
         });
 
