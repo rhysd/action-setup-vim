@@ -55,18 +55,18 @@ async function getVimRootDirAt(dir: string): Promise<string> {
 export async function detectLatestWindowsReleaseTag(): Promise<string> {
     const url = 'https://github.com/vim/vim-win32-installer/releases/latest';
     try {
-        const req = await fetch(url, {
+        const res = await fetch(url, {
             method: 'HEAD',
             redirect: 'manual',
         });
 
-        if (req.status !== 302) {
-            throw new Error(`Expected status 302 (Redirect) but got ${req.status} (${req.statusText})`);
+        if (res.status !== 302) {
+            throw new Error(`Expected status 302 (Redirect) but got ${res.status} (${res.statusText})`);
         }
 
-        const location = req.headers.get('location');
+        const location = res.headers.get('location');
         if (!location) {
-            throw new Error(`'Location' header is not included in a response: ${JSON.stringify(req.headers.raw())}`);
+            throw new Error(`'Location' header is not included in a response: ${JSON.stringify(res.headers.raw())}`);
         }
 
         const m = location.match(/\/releases\/tag\/(.+)$/);
