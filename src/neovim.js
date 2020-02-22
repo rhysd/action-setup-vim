@@ -77,7 +77,11 @@ async function downloadNeovim(version, os) {
     }
     catch (err) {
         core.debug(err.stack);
-        throw new Error(`Could not download Neovim release from ${url}: ${err.message}`);
+        let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
+        if (version === 'nightly') {
+            msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
+        }
+        throw new Error(msg);
     }
 }
 exports.downloadNeovim = downloadNeovim;
