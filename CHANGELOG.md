@@ -1,3 +1,11 @@
+<a name="v1.2.2"></a>
+# [v1.2.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.2) - 22 Feb 2020
+
+- **Improve:** Better error message when no asset is found on installing Neovim
+
+[Changes][v1.2.2]
+
+
 <a name="v1.2.1"></a>
 # [v1.2.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.1) - 15 Feb 2020
 
@@ -79,6 +87,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.2]: https://github.com/rhysd/action-setup-vim/compare/v1.2.1...v1.2.2
 [v1.2.1]: https://github.com/rhysd/action-setup-vim/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/rhysd/action-setup-vim/compare/v1.1.3...v1.2.0
 [v1.1.3]: https://github.com/rhysd/action-setup-vim/compare/v1.1.2...v1.1.3
