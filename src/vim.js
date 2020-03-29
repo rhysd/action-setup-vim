@@ -21,7 +21,7 @@ const utils_1 = require("./utils");
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
 async function buildVim(version) {
     const installDir = path.join(os_1.homedir(), 'vim');
-    core.debug(`Building and installing Vim to ${installDir} (version=${(version !== null && version !== void 0 ? version : 'HEAD')})`);
+    core.debug(`Building and installing Vim to ${installDir} (version=${version !== null && version !== void 0 ? version : 'HEAD'})`);
     const dir = path.join(await utils_1.makeTmpdir(), 'vim');
     const args = ['clone', '--depth=1', '--single-branch'];
     if (version === null) {

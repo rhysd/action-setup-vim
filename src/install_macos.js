@@ -21,7 +21,7 @@ async function installVimStable() {
     };
 }
 async function installVim(ver) {
-    core.debug(`Installing Vim version '${(ver !== null && ver !== void 0 ? ver : 'HEAD')}' on macOS`);
+    core.debug(`Installing Vim version '${ver !== null && ver !== void 0 ? ver : 'HEAD'}' on macOS`);
     const vimDir = await vim_1.buildVim(ver);
     return {
         executable: 'vim',

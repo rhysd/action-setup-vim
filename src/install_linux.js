@@ -14,6 +14,7 @@ const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
 async function installVimStable() {
     core.debug('Installing stable Vim on Linux');
+    await shell_1.exec('sudo', ['apt', 'update', '-y']);
     await shell_1.exec('sudo', ['apt', 'install', '-y', 'vim-gnome']);
     return {
         executable: 'vim',
@@ -21,7 +22,7 @@ async function installVimStable() {
     };
 }
 async function installVim(ver) {
-    core.debug(`Installing Vim version '${(ver !== null && ver !== void 0 ? ver : 'HEAD')}' on Linux`);
+    core.debug(`Installing Vim version '${ver !== null && ver !== void 0 ? ver : 'HEAD'}' on Linux`);
     const vimDir = await vim_1.buildVim(ver);
     return {
         executable: 'vim',
