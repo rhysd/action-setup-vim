@@ -10,25 +10,25 @@ function mockFetch(): typeof import('../src/vim') {
     return mock.reRequire('../src/vim');
 }
 
-describe('detectLatestWindowsReleaseTag()', function() {
-    it('detects the latest release from redirect URL', async function() {
+describe('detectLatestWindowsReleaseTag()', function () {
+    it('detects the latest release from redirect URL', async function () {
         const tag = await detectLatestWindowsReleaseTag();
         const re = /^v\d+\.\d+\.\d{4}$/;
         A.ok(re.test(tag), `'${tag}' did not match to ${re}`);
     });
 
-    context('with mocking fetch()', function() {
+    context('with mocking fetch()', function () {
         let detectLatestWindowsReleaseTagMocked: typeof detectLatestWindowsReleaseTag;
 
-        before(function() {
+        before(function () {
             detectLatestWindowsReleaseTagMocked = mockFetch().detectLatestWindowsReleaseTag;
         });
 
-        after(function() {
+        after(function () {
             mock.stop('../src/vim');
         });
 
-        it('throws an error when response is other than 302', async function() {
+        it('throws an error when response is other than 302', async function () {
             await A.rejects(
                 () => detectLatestWindowsReleaseTagMocked(),
                 /Expected status 302 \(Redirect\) but got 404/,
@@ -37,23 +37,23 @@ describe('detectLatestWindowsReleaseTag()', function() {
     });
 });
 
-describe('installVimOnWindows()', function() {
-    it('throws an error when the specified version does not exist', async function() {
+describe('installVimOnWindows()', function () {
+    it('throws an error when the specified version does not exist', async function () {
         await A.rejects(() => installVimOnWindows('v0.1.2'), /^Error: Could not download and unarchive asset/);
     });
 
-    context('with mocking fetch()', function() {
+    context('with mocking fetch()', function () {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
 
-        before(function() {
+        before(function () {
             installVimOnWindowsMocked = mockFetch().installVimOnWindows;
         });
 
-        after(function() {
+        after(function () {
             mock.stop('../src/vim');
         });
 
-        it('throws an error when receiving unsuccessful response', async function() {
+        it('throws an error when receiving unsuccessful response', async function () {
             await A.rejects(
                 () => installVimOnWindowsMocked('nightly'),
                 /Downloading asset failed: Not found for dummy/,

@@ -3,26 +3,26 @@ import mock = require('mock-require');
 import { Response } from 'node-fetch';
 import { downloadNeovim } from '../src/neovim';
 
-describe('downloadNeovim()', function() {
-    it('throws an error when release asset not found', async function() {
+describe('downloadNeovim()', function () {
+    it('throws an error when release asset not found', async function () {
         await A.rejects(() => downloadNeovim('v0.4.999', 'linux'), /Downloading asset failed/);
     });
 
-    context('with mocking fetch()', function() {
+    context('with mocking fetch()', function () {
         let downloadNeovim: (tag: string, os: string) => Promise<unknown>;
 
-        before(function() {
+        before(function () {
             mock('node-fetch', async (url: string) =>
                 Promise.resolve(new Response(`dummy response for ${url}`, { status: 404, statusText: 'Not found' })),
             );
             downloadNeovim = mock.reRequire('../src/neovim').downloadNeovim;
         });
 
-        after(function() {
+        after(function () {
             mock.stop('../src/neovim');
         });
 
-        it('throws an error when receiving unsuccessful response', async function() {
+        it('throws an error when receiving unsuccessful response', async function () {
             try {
                 const ret = await downloadNeovim('nightly', 'linux');
                 A.ok(false, `Exception was not thrown: ${ret}`);

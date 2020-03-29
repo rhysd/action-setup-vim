@@ -8,25 +8,25 @@ function setInputs(inputs: { [k: string]: string }) {
     }
 }
 
-describe('loadConfigFromInputs()', function() {
+describe('loadConfigFromInputs()', function () {
     let savedEnv: { [k: string]: string | undefined };
 
-    before(function() {
+    before(function () {
         savedEnv = { ...process.env };
     });
 
-    afterEach(function() {
+    afterEach(function () {
         process.env = { ...savedEnv };
     });
 
-    it('returns default configurations with no input', function() {
+    it('returns default configurations with no input', function () {
         const c = loadConfigFromInputs();
         A.equal(c.version, 'stable');
         A.equal(c.neovim, false);
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
     });
 
-    it('returns validated configurations with user inputs', function() {
+    it('returns validated configurations with user inputs', function () {
         setInputs({
             version: 'nightly',
             neovim: 'true',
@@ -77,7 +77,7 @@ describe('loadConfigFromInputs()', function() {
 
     for (const t of specificVersions) {
         const editor = t.neovim ? 'Neovim' : 'Vim';
-        it(`verifies correct ${editor} version ${t.version}`, function() {
+        it(`verifies correct ${editor} version ${t.version}`, function () {
             setInputs({
                 version: t.version,
                 neovim: t.neovim.toString(),
@@ -170,7 +170,7 @@ describe('loadConfigFromInputs()', function() {
     ];
 
     for (const t of errorCases) {
-        it(`causes an error on ${t.what}`, function() {
+        it(`causes an error on ${t.what}`, function () {
             setInputs(t.inputs);
             A.throws(loadConfigFromInputs, t.expected);
         });
