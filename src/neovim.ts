@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { makeTmpdir } from './utils';
-import { Os } from './config';
+import type { Os } from './config';
 import { exec } from './shell';
 
 function assetFileName(os: Os) {

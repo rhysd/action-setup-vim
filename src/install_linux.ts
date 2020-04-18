@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as core from '@actions/core';
-import { Installed } from './install';
-import { Config } from './config';
+import type { Installed } from './install';
+import type { Config } from './config';
 import { exec } from './shell';
 import { buildVim } from './vim';
 import { downloadNeovim } from './neovim';

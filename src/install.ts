@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { Config } from './config';
+import type { Config } from './config';
 import { install as installOnLinux } from './install_linux';
 import { install as installOnMacOs } from './install_macos';
 import { install as installOnWindows } from './install_windows';

@@ -1,7 +1,7 @@
 import { promises as fs, constants as fsconsts } from 'fs';
 import { join } from 'path';
 import * as core from '@actions/core';
-import { Installed } from './install';
+import type { Installed } from './install';
 import { exec } from './shell';
 
 export async function validateInstallation(installed: Installed) {
