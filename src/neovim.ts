@@ -13,9 +13,9 @@ function assetFileName(os: Os) {
         case 'macos':
             return 'nvim-macos.tar.gz';
         case 'linux':
-            return `nvim-linux64.tar.gz`;
+            return 'nvim-linux64.tar.gz';
         case 'windows':
-            return `nvim-win64.zip`;
+            return 'nvim-win64.zip';
     }
 }
 
