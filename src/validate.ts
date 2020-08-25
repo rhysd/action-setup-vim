@@ -4,7 +4,7 @@ import * as core from '@actions/core';
 import type { Installed } from './install';
 import { exec } from './shell';
 
-export async function validateInstallation(installed: Installed) {
+export async function validateInstallation(installed: Installed): Promise<void> {
     try {
         const s = await fs.stat(installed.bin);
         if (!s.isDirectory()) {
