@@ -1,4 +1,4 @@
-import { exec as execCommand } from '@actions/exec';
+import { exec as origExec } from '@actions/exec';
 
 interface Options {
     readonly cwd?: string;
@@ -42,7 +42,7 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
         ignoreReturnCode: true, // Check exit status by myself for better error message
     };
 
-    const code = await execCommand(cmd, args, execOpts);
+    const code = await origExec(cmd, args, execOpts);
 
     if (code === 0) {
         return res.stdout;

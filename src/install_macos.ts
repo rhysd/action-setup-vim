@@ -7,7 +7,7 @@ import { buildVim } from './vim';
 import { downloadNeovim } from './neovim';
 
 async function installVimStable(): Promise<Installed> {
-    core.debug('Installing stable Vim on macOS');
+    core.debug('Installing stable Vim on macOS using Homebrew');
     await exec('brew', ['install', 'macvim']);
     return {
         executable: 'vim',
@@ -25,7 +25,7 @@ async function installVim(ver: string | null): Promise<Installed> {
 }
 
 async function installNeovimStable(): Promise<Installed> {
-    core.debug('Installing stable Neovim on macOS');
+    core.debug('Installing stable Neovim on macOS using Homebrew');
     await exec('brew', ['install', 'neovim']);
     return {
         executable: 'nvim',
