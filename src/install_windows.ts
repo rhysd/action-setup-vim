@@ -10,7 +10,7 @@ async function installVimNightly(): Promise<Installed> {
     const vimDir = await installNightlyVimOnWindows();
     return {
         executable: 'vim.exe',
-        bin: vimDir,
+        binDir: vimDir,
     };
 }
 
@@ -25,7 +25,7 @@ async function installVim(ver: string): Promise<Installed> {
     const vimDir = await installVimOnWindows(ver);
     return {
         executable: 'vim.exe',
-        bin: vimDir,
+        binDir: vimDir,
     };
 }
 
@@ -34,7 +34,7 @@ async function installNeovim(ver: string): Promise<Installed> {
     const nvimDir = await downloadNeovim(ver, 'windows');
     return {
         executable: 'nvim.exe',
-        bin: path.join(nvimDir, 'bin'),
+        binDir: path.join(nvimDir, 'bin'),
     };
 }
 

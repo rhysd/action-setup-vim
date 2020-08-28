@@ -4,9 +4,11 @@ import { install as installOnLinux } from './install_linux';
 import { install as installOnMacOs } from './install_macos';
 import { install as installOnWindows } from './install_windows';
 
+export type ExeName = 'vim' | 'nvim' | 'vim.exe' | 'nvim.exe';
+
 export interface Installed {
-    readonly executable: string;
-    readonly bin: string;
+    readonly executable: ExeName;
+    readonly binDir: string;
 }
 
 export function install(config: Config): Promise<Installed> {

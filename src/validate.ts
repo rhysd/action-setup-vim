@@ -6,16 +6,16 @@ import { exec } from './shell';
 
 export async function validateInstallation(installed: Installed): Promise<void> {
     try {
-        const s = await fs.stat(installed.bin);
+        const s = await fs.stat(installed.binDir);
         if (!s.isDirectory()) {
-            throw new Error(`Validation failed! '${installed.bin}' is not a directory for executable`);
+            throw new Error(`Validation failed! '${installed.binDir}' is not a directory for executable`);
         }
     } catch (err) {
-        throw new Error(`Validation failed! Could not stat installed directory '${installed.bin}': ${err.message}`);
+        throw new Error(`Validation failed! Could not stat installed directory '${installed.binDir}': ${err.message}`);
     }
-    core.debug(`Installed directory '${installed.bin}' was validated`);
+    core.debug(`Installed directory '${installed.binDir}' was validated`);
 
-    const fullPath = join(installed.bin, installed.executable);
+    const fullPath = join(installed.binDir, installed.executable);
 
     try {
         await fs.access(fullPath, fsconsts.X_OK);

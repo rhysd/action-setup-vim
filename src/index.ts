@@ -12,10 +12,10 @@ async function main() {
     const installed = await install(config);
     await validateInstallation(installed);
 
-    core.exportVariable('PATH', `${installed.bin}${pathSep}${process.env.PATH}`);
-    core.debug(`'${installed.bin}' was set to $PATH`);
+    core.exportVariable('PATH', `${installed.binDir}${pathSep}${process.env.PATH}`);
+    core.debug(`'${installed.binDir}' was set to $PATH`);
 
-    const fullPath = join(installed.bin, installed.executable);
+    const fullPath = join(installed.binDir, installed.executable);
     core.setOutput('executable', fullPath);
     console.log('Installed executable:', fullPath);
     console.log('Installation successfully done:', installed);

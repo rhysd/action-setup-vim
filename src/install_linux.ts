@@ -12,7 +12,7 @@ async function installVimStable(): Promise<Installed> {
     await exec('sudo', ['apt', 'install', '-y', 'vim-gnome']);
     return {
         executable: 'vim',
-        bin: '/usr/bin',
+        binDir: '/usr/bin',
     };
 }
 
@@ -21,7 +21,7 @@ async function installVim(ver: string | null): Promise<Installed> {
     const vimDir = await buildVim(ver);
     return {
         executable: 'vim',
-        bin: path.join(vimDir, 'bin'),
+        binDir: path.join(vimDir, 'bin'),
     };
 }
 
@@ -30,7 +30,7 @@ async function installNeovim(ver: string): Promise<Installed> {
     const nvimDir = await downloadNeovim(ver, 'linux');
     return {
         executable: 'nvim',
-        bin: path.join(nvimDir, 'bin'),
+        binDir: path.join(nvimDir, 'bin'),
     };
 }
 
