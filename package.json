@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc -p .",
     "watch:tsc": "tsc -p . --watch --preserveWatchOutput",
-    "watch:mocha": "mocha --watch ./test",
+    "watch:mocha": "mocha --watch-files './test/*.js'",
     "watch": "npm-run-all -p watch:tsc watch:mocha",
     "lint": "eslint --max-warnings 0 ./**/*.ts",
     "fix": "eslint --fix './**/*.ts'",
