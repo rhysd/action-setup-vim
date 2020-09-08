@@ -1,3 +1,12 @@
+<a name="v1.2.4"></a>
+# [v1.2.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.4) - 08 Sep 2020
+
+- **Improve:** When an asset for stable Neovim in `stable` release is not found, fallback to the latest version release by detecting the latest version via GitHub API. API token will be given via `token` input. You don't need to set it because it is set automatically. (#5)
+- **Improve:** Update dependencies to the latest
+
+[Changes][v1.2.4]
+
+
 <a name="v1.2.3"></a>
 # [v1.2.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.3) - 29 Mar 2020
 
@@ -95,6 +104,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.4]: https://github.com/rhysd/action-setup-vim/compare/v1.2.3...v1.2.4
 [v1.2.3]: https://github.com/rhysd/action-setup-vim/compare/v1.2.2...v1.2.3
 [v1.2.2]: https://github.com/rhysd/action-setup-vim/compare/v1.2.1...v1.2.2
 [v1.2.1]: https://github.com/rhysd/action-setup-vim/compare/v1.2.0...v1.2.1
