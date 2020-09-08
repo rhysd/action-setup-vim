@@ -48,7 +48,8 @@ describe('downloadNeovim()', function () {
                 A.ok(false, `Exception was not thrown: ${ret}`);
             } catch (err) {
                 // Matches to version tag like '/v0.4.4/' as part of download URL in error message
-                A.match(err.message, /\/v\d+\.\d+\.\d+\//);
+                // Note: assert.match is not available in Node v12
+                A.ok(/\/v\d+\.\d+\.\d+\//.test(err.message), err.message);
             }
         });
     });
