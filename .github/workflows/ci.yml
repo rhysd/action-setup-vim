@@ -68,7 +68,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
-      - run: npm test
+      - name: Run unit tests
+        run: npm test
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - run: npm run lint
       - uses: actions/setup-python@v1
       - run: pip install yamllint

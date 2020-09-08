@@ -7,6 +7,7 @@ import * as io from '@actions/io';
 import { makeTmpdir } from './utils';
 import type { Os } from './config';
 import { exec } from './shell';
+import * as github from '@actions/github';
 
 function assetFileName(os: Os) {
     switch (os) {
@@ -77,5 +78,35 @@ export async function downloadNeovim(version: string, os: Os): Promise<string> {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
         }
         throw new Error(msg);
+    }
+}
+
+async function fetchLatestVersion(token: string): Promise<string> {
+    const octokit = github.getOctokit(token);
+    const { data } = await octokit.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
+    const re = /^v\d+\.\d+\.\d+$/;
+    for (const release of data) {
+        const tagName = release.tag_name;
+        if (re.test(tagName)) {
+            core.debug(`Detected the latest stable version '${tagName}'`);
+            return tagName;
+        }
+    }
+    throw new Error(`No stable version was found in ${data.length} releases`);
+}
+
+// Download stable asset from 'stable' release. When the asset is not found, get the latest version
+// using GitHub API and retry downloading an asset with the version as fallback (#5).
+export async function downloadStableNeovim(os: Os, token: string | null = null): Promise<string> {
+    try {
+        return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
+    } catch (err) {
+        if (err.message.includes('Downloading asset failed:') && token !== null) {
+            core.warning(`Could not download stable asset. Trying fallback: ${err.message}`);
+            const ver = await fetchLatestVersion(token);
+            core.warning(`Fallback to install asset from '${ver}' release`);
+            return downloadNeovim(ver, os);
+        }
+        throw err;
     }
 }

@@ -14,13 +14,20 @@ inputs:
     required: false
     default: 'stable'
   neovim:
-    description: 'Setting to true will install Neovim.'
+    description: >
+      Setting to true will install Neovim.
     required: false
     default: false
+  token:
+    description: >
+      Personal access token. It is used for calling GitHub API. The API call happens when Neovim
+      asset is not found and needs to fallback.
+    default: ${{ github.token }}
 
 outputs:
   executable:
-    description: 'Absolute file path to the installed executable'
+    description: >
+      Absolute file path to the installed executable.
 
 runs:
   using: 'node12'
