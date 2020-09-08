@@ -7,6 +7,21 @@ import * as io from '@actions/io';
 import { makeTmpdir } from './utils';
 import type { Os } from './config';
 import { exec } from './shell';
+import * as github from '@actions/github';
+
+export async function fetchLatestNeovimVersion(token: string): Promise<string> {
+    const octokit = github.getOctokit(token);
+    const { data } = await octokit.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
+    const re = /^v\d+\.\d+\.\d+$/;
+    for (const release of data) {
+        const tagName = release.tag_name;
+        if (re.test(tagName)) {
+            core.debug(`Detected the latest stable version '${tagName}'`);
+            return tagName;
+        }
+    }
+    throw new Error(`No stable version was found in ${data.length} releases`);
+}
 
 function assetFileName(os: Os) {
     switch (os) {

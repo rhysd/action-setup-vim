@@ -3,3 +3,4 @@
 /test/*.js
 /scripts/*.js
 *.js.map
+/env.sh

@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 import type { Installed } from './install';
 import type { Config } from './config';
 import { installNightlyVimOnWindows, installVimOnWindows } from './vim';
-import { downloadNeovim } from './neovim';
+import { downloadNeovim, fetchLatestNeovimVersion } from './neovim';
 
 async function installVimNightly(): Promise<Installed> {
     core.debug('Installing nightly Vim on Windows');
@@ -38,11 +38,25 @@ async function installNeovim(ver: string): Promise<Installed> {
     };
 }
 
+async function installStableNeovim(token: string | null): Promise<Installed> {
+    try {
+        return installNeovim('stable');
+    } catch (err) {
+        if (err.message.includes('Downloading asset failed:') && token !== null) {
+            core.warning(`Could not download stable asset. Trying fallback: ${err.message}`);
+            const ver = await fetchLatestNeovimVersion(token);
+            core.warning(`Fallback to install asset from '${ver}' release`);
+            return installNeovim(ver);
+        }
+        throw err;
+    }
+}
+
 export function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installNeovim('stable');
+                return installStableNeovim(config.token);
             case 'nightly':
                 return installNeovim('nightly');
             default:

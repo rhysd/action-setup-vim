@@ -6,6 +6,7 @@ export interface Config {
     readonly version: string;
     readonly neovim: boolean;
     readonly os: Os;
+    readonly token: string | null;
 }
 
 function getBoolean(input: string, def: boolean): boolean {
@@ -67,5 +68,6 @@ export function loadConfigFromInputs(): Config {
         version: getVersion(neovim),
         neovim,
         os: getOs(),
+        token: getInput('token') ?? null,
     };
 }
