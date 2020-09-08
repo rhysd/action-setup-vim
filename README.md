@@ -154,6 +154,10 @@ When installing without system's package manager, Neovim is installed at `$HOME/
 **Note:** Ubuntu 18.04 supports official [`neovim` package][ubuntu-nvim] but this action does not
 install it. As of now, GitHub Actions also supports Ubuntu 16.04.
 
+**Note:** When downloading an asset for stable Neovim from `stable` release on GitHub, the asset is
+rarely missing. In the case, this action will get the latest version tag from GitHub API and use
+it instead of `stable` tag (see [#5][issue-5] for more details).
+
 ## Choose specific version
 
 ### Vim
@@ -209,3 +213,4 @@ Distributed under [the MIT license](./LICENSE.txt).
 [neovim-release]: https://github.com/neovim/neovim/releases
 [generate-pat]: https://github.com/settings/tokens/new
 [gh-action-secrets]: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets
+[issue-5]: https://github.com/rhysd/action-setup-vim/issues/5
