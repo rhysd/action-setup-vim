@@ -1,24 +1,37 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.install = void 0;
 const path = __importStar(require("path"));
 const core = __importStar(require("@actions/core"));
 const shell_1 = require("./shell");
 const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
 async function installVimStable() {
-    core.debug('Installing stable Vim on Linux');
+    core.debug('Installing stable Vim on Linux using apt');
     await shell_1.exec('sudo', ['apt', 'update', '-y']);
     await shell_1.exec('sudo', ['apt', 'install', '-y', 'vim-gnome']);
     return {
         executable: 'vim',
-        bin: '/usr/bin',
+        binDir: '/usr/bin',
     };
 }
 async function installVim(ver) {
@@ -26,22 +39,28 @@ async function installVim(ver) {
     const vimDir = await vim_1.buildVim(ver);
     return {
         executable: 'vim',
-        bin: path.join(vimDir, 'bin'),
+        binDir: path.join(vimDir, 'bin'),
+    };
+}
+function neovimInstalled(nvimDir) {
+    return {
+        executable: 'nvim',
+        binDir: path.join(nvimDir, 'bin'),
     };
 }
 async function installNeovim(ver) {
     core.debug(`Installing Neovim version '${ver}' on Linux`);
-    const nvimDir = await neovim_1.downloadNeovim(ver, 'linux');
-    return {
-        executable: 'nvim',
-        bin: path.join(nvimDir, 'bin'),
-    };
+    return neovimInstalled(await neovim_1.downloadNeovim(ver, 'linux'));
+}
+async function installStableNeovim(token) {
+    core.debug(`Installing Neovim version 'stable' on Linux`);
+    return neovimInstalled(await neovim_1.downloadStableNeovim('linux', token));
 }
 function install(config) {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installNeovim('stable');
+                return installStableNeovim(config.token);
             case 'nightly':
                 return installNeovim('nightly');
             default:

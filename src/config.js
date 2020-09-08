@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.loadConfigFromInputs = void 0;
 const core_1 = require("@actions/core");
 function getBoolean(input, def) {
     const i = core_1.getInput(input).toLowerCase();
@@ -46,11 +47,13 @@ function getNeovim() {
     return getBoolean('neovim', false);
 }
 function loadConfigFromInputs() {
+    var _a;
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),
         neovim,
         os: getOs(),
+        token: (_a = core_1.getInput('token')) !== null && _a !== void 0 ? _a : null,
     };
 }
 exports.loadConfigFromInputs = loadConfigFromInputs;
