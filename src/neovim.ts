@@ -97,9 +97,9 @@ async function fetchLatestVersion(token: string): Promise<string> {
 
 // Download stable asset from 'stable' release. When the asset is not found, get the latest version
 // using GitHub API and retry downloading an asset with the version as fallback (#5).
-export async function downloadStableNeovim(os: Os, token: string | null): Promise<string> {
+export async function downloadStableNeovim(os: Os, token: string | null = null): Promise<string> {
     try {
-        return downloadNeovim('stable', os);
+        return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
     } catch (err) {
         if (err.message.includes('Downloading asset failed:') && token !== null) {
             core.warning(`Could not download stable asset. Trying fallback: ${err.message}`);
