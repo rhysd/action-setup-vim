@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 import type { Installed } from './install';
 import type { Config } from './config';
 import { installNightlyVimOnWindows, installVimOnWindows } from './vim';
-import { downloadNeovim, fetchLatestNeovimVersion } from './neovim';
+import { downloadNeovim, downloadStableNeovim } from './neovim';
 
 async function installVimNightly(): Promise<Installed> {
     core.debug('Installing nightly Vim on Windows');
@@ -29,27 +29,21 @@ async function installVim(ver: string): Promise<Installed> {
     };
 }
 
-async function installNeovim(ver: string): Promise<Installed> {
-    core.debug(`Installing Neovim version '${ver}' on Windows`);
-    const nvimDir = await downloadNeovim(ver, 'windows');
+function neovimInstalled(nvimDir: string): Installed {
     return {
         executable: 'nvim.exe',
         binDir: path.join(nvimDir, 'bin'),
     };
 }
 
+async function installNeovim(ver: string): Promise<Installed> {
+    core.debug(`Installing Neovim version '${ver}' on Windows`);
+    return neovimInstalled(await downloadNeovim(ver, 'windows'));
+}
+
 async function installStableNeovim(token: string | null): Promise<Installed> {
-    try {
-        return installNeovim('stable');
-    } catch (err) {
-        if (err.message.includes('Downloading asset failed:') && token !== null) {
-            core.warning(`Could not download stable asset. Trying fallback: ${err.message}`);
-            const ver = await fetchLatestNeovimVersion(token);
-            core.warning(`Fallback to install asset from '${ver}' release`);
-            return installNeovim(ver);
-        }
-        throw err;
-    }
+    core.debug(`Installing Neovim version 'stable' on Windows`);
+    return neovimInstalled(await downloadStableNeovim('windows', token));
 }
 
 export function install(config: Config): Promise<Installed> {
