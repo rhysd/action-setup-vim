@@ -90,10 +90,14 @@ function main() {
     log('Validating executable');
     const proc = spawnSync(exe, ['-N', '-c', 'quit']);
     assert.equal(proc.status, 0);
+    assert.equal(proc.error, undefined);
+    assert.equal(proc.signal, null);
 
     log('Validating version');
     const ver = spawnSync(exe, ['--version']);
     assert.equal(ver.status, 0);
+    assert.equal(ver.error, undefined);
+    assert.equal(ver.signal, null);
     const stdout = ver.stdout.toString();
 
     if (args.version !== 'stable' && args.version !== 'nightly') {
