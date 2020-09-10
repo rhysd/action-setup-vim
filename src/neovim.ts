@@ -4,10 +4,11 @@ import { promises as fs } from 'fs';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
-import { makeTmpdir } from './utils';
-import type { Os } from './utils';
-import { exec } from './shell';
 import * as github from '@actions/github';
+import { makeTmpdir } from './utils';
+import { Os, exeName } from './utils';
+import { exec } from './shell';
+import type { Installed } from './install';
 
 function assetFileName(os: Os) {
     switch (os) {
@@ -45,7 +46,7 @@ async function unarchiveAsset(asset: string, os: Os): Promise<string> {
 }
 
 // version = 'stable' or 'nightly' or version string
-export async function downloadNeovim(version: string, os: Os): Promise<string> {
+export async function downloadNeovim(version: string, os: Os): Promise<Installed> {
     const file = assetFileName(os);
     const destDir = path.join(homedir(), 'nvim');
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
@@ -70,7 +71,10 @@ export async function downloadNeovim(version: string, os: Os): Promise<string> {
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
 
-        return destDir;
+        return {
+            executable: exeName(true, os),
+            binDir: path.join(destDir, 'bin'),
+        };
     } catch (err) {
         core.debug(err.stack);
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
@@ -97,7 +101,7 @@ async function fetchLatestVersion(token: string): Promise<string> {
 
 // Download stable asset from 'stable' release. When the asset is not found, get the latest version
 // using GitHub API and retry downloading an asset with the version as fallback (#5).
-export async function downloadStableNeovim(os: Os, token: string | null = null): Promise<string> {
+export async function downloadStableNeovim(os: Os, token: string | null = null): Promise<Installed> {
     try {
         return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
     } catch (err) {

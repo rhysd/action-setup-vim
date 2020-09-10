@@ -1,20 +1,23 @@
 import { homedir } from 'os';
 import * as path from 'path';
 import { promises as fs } from 'fs';
+import { strict as assert } from 'assert';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { exec } from './shell';
-import { makeTmpdir } from './utils';
+import { makeTmpdir, exeName, Os } from './utils';
+import type { Installed } from './install';
 
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
-export async function buildVim(version: string | null): Promise<string> {
+export async function buildVim(version: string, os: Os): Promise<Installed> {
+    assert.notEqual(version, 'stable');
     const installDir = path.join(homedir(), 'vim');
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
     const dir = path.join(await makeTmpdir(), 'vim');
 
     const args = ['clone', '--depth=1', '--single-branch'];
-    if (version === null) {
+    if (version === 'nightly') {
         args.push('--no-tags');
     } else {
         args.push('--branch', version);
@@ -29,7 +32,10 @@ export async function buildVim(version: string | null): Promise<string> {
     await exec('make', ['install'], opts);
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
 
-    return installDir;
+    return {
+        executable: exeName(false, os),
+        binDir: path.join(installDir, 'bin'),
+    };
 }
 
 async function getVimRootDirAt(dir: string): Promise<string> {
@@ -116,15 +122,19 @@ async function installVimAssetOnWindows(file: string, url: string) {
     return destDir;
 }
 
-export async function installVimOnWindows(tag: string): Promise<string> {
+export async function installVimOnWindows(tag: string): Promise<Installed> {
     const ver = tag.slice(1); // Strip 'v' prefix
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
-    return installVimAssetOnWindows(file, url);
+    const destDir = await installVimAssetOnWindows(file, url);
+    return {
+        executable: exeName(false, 'windows'),
+        binDir: destDir,
+    };
 }
 
-export async function installNightlyVimOnWindows(): Promise<string> {
+export async function installNightlyVimOnWindows(): Promise<Installed> {
     const latestTag = await detectLatestWindowsReleaseTag();
     return installVimOnWindows(latestTag);
 }

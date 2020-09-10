@@ -1,6 +1,7 @@
 import { tmpdir } from 'os';
 import * as core from '@actions/core';
 import { mkdirP } from '@actions/io';
+import { ExeName } from './install';
 
 export type Os = 'macos' | 'linux' | 'windows';
 
@@ -24,6 +25,10 @@ export function getOs(): Os {
     }
 }
 
-export function exeName(name: 'vim' | 'nvim', os: Os): string {
-    return os === 'windows' ? name + '.exe' : name;
+export function exeName(isNeovim: boolean, os: Os): ExeName {
+    if (os === 'windows') {
+        return isNeovim ? 'nvim.exe' : 'vim.exe';
+    } else {
+        return isNeovim ? 'nvim' : 'vim';
+    }
 }

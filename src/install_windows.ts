@@ -1,69 +1,28 @@
-import * as path from 'path';
 import * as core from '@actions/core';
 import type { Installed } from './install';
 import type { Config } from './config';
 import { installNightlyVimOnWindows, installVimOnWindows } from './vim';
 import { downloadNeovim, downloadStableNeovim } from './neovim';
 
-async function installVimNightly(): Promise<Installed> {
-    core.debug('Installing nightly Vim on Windows');
-    const vimDir = await installNightlyVimOnWindows();
-    return {
-        executable: 'vim.exe',
-        binDir: vimDir,
-    };
-}
-
-function installVimStable(): Promise<Installed> {
-    core.debug('Installing stable Vim on Windows');
-    core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
-    return installVimNightly();
-}
-
-async function installVim(ver: string): Promise<Installed> {
-    core.debug(`Installing Vim version '${ver}' on Windows`);
-    const vimDir = await installVimOnWindows(ver);
-    return {
-        executable: 'vim.exe',
-        binDir: vimDir,
-    };
-}
-
-function neovimInstalled(nvimDir: string): Installed {
-    return {
-        executable: 'nvim.exe',
-        binDir: path.join(nvimDir, 'bin'),
-    };
-}
-
-async function installNeovim(ver: string): Promise<Installed> {
-    core.debug(`Installing Neovim version '${ver}' on Windows`);
-    return neovimInstalled(await downloadNeovim(ver, 'windows'));
-}
-
-async function installStableNeovim(token: string | null): Promise<Installed> {
-    core.debug(`Installing Neovim version 'stable' on Windows`);
-    return neovimInstalled(await downloadStableNeovim('windows', token));
-}
-
 export function install(config: Config): Promise<Installed> {
+    core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} ${config.version} version on Windows`);
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installStableNeovim(config.token);
-            case 'nightly':
-                return installNeovim('nightly');
+                return downloadStableNeovim('windows', config.token);
             default:
-                return installNeovim(config.version);
+                return downloadNeovim(config.version, 'windows');
         }
     } else {
         switch (config.version) {
             case 'stable':
-                return installVimStable();
+                core.debug('Installing stable Vim on Windows');
+                core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
+                return installNightlyVimOnWindows();
             case 'nightly':
-                return installVimNightly();
+                return installNightlyVimOnWindows();
             default:
-                return installVim(config.version);
+                return installVimOnWindows(config.version);
         }
     }
 }
