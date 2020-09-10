@@ -1,6 +1,5 @@
 import { getInput } from '@actions/core';
-
-export type Os = 'macos' | 'linux' | 'windows';
+import { Os, getOs } from './utils';
 
 export interface Config {
     readonly version: string;
@@ -20,19 +19,6 @@ function getBoolean(input: string, def: boolean): boolean {
             return false;
         default:
             throw new Error(`'${input}' input only accepts boolean values 'true' or 'false' but got '${i}'`);
-    }
-}
-
-function getOs(): Os {
-    switch (process.platform) {
-        case 'darwin':
-            return 'macos';
-        case 'linux':
-            return 'linux';
-        case 'win32':
-            return 'windows';
-        default:
-            throw new Error(`Platform '${process.platform}' is not supported`);
     }
 }
 
