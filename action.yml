@@ -20,8 +20,9 @@ inputs:
     default: false
   token:
     description: >
-      Personal access token. It is used for calling GitHub API. The API call happens when Neovim
-      asset is not found and needs to fallback.
+      Personal access token for GitHub API. It is used for calling GitHub API when Neovim asset is
+      not found in stable release and needs to fallback. You don't need to set this input since it
+      is set automatically.
     default: ${{ github.token }}
 
 outputs:
