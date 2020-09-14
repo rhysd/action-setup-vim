@@ -37,6 +37,14 @@ describe('loadConfigFromInputs()', function () {
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
     });
 
+    for (const version of ['STABLE', 'Nightly']) {
+        it("sets versions in lower case when it is 'nightly' or 'stable'", function () {
+            setInputs({ version });
+            const c = loadConfigFromInputs();
+            A.equal(c.version, version.toLowerCase());
+        });
+    }
+
     const specificVersions: Array<{
         neovim: boolean;
         version: string;
