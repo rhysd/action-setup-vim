@@ -38,10 +38,19 @@ describe('loadConfigFromInputs()', function () {
     });
 
     for (const version of ['STABLE', 'Nightly']) {
-        it("sets versions in lower case when it is 'nightly' or 'stable'", function () {
+        it(`sets '${version}' for ${version.toLowerCase()}`, function () {
             setInputs({ version });
             const c = loadConfigFromInputs();
             A.equal(c.version, version.toLowerCase());
+        });
+    }
+
+    for (const b of ['TRUE', 'False']) {
+        it(`sets '${b}' for boolean value ${b.toLowerCase()}`, function () {
+            setInputs({ neovim: b });
+            const c = loadConfigFromInputs();
+            const expected = b.toLowerCase() === 'true';
+            A.equal(c.neovim, expected);
         });
     }
 
