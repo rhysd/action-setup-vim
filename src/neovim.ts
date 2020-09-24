@@ -96,6 +96,7 @@ async function fetchLatestVersion(token: string): Promise<string> {
             return tagName;
         }
     }
+    core.debug(`No stable version was found in releases: ${JSON.stringify(data, null, 2)}`);
     throw new Error(`No stable version was found in ${data.length} releases`);
 }
 
@@ -106,7 +107,9 @@ export async function downloadStableNeovim(os: Os, token: string | null = null):
         return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
     } catch (err) {
         if (err.message.includes('Downloading asset failed:') && token !== null) {
-            core.warning(`Could not download stable asset. Trying fallback: ${err.message}`);
+            core.warning(
+                `Could not download stable asset. Detecting the latest stable release from GitHub API as fallback: ${err.message}`,
+            );
             const ver = await fetchLatestVersion(token);
             core.warning(`Fallback to install asset from '${ver}' release`);
             return downloadNeovim(ver, os);
