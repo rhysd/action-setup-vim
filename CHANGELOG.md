@@ -1,3 +1,13 @@
+<a name="v1.2.5"></a>
+# [v1.2.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.5) - 02 Oct 2020
+
+- **Fix:** Update `@actions/core` for security patch
+- **Improve:** Internal refactoring
+- **Improve:** Update dependencies
+
+[Changes][v1.2.5]
+
+
 <a name="v1.2.4"></a>
 # [v1.2.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.4) - 08 Sep 2020
 
@@ -104,6 +114,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.5]: https://github.com/rhysd/action-setup-vim/compare/v1.2.4...v1.2.5
 [v1.2.4]: https://github.com/rhysd/action-setup-vim/compare/v1.2.3...v1.2.4
 [v1.2.3]: https://github.com/rhysd/action-setup-vim/compare/v1.2.2...v1.2.3
 [v1.2.2]: https://github.com/rhysd/action-setup-vim/compare/v1.2.1...v1.2.2
