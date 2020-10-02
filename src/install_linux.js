@@ -20,7 +20,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.install = void 0;
-const path = __importStar(require("path"));
 const core = __importStar(require("@actions/core"));
 const shell_1 = require("./shell");
 const vim_1 = require("./vim");
@@ -34,47 +33,22 @@ async function installVimStable() {
         binDir: '/usr/bin',
     };
 }
-async function installVim(ver) {
-    core.debug(`Installing Vim version '${ver !== null && ver !== void 0 ? ver : 'HEAD'}' on Linux`);
-    const vimDir = await vim_1.buildVim(ver);
-    return {
-        executable: 'vim',
-        binDir: path.join(vimDir, 'bin'),
-    };
-}
-function neovimInstalled(nvimDir) {
-    return {
-        executable: 'nvim',
-        binDir: path.join(nvimDir, 'bin'),
-    };
-}
-async function installNeovim(ver) {
-    core.debug(`Installing Neovim version '${ver}' on Linux`);
-    return neovimInstalled(await neovim_1.downloadNeovim(ver, 'linux'));
-}
-async function installStableNeovim(token) {
-    core.debug(`Installing Neovim version 'stable' on Linux`);
-    return neovimInstalled(await neovim_1.downloadStableNeovim('linux', token));
-}
 function install(config) {
+    core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} version '${config.version}' on Linux`);
     if (config.neovim) {
-        switch (config.version) {
-            case 'stable':
-                return installStableNeovim(config.token);
-            case 'nightly':
-                return installNeovim('nightly');
-            default:
-                return installNeovim(config.version);
+        if (config.version === 'stable') {
+            return neovim_1.downloadStableNeovim('linux', config.token);
+        }
+        else {
+            return neovim_1.downloadNeovim(config.version, 'linux');
         }
     }
     else {
-        switch (config.version) {
-            case 'stable':
-                return installVimStable();
-            case 'nightly':
-                return installVim(null);
-            default:
-                return installVim(config.version);
+        if (config.version === 'stable') {
+            return installVimStable();
+        }
+        else {
+            return vim_1.buildVim(config.version, config.os);
         }
     }
 }

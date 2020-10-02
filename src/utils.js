@@ -19,7 +19,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeTmpdir = void 0;
+exports.exeName = exports.getOs = exports.makeTmpdir = void 0;
 const os_1 = require("os");
 const core = __importStar(require("@actions/core"));
 const io_1 = require("@actions/io");
@@ -30,4 +30,26 @@ async function makeTmpdir() {
     return dir;
 }
 exports.makeTmpdir = makeTmpdir;
+function getOs() {
+    switch (process.platform) {
+        case 'darwin':
+            return 'macos';
+        case 'linux':
+            return 'linux';
+        case 'win32':
+            return 'windows';
+        default:
+            throw new Error(`Platform '${process.platform}' is not supported`);
+    }
+}
+exports.getOs = getOs;
+function exeName(isNeovim, os) {
+    if (os === 'windows') {
+        return isNeovim ? 'nvim.exe' : 'vim.exe';
+    }
+    else {
+        return isNeovim ? 'nvim' : 'vim';
+    }
+}
+exports.exeName = exeName;
 //# sourceMappingURL=utils.js.map

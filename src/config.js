@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadConfigFromInputs = void 0;
 const core_1 = require("@actions/core");
+const utils_1 = require("./utils");
 function getBoolean(input, def) {
     const i = core_1.getInput(input).toLowerCase();
     switch (i) {
@@ -13,18 +14,6 @@ function getBoolean(input, def) {
             return false;
         default:
             throw new Error(`'${input}' input only accepts boolean values 'true' or 'false' but got '${i}'`);
-    }
-}
-function getOs() {
-    switch (process.platform) {
-        case 'darwin':
-            return 'macos';
-        case 'linux':
-            return 'linux';
-        case 'win32':
-            return 'windows';
-        default:
-            throw new Error(`Platform '${process.platform}' is not supported`);
     }
 }
 function getVersion(neovim) {
@@ -52,7 +41,7 @@ function loadConfigFromInputs() {
     return {
         version: getVersion(neovim),
         neovim,
-        os: getOs(),
+        os: utils_1.getOs(),
         token: (_a = core_1.getInput('token')) !== null && _a !== void 0 ? _a : null,
     };
 }

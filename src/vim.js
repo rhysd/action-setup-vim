@@ -26,18 +26,20 @@ exports.installNightlyVimOnWindows = exports.installVimOnWindows = exports.detec
 const os_1 = require("os");
 const path = __importStar(require("path"));
 const fs_1 = require("fs");
+const assert_1 = require("assert");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const core = __importStar(require("@actions/core"));
 const io = __importStar(require("@actions/io"));
 const shell_1 = require("./shell");
 const utils_1 = require("./utils");
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
-async function buildVim(version) {
+async function buildVim(version, os) {
+    assert_1.strict.notEqual(version, 'stable');
     const installDir = path.join(os_1.homedir(), 'vim');
     core.debug(`Building and installing Vim to ${installDir} (version=${version !== null && version !== void 0 ? version : 'HEAD'})`);
     const dir = path.join(await utils_1.makeTmpdir(), 'vim');
     const args = ['clone', '--depth=1', '--single-branch'];
-    if (version === null) {
+    if (version === 'nightly') {
         args.push('--no-tags');
     }
     else {
@@ -50,7 +52,10 @@ async function buildVim(version) {
     await shell_1.exec('make', ['-j'], opts);
     await shell_1.exec('make', ['install'], opts);
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
-    return installDir;
+    return {
+        executable: utils_1.exeName(false, os),
+        binDir: path.join(installDir, 'bin'),
+    };
 }
 exports.buildVim = buildVim;
 async function getVimRootDirAt(dir) {
@@ -131,7 +136,11 @@ async function installVimOnWindows(tag) {
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
-    return installVimAssetOnWindows(file, url);
+    const destDir = await installVimAssetOnWindows(file, url);
+    return {
+        executable: utils_1.exeName(false, 'windows'),
+        binDir: destDir,
+    };
 }
 exports.installVimOnWindows = installVimOnWindows;
 async function installNightlyVimOnWindows() {

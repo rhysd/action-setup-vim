@@ -29,9 +29,10 @@ const fs_1 = require("fs");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const core = __importStar(require("@actions/core"));
 const io = __importStar(require("@actions/io"));
-const utils_1 = require("./utils");
-const shell_1 = require("./shell");
 const github = __importStar(require("@actions/github"));
+const utils_1 = require("./utils");
+const utils_2 = require("./utils");
+const shell_1 = require("./shell");
 function assetFileName(os) {
     switch (os) {
         case 'macos':
@@ -87,7 +88,10 @@ async function downloadNeovim(version, os) {
         core.debug(`Unarchived asset ${unarchived}`);
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
-        return destDir;
+        return {
+            executable: utils_2.exeName(true, os),
+            binDir: path.join(destDir, 'bin'),
+        };
     }
     catch (err) {
         core.debug(err.stack);
@@ -110,6 +114,7 @@ async function fetchLatestVersion(token) {
             return tagName;
         }
     }
+    core.debug(`No stable version was found in releases: ${JSON.stringify(data, null, 2)}`);
     throw new Error(`No stable version was found in ${data.length} releases`);
 }
 // Download stable asset from 'stable' release. When the asset is not found, get the latest version
@@ -120,7 +125,7 @@ async function downloadStableNeovim(os, token = null) {
     }
     catch (err) {
         if (err.message.includes('Downloading asset failed:') && token !== null) {
-            core.warning(`Could not download stable asset. Trying fallback: ${err.message}`);
+            core.warning(`Could not download stable asset. Detecting the latest stable release from GitHub API as fallback: ${err.message}`);
             const ver = await fetchLatestVersion(token);
             core.warning(`Fallback to install asset from '${ver}' release`);
             return downloadNeovim(ver, os);
