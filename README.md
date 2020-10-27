@@ -123,7 +123,7 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 | macOS   | `stable`  | Install MacVim via `brew install macvim`                                           |
 | macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                        |
 | macOS   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                |
-| Widnows | `stable`  | There is no stable release for Windows so fall back to `nightly`                   |
+| Windows | `stable`  | There is no stable release for Windows so fall back to `nightly`                   |
 | Windows | `nightly` | Install the latest release from [installer repository][win-inst]                   |
 | Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [installer repository][win-inst] repository |
 
