@@ -41,18 +41,22 @@ export async function buildVim(version: string, os: Os): Promise<Installed> {
     await exec('git', args);
 
     const env: Env = {};
-    if (
-        os === 'macos' &&
-        version.startsWith('v') &&
-        semverLT(version.slice(1), '8.2.1119') &&
-        (await dirExists(XCODE11_DEVELOPER_DIR))
-    ) {
-        // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
-        //   ref: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
-        // By setting $DEVELOPER_DIR environment variable, Xcode11 is used to build Vim.
-        //   ref: https://www.jessesquires.com/blog/2020/01/06/selecting-an-xcode-version-on-github-ci/
-        // Note that xcode-select command is not available since it changes Xcode version in system global.
-        env['DEVELOPER_DIR'] = XCODE11_DEVELOPER_DIR;
+    if (os === 'macos' && version.startsWith('v') && semverLT(version.slice(1), '8.2.1119')) {
+        if (await dirExists(XCODE11_DEVELOPER_DIR)) {
+            // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
+            //   ref: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
+            // By setting $DEVELOPER_DIR environment variable, Xcode11 is used to build Vim.
+            //   ref: https://www.jessesquires.com/blog/2020/01/06/selecting-an-xcode-version-on-github-ci/
+            // Note that xcode-select command is not available since it changes Xcode version in system global.
+            env['DEVELOPER_DIR'] = XCODE11_DEVELOPER_DIR;
+            core.debug(
+                `Building Vim older than 8.2.1119 on macOS with Xcode11 at ${XCODE11_DEVELOPER_DIR} instead of the latest Xcode`,
+            );
+        } else {
+            core.warning(
+                `Building Vim older than 8.2.1119 on macOS but proper Xcode is not found at ${XCODE11_DEVELOPER_DIR}. Using the latest Xcode`,
+            );
+        }
     }
 
     const opts = { cwd: dir, env };
