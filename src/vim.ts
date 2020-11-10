@@ -10,16 +10,16 @@ import { exec, Env } from './shell';
 import { makeTmpdir, exeName, Os } from './utils';
 import type { Installed } from './install';
 
-// Xcode10~12 are available at this point:
-// https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md#xcode
-const XCODE11_DEVELOPER_DIR = '/Applications/Xcode_11.7.app/Contents/Developer';
-
-async function dirExists(dir: string): Promise<boolean> {
+async function getXcode11DevDir(): Promise<string | null> {
+    // Xcode10~12 are available at this point:
+    // https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md#xcode
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    const dir = process.env.XCODE_11_DEVELOPER_DIR || '/Applications/Xcode_11.7.app/Contents/Developer';
     try {
         await fs.access(dir);
-        return true;
+        return dir;
     } catch (e) {
-        return false;
+        return null;
     }
 }
 
@@ -42,19 +42,18 @@ export async function buildVim(version: string, os: Os): Promise<Installed> {
 
     const env: Env = {};
     if (os === 'macos' && version.startsWith('v') && semverLT(version.slice(1), '8.2.1119')) {
-        if (await dirExists(XCODE11_DEVELOPER_DIR)) {
+        const dir = await getXcode11DevDir();
+        if (dir !== null) {
             // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
             //   ref: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
             // By setting $DEVELOPER_DIR environment variable, Xcode11 is used to build Vim.
             //   ref: https://www.jessesquires.com/blog/2020/01/06/selecting-an-xcode-version-on-github-ci/
             // Note that xcode-select command is not available since it changes Xcode version in system global.
-            env['DEVELOPER_DIR'] = XCODE11_DEVELOPER_DIR;
-            core.debug(
-                `Building Vim older than 8.2.1119 on macOS with Xcode11 at ${XCODE11_DEVELOPER_DIR} instead of the latest Xcode`,
-            );
+            env['DEVELOPER_DIR'] = dir;
+            core.debug(`Building Vim older than 8.2.1119 on macOS with Xcode11 at ${dir} instead of the latest Xcode`);
         } else {
             core.warning(
-                `Building Vim older than 8.2.1119 on macOS but proper Xcode is not found at ${XCODE11_DEVELOPER_DIR}. Using the latest Xcode`,
+                `Building Vim older than 8.2.1119 on macOS but proper Xcode is not found at ${dir}. Using the latest Xcode`,
             );
         }
     }
