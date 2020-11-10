@@ -5,9 +5,23 @@ import { strict as assert } from 'assert';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
-import { exec } from './shell';
+import { lt as semverLT } from 'semver';
+import { exec, Env } from './shell';
 import { makeTmpdir, exeName, Os } from './utils';
 import type { Installed } from './install';
+
+// Xcode10~12 are available at this point:
+// https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md#xcode
+const XCODE11_DEVELOPER_DIR = '/Applications/Xcode_11.7.app/Contents/Developer';
+
+async function dirExists(dir: string): Promise<boolean> {
+    try {
+        await fs.access(dir);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
 
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
 export async function buildVim(version: string, os: Os): Promise<Installed> {
@@ -26,7 +40,22 @@ export async function buildVim(version: string, os: Os): Promise<Installed> {
 
     await exec('git', args);
 
-    const opts = { cwd: dir };
+    const env: Env = {};
+    if (
+        os === 'macos' &&
+        version.startsWith('v') &&
+        semverLT(version.slice(1), '8.2.1119') &&
+        (await dirExists(XCODE11_DEVELOPER_DIR))
+    ) {
+        // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
+        //   ref: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
+        // By setting $DEVELOPER_DIR environment variable, Xcode11 is used to build Vim.
+        //   ref: https://www.jessesquires.com/blog/2020/01/06/selecting-an-xcode-version-on-github-ci/
+        // Note that xcode-select command is not available since it changes Xcode version in system global.
+        env['DEVELOPER_DIR'] = XCODE11_DEVELOPER_DIR;
+    }
+
+    const opts = { cwd: dir, env };
     await exec('./configure', [`--prefix=${installDir}`, '--with-features=huge', '--enable-fail-if-missing'], opts);
     await exec('make', ['-j'], opts);
     await exec('make', ['install'], opts);

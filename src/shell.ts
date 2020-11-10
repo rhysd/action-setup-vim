@@ -1,15 +1,16 @@
 import { exec as origExec } from '@actions/exec';
 
+export type Env = { [k: string]: string };
+
 interface Options {
     readonly cwd?: string;
+    readonly env?: Env;
 }
-
-type Env = { [k: string]: string };
 
 // Avoid leaking $INPUT_* variables to subprocess
 //   ref: https://github.com/actions/toolkit/issues/309
-function getEnv(): Env {
-    const ret: Env = {};
+function getEnv(base?: Env): Env {
+    const ret: Env = base ?? {};
     for (const key of Object.keys(process.env)) {
         if (!key.startsWith('INPUT_')) {
             const v = process.env[key];
@@ -29,8 +30,8 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
     };
 
     const execOpts = {
-        ...opts,
-        env: getEnv(),
+        cwd: opts?.cwd,
+        env: getEnv(opts?.env),
         listeners: {
             stdout(data: Buffer) {
                 res.stdout += data.toString();

@@ -36,13 +36,15 @@
     "@actions/exec": "^1.0.4",
     "@actions/github": "^4.0.0",
     "@actions/io": "^1.0.2",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "semver": "^5.7.1"
   },
   "devDependencies": {
     "@types/mocha": "^8.0.3",
     "@types/mock-require": "^2.0.0",
     "@types/node": "^14.11.8",
     "@types/node-fetch": "^2.5.7",
+    "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.4.1",
     "eslint": "^7.11.0",
