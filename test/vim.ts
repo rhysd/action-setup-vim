@@ -131,7 +131,7 @@ describe('buildVim()', function () {
     });
 
     it('builds recent Vim from source', async function () {
-        const version = '8.2.2424';
+        const version = 'v8.2.2424';
         const installed = await buildVim(version, 'linux');
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith('bin'), installed.binDir);
@@ -151,7 +151,7 @@ describe('buildVim()', function () {
     });
 
     it('builds older Vim from source on macOS', async function () {
-        const version = '8.1.1000';
+        const version = 'v8.2.0000';
         await buildVim(version, 'macos');
 
         // For older Vim (before 8.2.1119), Xcode11 is necessary to build
@@ -180,6 +180,7 @@ describe('versionIsOlderThan8_2_1119()', function () {
         ['v8.2.1118', true],
         ['v8.2.0000', true],
         ['v8.1.2000', true],
+        ['v8.1.1000', true],
         ['v8.0.2000', true],
         ['v7.3.2000', true],
         ['v7.2', true],
