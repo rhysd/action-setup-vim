@@ -5,10 +5,35 @@ import { strict as assert } from 'assert';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
-import { lt as semverLT } from 'semver';
 import { exec, Env } from './shell';
 import { makeTmpdir, exeName, Os } from './utils';
 import type { Installed } from './install';
+
+export function versionIsOlderThan8_2_1119(version: string): boolean {
+    // Note: Patch version may not exist on v7 or earlier
+    const majorStr = version.match(/^v(\d+)\./)?.[1];
+    if (!majorStr) {
+        return false; // Invalid case. Should be unreachable
+    }
+    const major = parseInt(majorStr, 10);
+
+    if (major !== 8) {
+        return major < 8;
+    }
+
+    const m = version.match(/\.(\d+)\.(\d{4})$/); // Extract minor and patch versions
+    if (!m) {
+        return false; // Invalid case. Should be unreachable
+    }
+
+    const minor = parseInt(m[1], 10);
+    if (minor !== 2) {
+        return minor < 2;
+    }
+
+    const patch = parseInt(m[2], 10);
+    return patch < 1119;
+}
 
 async function getXcode11DevDir(): Promise<string | null> {
     // Xcode10~12 are available at this point:
@@ -41,7 +66,7 @@ export async function buildVim(version: string, os: Os): Promise<Installed> {
     await exec('git', args);
 
     const env: Env = {};
-    if (os === 'macos' && version.startsWith('v') && semverLT(version.slice(1), '8.2.1119')) {
+    if (os === 'macos' && versionIsOlderThan8_2_1119(version)) {
         const dir = await getXcode11DevDir();
         if (dir !== null) {
             // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
