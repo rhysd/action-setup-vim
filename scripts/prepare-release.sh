@@ -73,6 +73,11 @@ if [[ "$current_branch" != "master" ]]; then
     exit 1
 fi
 
+echo "Checking tests and eslint results"
+
+npm run test
+npm run lint
+
 echo "Releasing to ${target_branch} branch for ${version}... (minor=${minor_version}, major=${major_version})"
 
 set -x
