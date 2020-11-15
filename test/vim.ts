@@ -2,7 +2,7 @@ import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
 import { Response } from 'node-fetch';
-import { installVimOnWindows, detectLatestWindowsReleaseTag } from '../src/vim';
+import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan8_2_1119 } from '../src/vim';
 import type { Installed } from '../src/install';
 import type { Os } from '../src/utils';
 
@@ -164,4 +164,35 @@ describe('buildVim()', function () {
             A.ok('DEVELOPER_DIR' in env);
         }
     });
+});
+
+describe('versionIsOlderThan8_2_1119()', function () {
+    const testCases: [string, boolean][] = [
+        // Equal
+        ['v8.2.1119', false],
+        // Newer
+        ['v8.2.1120', false],
+        ['v8.3.0000', false],
+        ['v8.3.1234', false],
+        ['v8.3.0123', false],
+        ['v9.0.0000', false],
+        // Older
+        ['v8.2.1118', true],
+        ['v8.2.0000', true],
+        ['v8.1.2000', true],
+        ['v8.0.2000', true],
+        ['v7.3.2000', true],
+        ['v7.2', true],
+        ['v6.4', true],
+        // Invalid
+        ['8.2.1119', false], // 'v' prefix not found
+        ['8.2', false], // newer than v7 but patch version does not exist
+    ];
+
+    for (const tc of testCases) {
+        const [v, expected] = tc;
+        it(`${v} is ${expected ? 'older' : 'equal or newer than'} 8.2.1119`, function () {
+            A.equal(versionIsOlderThan8_2_1119(v), expected);
+        });
+    }
 });
