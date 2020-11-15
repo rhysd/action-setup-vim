@@ -1,13 +1,41 @@
 import { strict as A } from 'assert';
+import * as path from 'path';
 import mock = require('mock-require');
 import { Response } from 'node-fetch';
 import { installVimOnWindows, detectLatestWindowsReleaseTag } from '../src/vim';
+import type { Installed } from '../src/install';
+import type { Os } from '../src/utils';
 
 function mockFetch(): typeof import('../src/vim') {
     mock('node-fetch', async (url: string) =>
         Promise.resolve(new Response(`dummy response for ${url}`, { status: 404, statusText: 'Not found for dummy' })),
     );
     return mock.reRequire('../src/vim');
+}
+
+// Arguments of exec(): cmd: string, args: string[], options?: Options
+type ExecArgs = [string, string[], Object | undefined];
+class ExecStub {
+    called: ExecArgs[] = [];
+
+    onCalled(args: ExecArgs) {
+        this.called.push(args);
+    }
+
+    reset() {
+        this.called = [];
+    }
+}
+
+function mockExec(): ExecStub {
+    const stub = new ExecStub();
+    const exec = async (...args: ExecArgs) => {
+        stub.onCalled(args);
+        return '';
+    };
+    mock('../src/shell', { exec });
+    mock.reRequire('../src/shell');
+    return stub;
 }
 
 describe('detectLatestWindowsReleaseTag()', function () {
@@ -59,5 +87,81 @@ describe('installVimOnWindows()', function () {
                 /Downloading asset failed: Not found for dummy/,
             );
         });
+    });
+});
+
+describe('buildVim()', function () {
+    let stub: ExecStub;
+    let buildVim: (v: string, os: Os) => Promise<Installed>;
+    const savedXcode11Env = process.env.XCODE_11_DEVELOPER_DIR;
+
+    before(function () {
+        stub = mockExec();
+        // Re-requiring ../src/vim is necessary because it depends on ../src/shell
+        buildVim = mock.reRequire('../src/vim').buildVim;
+        process.env.XCODE_11_DEVELOPER_DIR = './';
+    });
+
+    after(function () {
+        mock.stop('../src/shell');
+        mock.stop('../src/vim');
+        process.env.XCODE_11_DEVELOPER_DIR = savedXcode11Env;
+    });
+
+    afterEach(function () {
+        stub.reset();
+    });
+
+    it('builds nightly Vim from source', async function () {
+        const installed = await buildVim('nightly', 'linux');
+        A.equal(installed.executable, 'vim');
+        A.ok(installed.binDir.endsWith('bin'), installed.binDir);
+        A.ok(stub.called.length > 0);
+
+        const [cmd, args] = stub.called[0];
+        A.equal(cmd, 'git');
+        A.equal(args[0], 'clone');
+        A.equal(args[args.length - 2], 'https://github.com/vim/vim');
+        // Nightly uses HEAD. It means tags are unnecessary
+        A.equal(args[args.length - 3], '--no-tags');
+
+        A.equal(stub.called[1][0], './configure');
+        const configurePrefix = stub.called[1][1][0]; // --prefix=installDir
+        A.equal(`--prefix=${path.dirname(installed.binDir)}`, configurePrefix);
+    });
+
+    it('builds recent Vim from source', async function () {
+        const version = '8.2.2424';
+        const installed = await buildVim(version, 'linux');
+        A.equal(installed.executable, 'vim');
+        A.ok(installed.binDir.endsWith('bin'), installed.binDir);
+        A.ok(stub.called.length > 0);
+
+        const [cmd, args] = stub.called[0];
+        A.equal(cmd, 'git');
+        A.equal(args[0], 'clone');
+        A.equal(args[args.length - 2], 'https://github.com/vim/vim');
+        // Specify tag name for cloning specific version
+        A.equal(args[args.length - 4], '--branch');
+        A.equal(args[args.length - 3], version);
+
+        A.equal(stub.called[1][0], './configure');
+        const configurePrefix = stub.called[1][1][0]; // --prefix=installDir
+        A.equal(`--prefix=${path.dirname(installed.binDir)}`, configurePrefix);
+    });
+
+    it('builds older Vim from source on macOS', async function () {
+        const version = '8.1.1000';
+        await buildVim(version, 'macos');
+
+        // For older Vim (before 8.2.1119), Xcode11 is necessary to build
+        // Check `./configure`, `make` and `make install` are run with Xcode11
+        for (let i = 1; i < 4; i++) {
+            const opts = stub.called[i][2];
+            A.ok(opts);
+            A.ok('env' in opts);
+            const env = opts['env'];
+            A.ok('DEVELOPER_DIR' in env);
+        }
     });
 });
