@@ -1,3 +1,12 @@
+<a name="v1.2.6"></a>
+# [v1.2.6](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.6) - 15 Nov 2020
+
+- **Fix:** Build failed on building Vim older than v8.2.1119 on macOS worker. Now Vim before v8.2.1119 is built with Xcode11 since it cannot be built with Xcode12. (#10)
+- **Improve:** Update dependencies
+
+[Changes][v1.2.6]
+
+
 <a name="v1.2.5"></a>
 # [v1.2.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.5) - 02 Oct 2020
 
@@ -114,6 +123,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.6]: https://github.com/rhysd/action-setup-vim/compare/v1.2.5...v1.2.6
 [v1.2.5]: https://github.com/rhysd/action-setup-vim/compare/v1.2.4...v1.2.5
 [v1.2.4]: https://github.com/rhysd/action-setup-vim/compare/v1.2.3...v1.2.4
 [v1.2.3]: https://github.com/rhysd/action-setup-vim/compare/v1.2.2...v1.2.3
