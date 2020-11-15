@@ -9,6 +9,7 @@ import { exec, Env } from './shell';
 import { makeTmpdir, exeName, Os } from './utils';
 import type { Installed } from './install';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export function versionIsOlderThan8_2_1119(version: string): boolean {
     // Note: Patch version may not exist on v7 or earlier
     const majorStr = version.match(/^v(\d+)\./)?.[1];

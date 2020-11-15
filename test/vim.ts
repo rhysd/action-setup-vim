@@ -14,7 +14,7 @@ function mockFetch(): typeof import('../src/vim') {
 }
 
 // Arguments of exec(): cmd: string, args: string[], options?: Options
-type ExecArgs = [string, string[], Object | undefined];
+type ExecArgs = [string, string[], { env: { [n: string]: string } } | undefined];
 class ExecStub {
     called: ExecArgs[] = [];
 
