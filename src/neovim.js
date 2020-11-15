@@ -31,7 +31,6 @@ const core = __importStar(require("@actions/core"));
 const io = __importStar(require("@actions/io"));
 const github = __importStar(require("@actions/github"));
 const utils_1 = require("./utils");
-const utils_2 = require("./utils");
 const shell_1 = require("./shell");
 function assetFileName(os) {
     switch (os) {
@@ -89,7 +88,7 @@ async function downloadNeovim(version, os) {
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
         return {
-            executable: utils_2.exeName(true, os),
+            executable: utils_1.exeName(true, os),
             binDir: path.join(destDir, 'bin'),
         };
     }

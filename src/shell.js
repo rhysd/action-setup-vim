@@ -4,8 +4,8 @@ exports.exec = void 0;
 const exec_1 = require("@actions/exec");
 // Avoid leaking $INPUT_* variables to subprocess
 //   ref: https://github.com/actions/toolkit/issues/309
-function getEnv() {
-    const ret = {};
+function getEnv(base) {
+    const ret = base !== null && base !== void 0 ? base : {};
     for (const key of Object.keys(process.env)) {
         if (!key.startsWith('INPUT_')) {
             const v = process.env[key];
@@ -23,8 +23,8 @@ async function exec(cmd, args, opts) {
         code: null,
     };
     const execOpts = {
-        ...opts,
-        env: getEnv(),
+        cwd: opts === null || opts === void 0 ? void 0 : opts.cwd,
+        env: getEnv(opts === null || opts === void 0 ? void 0 : opts.env),
         listeners: {
             stdout(data) {
                 res.stdout += data.toString();
