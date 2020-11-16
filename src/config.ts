@@ -36,9 +36,11 @@ function getVersion(neovim: boolean): string {
     const re = neovim ? /^v\d+\.\d+\.\d+$/ : /^v7\.\d+(?:\.\d+)?$|^v\d+\.\d+\.\d{4}$/;
     if (!re.test(v)) {
         const repo = neovim ? 'neovim/neovim' : 'vim/vim';
-        throw new Error(
-            `'version' input '${v}' is not a format of Git tags in ${repo} repository. It should match to regex /${re}/`,
-        );
+        let msg = `'version' input '${v}' is not a format of Git tags in ${repo} repository. It should match to regex /${re}/. NOTE: It requires 'v' prefix`;
+        if (!neovim) {
+            msg += ". And the patch version of Vim must be in 4-digits like 'v8.2.0126'";
+        }
+        throw new Error(msg);
     }
 
     return v;
