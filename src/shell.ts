@@ -22,7 +22,7 @@ function getEnv(base?: Env): Env {
     return ret;
 }
 
-export async function exec(cmd: string, args: readonly string[], opts?: Options): Promise<string> {
+export async function exec(cmd: string, args: string[], opts?: Options): Promise<string> {
     const res = {
         stdout: '',
         stderr: '',
