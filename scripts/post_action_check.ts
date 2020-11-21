@@ -3,7 +3,7 @@ import * as path from 'path';
 import { strict as assert } from 'assert';
 import { spawnSync } from 'child_process';
 
-function log(...args: unknown[]) {
+function log(...args: unknown[]): void {
     console.log('[post_action_check]:', ...args);
 }
 
@@ -70,7 +70,7 @@ function expectedExecutable(neovim: boolean, ver: string): string {
     throw new Error(`Unexpected platform '${process.platform}'`);
 }
 
-function main() {
+function main(): void {
     log('Running with argv:', process.argv);
 
     const args = parseArgs(process.argv);

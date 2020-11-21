@@ -4,7 +4,7 @@ import { loadConfigFromInputs } from './config';
 import { install } from './install';
 import { validateInstallation } from './validate';
 
-async function main() {
+async function main(): Promise<void> {
     const config = loadConfigFromInputs();
     console.log('Extracted configuration:', config);
 

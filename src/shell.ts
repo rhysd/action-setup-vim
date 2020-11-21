@@ -33,10 +33,10 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
         cwd: opts?.cwd,
         env: getEnv(opts?.env),
         listeners: {
-            stdout(data: Buffer) {
+            stdout(data: Buffer): void {
                 res.stdout += data.toString();
             },
-            stderr(data: Buffer) {
+            stderr(data: Buffer): void {
                 res.stderr += data.toString();
             },
         },

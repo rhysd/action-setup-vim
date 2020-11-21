@@ -147,7 +147,7 @@ export async function detectLatestWindowsReleaseTag(): Promise<string> {
     }
 }
 
-async function installVimAssetOnWindows(file: string, url: string) {
+async function installVimAssetOnWindows(file: string, url: string): Promise<string> {
     const tmpdir = await makeTmpdir();
     const dlDir = path.join(tmpdir, 'vim-installer');
     await io.mkdirP(dlDir);

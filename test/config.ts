@@ -1,7 +1,7 @@
 import { strict as A } from 'assert';
 import { loadConfigFromInputs } from '../src/config';
 
-function setInputs(inputs: { [k: string]: string }) {
+function setInputs(inputs: { [k: string]: string }): void {
     for (const key of Object.keys(inputs)) {
         const k = `INPUT_${key.toUpperCase().replace(' ', '_')}`;
         process.env[k] = inputs[key];

@@ -18,18 +18,18 @@ type ExecArgs = [string, string[], { env: { [n: string]: string } } | undefined]
 class ExecStub {
     called: ExecArgs[] = [];
 
-    onCalled(args: ExecArgs) {
+    onCalled(args: ExecArgs): void {
         this.called.push(args);
     }
 
-    reset() {
+    reset(): void {
         this.called = [];
     }
 }
 
 function mockExec(): ExecStub {
     const stub = new ExecStub();
-    const exec = async (...args: ExecArgs) => {
+    const exec = async (...args: ExecArgs): Promise<string> => {
         stub.onCalled(args);
         return '';
     };

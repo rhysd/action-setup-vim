@@ -9,7 +9,7 @@ import { makeTmpdir, Os, exeName } from './utils';
 import { exec } from './shell';
 import type { Installed } from './install';
 
-function assetFileName(os: Os) {
+function assetFileName(os: Os): string {
     switch (os) {
         case 'macos':
             return 'nvim-macos.tar.gz';
@@ -20,7 +20,7 @@ function assetFileName(os: Os) {
     }
 }
 
-function assetDirName(os: Os) {
+function assetDirName(os: Os): string {
     switch (os) {
         case 'macos':
             return 'nvim-osx64';
