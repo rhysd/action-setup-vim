@@ -1,7 +1,7 @@
 import { tmpdir } from 'os';
 import * as core from '@actions/core';
 import { mkdirP } from '@actions/io';
-import { ExeName } from './install';
+import type { ExeName } from './install';
 
 export type Os = 'macos' | 'linux' | 'windows';
 
