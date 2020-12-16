@@ -158,6 +158,11 @@ install it. As of now, GitHub Actions also supports Ubuntu 16.04.
 is rarely missing in the release. In the case, this action will get the latest version tag from
 GitHub API and use it instead of `stable` tag (see [#5][issue-5] for more details).
 
+**Note:** When downloading a Neovim asset from [`nightly` release][nvim-nightly] on GitHub, it might
+cause 'Asset Not Found' error. This is because the Nightly build failed due to some reason in
+[neovim/neovim][neovim] CI workflow. If it is still not fixed after a few days, please ask it at
+[Neovim chat](https://gitter.im/neovim/neovim).
+
 ## Choose specific version
 
 ### Vim
