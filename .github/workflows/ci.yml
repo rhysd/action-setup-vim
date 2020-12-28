@@ -10,9 +10,10 @@ jobs:
         version: [stable, nightly]
         neovim: [true, false]
         exclude:
+          # Neovim nightly build for Windows seemed to be removed
           - os: windows-latest
-          - version: nightly
-          - neovim: true
+            version: nightly
+            neovim: true
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
