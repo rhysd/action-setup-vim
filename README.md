@@ -117,7 +117,7 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 | OS      | Version   | Installation                                                                       |
 |---------|-----------|------------------------------------------------------------------------------------|
-| Linux   | `stable`  | Install [`vim-gnome`][ubuntu-vim] package via `apt` package manager                |
+| Linux   | `stable`  | Install [`vim-gtk3`][ubuntu-vim] package via `apt` package manager                 |
 | Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                        |
 | Linux   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                |
 | macOS   | `stable`  | Install MacVim via `brew install macvim`                                           |
@@ -211,7 +211,7 @@ Distributed under [the MIT license](./LICENSE.txt).
 [nvim-nightly]: https://github.com/neovim/neovim/releases/tag/nightly
 [clever-f-workflow]: https://github.com/rhysd/clever-f.vim/blob/master/.github/workflows/ci.yml
 [git-messenger-workflow]: https://github.com/rhysd/git-messenger.vim/blob/master/.github/workflows/ci.yml
-[ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gnome
+[ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gtk3
 [ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
 [vim-themis]: https://github.com/thinca/vim-themis
 [win-inst-release]: https://github.com/vim/vim-win32-installer/releases

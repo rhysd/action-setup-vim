@@ -8,7 +8,7 @@ import { downloadNeovim, downloadStableNeovim } from './neovim';
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux using apt');
     await exec('sudo', ['apt', 'update', '-y']);
-    await exec('sudo', ['apt', 'install', '-y', 'vim-gnome']);
+    await exec('sudo', ['apt', 'install', '-y', 'vim-gtk3']);
     return {
         executable: 'vim',
         binDir: '/usr/bin',
