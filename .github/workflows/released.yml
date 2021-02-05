@@ -28,4 +28,4 @@ jobs:
       - run: npm ci
       - run: npm run build
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js "${{ matrix.neovim }}" "stable" "${{ steps.vim.outputs.executable }}"
