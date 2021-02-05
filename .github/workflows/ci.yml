@@ -83,6 +83,23 @@ jobs:
         id: vim
       - name: Validate action result
         run: node ./scripts/post_action_check.js "false" "v8.1.2424" "${{ steps.vim.outputs.executable }}"
+  # See #11 for more details. vim-gnome package is available until Ubuntu 19.04
+  ubuntu-16_04:
+    name: Vim stable on Ubuntu 16.04
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12'
+      - run: npm ci
+      - run: npm run build
+      - uses: ./
+        with:
+          version: stable
+        id: vim
+      - name: Validate action result
+        run: node ./scripts/post_action_check.js "false" "stable" "${{ steps.vim.outputs.executable }}"
 
   test-and-lint:
     name: Check unit tests and linter

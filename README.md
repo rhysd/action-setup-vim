@@ -115,17 +115,17 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 `vX.Y.Z` represents a specific version such as `v8.2.0126`.
 
-| OS      | Version   | Installation                                                                       |
-|---------|-----------|------------------------------------------------------------------------------------|
-| Linux   | `stable`  | Install [`vim-gnome`][ubuntu-vim] package via `apt` package manager                |
-| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                        |
-| Linux   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                |
-| macOS   | `stable`  | Install MacVim via `brew install macvim`                                           |
-| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                        |
-| macOS   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                |
-| Windows | `stable`  | There is no stable release for Windows so fall back to `nightly`                   |
-| Windows | `nightly` | Install the latest release from [installer repository][win-inst]                   |
-| Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [installer repository][win-inst] repository |
+| OS      | Version   | Installation                                                                                                                  |
+|---------|-----------|-------------------------------------------------------------------------------------------------------------------------------|
+| Linux   | `stable`  | Install [`vim-gnome`][vim-gnome] for `ubuntu-18.04` or later and [`vim-gtk3`][vim-gtk3] for `ubuntu-18.04` or later via `apt` |
+| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                                                                   |
+| Linux   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                                                           |
+| macOS   | `stable`  | Install MacVim via `brew install macvim`                                                                                      |
+| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                                                                   |
+| macOS   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                                                           |
+| Windows | `stable`  | There is no stable release for Windows so fall back to `nightly`                                                              |
+| Windows | `nightly` | Install the latest release from [installer repository][win-inst]                                                              |
+| Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [installer repository][win-inst] repository                                            |
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
@@ -211,7 +211,8 @@ Distributed under [the MIT license](./LICENSE.txt).
 [nvim-nightly]: https://github.com/neovim/neovim/releases/tag/nightly
 [clever-f-workflow]: https://github.com/rhysd/clever-f.vim/blob/master/.github/workflows/ci.yml
 [git-messenger-workflow]: https://github.com/rhysd/git-messenger.vim/blob/master/.github/workflows/ci.yml
-[ubuntu-vim]: https://packages.ubuntu.com/search?keywords=vim-gnome
+[vim-gnome]: https://packages.ubuntu.com/search?keywords=vim-gnome
+[vim-gtk3]: https://packages.ubuntu.com/search?keywords=vim-gtk3
 [ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
 [vim-themis]: https://github.com/thinca/vim-themis
 [win-inst-release]: https://github.com/vim/vim-win32-installer/releases
