@@ -6,6 +6,7 @@ on:
     paths:
       - 'CHANGELOG.md'
       - '.github/workflows/released.yml'
+  workflow_dispatch:
 
 jobs:
   validate:
