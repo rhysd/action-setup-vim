@@ -1,3 +1,13 @@
+<a name="v1.2.7"></a>
+# [v1.2.7](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.7) - 05 Feb 2021
+
+- **Fix:** Installing stable Vim on `ubuntu-20.04` worker. `vim-gnome` was removed at Ubuntu 19.10. In the case, this action installs `vim-gtk3` instead. The worker is now used for `ubuntu-latest` also. (#11)
+- **Improve:** Better error message on an invalid value for `version` input
+- **Improve:** Update dependencies
+
+[Changes][v1.2.7]
+
+
 <a name="v1.2.6"></a>
 # [v1.2.6](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.6) - 15 Nov 2020
 
@@ -123,6 +133,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.7]: https://github.com/rhysd/action-setup-vim/compare/v1.2.6...v1.2.7
 [v1.2.6]: https://github.com/rhysd/action-setup-vim/compare/v1.2.5...v1.2.6
 [v1.2.5]: https://github.com/rhysd/action-setup-vim/compare/v1.2.4...v1.2.5
 [v1.2.4]: https://github.com/rhysd/action-setup-vim/compare/v1.2.3...v1.2.4
