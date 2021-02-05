@@ -5,6 +5,7 @@ import { Response } from 'node-fetch';
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan8_2_1119 } from '../src/vim';
 import type { Installed } from '../src/install';
 import type { Os } from '../src/utils';
+import type { Config } from '../src/config';
 
 function mockFetch(): typeof import('../src/vim') {
     mock('node-fetch', async (url: string) =>
@@ -196,4 +197,69 @@ describe('versionIsOlderThan8_2_1119()', function () {
             A.equal(versionIsOlderThan8_2_1119(v), expected);
         });
     }
+});
+
+describe('installVimStable()', function () {
+    let stub: ExecStub;
+    let installVimOnLinux: (config: Config) => Promise<Installed>;
+
+    before(function () {
+        stub = mockExec();
+    });
+
+    after(function () {
+        mock.stop('../src/shell');
+    });
+
+    afterEach(function () {
+        mock.stop('ubuntu-version');
+    });
+
+    it('installs vim-gnome package for Ubuntu 18.10 or earlier (#11)', async function () {
+        async function getUbuntuVersion(): Promise<unknown> {
+            return Promise.resolve({
+                description: 'Ubuntu 18.04 LTS',
+                release: '18.04',
+                codename: '...',
+            });
+        }
+        mock('ubuntu-version', { getUbuntuVersion });
+        installVimOnLinux = mock.reRequire('../src/install_linux').install;
+
+        const installed = await installVimOnLinux({
+            version: 'stable',
+            neovim: false,
+            os: 'linux',
+            token: null,
+        });
+
+        A.equal(installed.executable, 'vim');
+        A.equal(installed.binDir, '/usr/bin');
+        const aptArgs = stub.called[stub.called.length - 1][1];
+        A.equal(aptArgs[aptArgs.length - 1], 'vim-gnome', aptArgs.join(' '));
+    });
+
+    it('installs vim-gtk3 package for Ubuntu 19.04 or later (#11)', async function () {
+        async function getUbuntuVersion(): Promise<unknown> {
+            return Promise.resolve({
+                description: 'Ubuntu 20.04 LTS',
+                release: '20.04',
+                codename: '...',
+            });
+        }
+        mock('ubuntu-version', { getUbuntuVersion });
+        installVimOnLinux = mock.reRequire('../src/install_linux').install;
+
+        const installed = await installVimOnLinux({
+            version: 'stable',
+            neovim: false,
+            os: 'linux',
+            token: null,
+        });
+
+        A.equal(installed.executable, 'vim');
+        A.equal(installed.binDir, '/usr/bin');
+        const aptArgs = stub.called[stub.called.length - 1][1];
+        A.equal(aptArgs[aptArgs.length - 1], 'vim-gtk3', aptArgs.join(' '));
+    });
 });
