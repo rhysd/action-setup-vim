@@ -36,26 +36,27 @@
     "@actions/exec": "^1.0.4",
     "@actions/github": "^4.0.0",
     "@actions/io": "^1.0.2",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "ubuntu-version": "^1.0.2"
   },
   "devDependencies": {
-    "@types/mocha": "^8.0.3",
+    "@types/mocha": "^8.2.0",
     "@types/mock-require": "^2.0.0",
-    "@types/node": "^14.11.8",
+    "@types/node": "^14.14.20",
     "@types/node-fetch": "^2.5.7",
-    "@typescript-eslint/eslint-plugin": "^4.4.1",
-    "@typescript-eslint/parser": "^4.4.1",
-    "eslint": "^7.11.0",
-    "eslint-config-prettier": "^6.12.0",
+    "@typescript-eslint/eslint-plugin": "^4.12.0",
+    "@typescript-eslint/parser": "^4.12.0",
+    "eslint": "^7.17.0",
+    "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-mocha": "^8.0.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
-    "mocha": "^8.1.3",
+    "eslint-plugin-prettier": "^3.3.1",
+    "husky": "^4.3.7",
+    "mocha": "^8.2.1",
     "mock-require": "^3.0.3",
     "npm-run-all": "^4.1.5",
     "nyc": "^15.1.0",
-    "prettier": "^2.1.2",
-    "typescript": "^4.0.3"
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.3"
   },
   "husky": {
     "hooks": {
