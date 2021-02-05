@@ -36,7 +36,8 @@
     "@actions/exec": "^1.0.4",
     "@actions/github": "^4.0.0",
     "@actions/io": "^1.0.2",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "ubuntu-version": "^1.0.2"
   },
   "devDependencies": {
     "@types/mocha": "^8.2.0",
