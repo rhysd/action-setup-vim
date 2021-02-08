@@ -13,17 +13,16 @@ async function isUbuntu18OrEarlier(): Promise<boolean> {
         return false; // Should be unreachable
     }
 
-    core.debug(`Ubuntu system information ${JSON.stringify(ver)}`);
+    const json = JSON.stringify(ver);
+    core.debug(`Ubuntu system information ${json}`);
 
-    const m = ver.release.match(/^(\d+)\./);
-    if (m === null) {
-        core.error(`Unexpected 'Release' value of OS info: ${ver.release}`);
+    const vers = ver.version;
+    if (vers.length === 0) {
+        core.error(`Could not get Ubuntu version from ${json}`);
         return false;
     }
 
-    const majorVer = parseInt(m[1], 10);
-    core.debug(`Ubuntu major version: ${majorVer}`);
-    return majorVer <= 18;
+    return vers[0] <= 18;
 }
 
 async function installVimStable(): Promise<Installed> {

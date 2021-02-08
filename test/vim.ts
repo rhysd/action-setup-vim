@@ -221,6 +221,7 @@ describe('installVimStable()', function () {
                 description: 'Ubuntu 18.04 LTS',
                 release: '18.04',
                 codename: '...',
+                version: [18, 4],
             });
         }
         mock('ubuntu-version', { getUbuntuVersion });
@@ -242,9 +243,10 @@ describe('installVimStable()', function () {
     it('installs vim-gtk3 package for Ubuntu 19.04 or later (#11)', async function () {
         async function getUbuntuVersion(): Promise<unknown> {
             return Promise.resolve({
-                description: 'Ubuntu 20.04 LTS',
+                description: 'Ubuntu 20.04.2 LTS',
                 release: '20.04',
                 codename: '...',
+                version: [20, 4, 2],
             });
         }
         mock('ubuntu-version', { getUbuntuVersion });
