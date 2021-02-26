@@ -13,6 +13,7 @@
     "noUnusedParameters": true,
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
     "strict": true,
     "target": "es2019",
     "sourceMap": true,
