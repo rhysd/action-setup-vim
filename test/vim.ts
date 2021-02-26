@@ -94,19 +94,19 @@ describe('installVimOnWindows()', function () {
 describe('buildVim()', function () {
     let stub: ExecStub;
     let buildVim: (v: string, os: Os) => Promise<Installed>;
-    const savedXcode11Env = process.env.XCODE_11_DEVELOPER_DIR;
+    const savedXcode11Env = process.env['XCODE_11_DEVELOPER_DIR'];
 
     before(function () {
         stub = mockExec();
         // Re-requiring ../src/vim is necessary because it depends on ../src/shell
         buildVim = mock.reRequire('../src/vim').buildVim;
-        process.env.XCODE_11_DEVELOPER_DIR = './';
+        process.env['XCODE_11_DEVELOPER_DIR'] = './';
     });
 
     after(function () {
         mock.stop('../src/shell');
         mock.stop('../src/vim');
-        process.env.XCODE_11_DEVELOPER_DIR = savedXcode11Env;
+        process.env['XCODE_11_DEVELOPER_DIR'] = savedXcode11Env;
     });
 
     afterEach(function () {

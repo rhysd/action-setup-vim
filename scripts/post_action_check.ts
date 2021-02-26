@@ -82,10 +82,10 @@ function main(): void {
 
     const bin = path.dirname(exe);
     log(`Validating '${bin}' is in $PATH`);
-    ok(process.env.PATH);
+    ok(process.env['PATH']);
     const pathSep = process.platform === 'win32' ? ';' : ':';
-    const paths = process.env.PATH.split(pathSep);
-    ok(paths.includes(bin), `'${bin}' is not included in '${process.env.PATH}'`);
+    const paths = process.env['PATH'].split(pathSep);
+    ok(paths.includes(bin), `'${bin}' is not included in '${process.env['PATH']}'`);
 
     log('Validating executable');
     const proc = spawnSync(exe, ['-N', '-c', 'quit']);

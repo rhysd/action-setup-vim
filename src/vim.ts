@@ -40,7 +40,7 @@ async function getXcode11DevDir(): Promise<string | null> {
     // Xcode10~12 are available at this point:
     // https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md#xcode
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const dir = process.env.XCODE_11_DEVELOPER_DIR || '/Applications/Xcode_11.7.app/Contents/Developer';
+    const dir = process.env['XCODE_11_DEVELOPER_DIR'] || '/Applications/Xcode_11.7.app/Contents/Developer';
     try {
         await fs.access(dir);
         return dir;

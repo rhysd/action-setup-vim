@@ -12,7 +12,7 @@ async function main(): Promise<void> {
     const installed = await install(config);
     await validateInstallation(installed);
 
-    core.exportVariable('PATH', `${installed.binDir}${pathSep}${process.env.PATH}`);
+    core.exportVariable('PATH', `${installed.binDir}${pathSep}${process.env['PATH']}`);
     core.debug(`'${installed.binDir}' was set to $PATH`);
 
     const fullPath = join(installed.binDir, installed.executable);

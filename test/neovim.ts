@@ -39,7 +39,7 @@ describe('downloadNeovim()', function () {
         });
 
         it('fallbacks to the latest version detected from GitHub API', async function () {
-            const token = process.env.GITHUB_TOKEN ?? null;
+            const token = process.env['GITHUB_TOKEN'] ?? null;
             if (token === null) {
                 this.skip(); // GitHub API token is necessary
             }
