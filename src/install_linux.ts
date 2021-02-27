@@ -7,22 +7,15 @@ import { buildVim } from './vim';
 import { downloadNeovim, downloadStableNeovim } from './neovim';
 
 async function isUbuntu18OrEarlier(): Promise<boolean> {
-    const ver = await getUbuntuVersion();
-    if (ver === null) {
+    const version = await getUbuntuVersion();
+    if (version.length === 0) {
         core.error('Trying to install apt package but current OS is not Ubuntu');
         return false; // Should be unreachable
     }
 
-    const json = JSON.stringify(ver);
-    core.debug(`Ubuntu system information ${json}`);
+    core.debug(`Ubuntu system version: ${version}`);
 
-    const vers = ver.version;
-    if (vers.length === 0) {
-        core.error(`Could not get Ubuntu version from ${json}`);
-        return false;
-    }
-
-    return vers[0] <= 18;
+    return version[0] <= 18;
 }
 
 async function installVimStable(): Promise<Installed> {
