@@ -30,7 +30,7 @@ describe('downloadNeovim()', function () {
                 const ret = await downloadNeovim('nightly', 'linux');
                 A.ok(false, `Exception was not thrown: ${ret}`);
             } catch (err) {
-                const msg = err.message;
+                const msg = (err as Error).message;
                 A.ok(msg.includes('Could not download Neovim release from'), msg);
                 A.ok(msg.includes('check the asset for linux was really uploaded'), msg);
                 // Special message only for nightly build
@@ -46,7 +46,8 @@ describe('downloadNeovim()', function () {
             try {
                 const ret = await downloadStableNeovim('linux', token);
                 A.ok(false, `Exception was not thrown: ${ret}`);
-            } catch (err) {
+            } catch (e) {
+                const err = e as Error;
                 // Matches to version tag like '/v0.4.4/' as part of download URL in error message
                 // Note: assert.match is not available in Node v12
                 A.ok(/\/v\d+\.\d+\.\d+\//.test(err.message), err.message);

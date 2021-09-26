@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { exec, Env } from './shell';
-import { makeTmpdir, exeName, Os } from './utils';
+import { makeTmpdir, exeName, Os, ensureError } from './utils';
 import type { Installed } from './install';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -140,9 +140,9 @@ export async function detectLatestWindowsReleaseTag(): Promise<string> {
 
         core.debug(`Latest Vim relese tag ${m[1]} was extracted from redirect`);
         return m[1];
-    } catch (err) {
-        core.error(err.message);
-        core.debug(err.stack);
+    } catch (e) {
+        const err = ensureError(e);
+        core.debug(err.stack ?? err.message);
         throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
     }
 }
@@ -164,8 +164,9 @@ async function installVimAssetOnWindows(file: string, url: string): Promise<stri
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
 
         await exec('unzip', [assetFile], { cwd: dlDir });
-    } catch (err) {
-        core.debug(err.stack);
+    } catch (e) {
+        const err = ensureError(e);
+        core.debug(err.stack ?? err.message);
         throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
     }
 

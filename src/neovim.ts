@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
-import { makeTmpdir, Os, exeName } from './utils';
+import { makeTmpdir, Os, exeName, ensureError } from './utils';
 import { exec } from './shell';
 import type { Installed } from './install';
 
@@ -74,8 +74,9 @@ export async function downloadNeovim(version: string, os: Os): Promise<Installed
             executable: exeName(true, os),
             binDir: path.join(destDir, 'bin'),
         };
-    } catch (err) {
-        core.debug(err.stack);
+    } catch (e) {
+        const err = ensureError(e);
+        core.debug(err.stack ?? err.message);
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
@@ -86,7 +87,7 @@ export async function downloadNeovim(version: string, os: Os): Promise<Installed
 
 async function fetchLatestVersion(token: string): Promise<string> {
     const octokit = github.getOctokit(token);
-    const { data } = await octokit.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
+    const { data } = await octokit.rest.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
     const re = /^v\d+\.\d+\.\d+$/;
     for (const release of data) {
         const tagName = release.tag_name;
@@ -104,7 +105,8 @@ async function fetchLatestVersion(token: string): Promise<string> {
 export async function downloadStableNeovim(os: Os, token: string | null = null): Promise<Installed> {
     try {
         return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
-    } catch (err) {
+    } catch (e) {
+        const err = ensureError(e);
         if (err.message.includes('Downloading asset failed:') && token !== null) {
             core.warning(
                 `Could not download stable asset. Detecting the latest stable release from GitHub API as fallback: ${err.message}`,
