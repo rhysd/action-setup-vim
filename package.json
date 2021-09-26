@@ -36,14 +36,14 @@
     "@actions/exec": "^1.1.0",
     "@actions/github": "^5.0.0",
     "@actions/io": "^1.1.1",
-    "node-fetch": "^3.0.0",
+    "node-fetch": "^2.6.5",
     "ubuntu-version": "^2.0.0"
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",
     "@types/mock-require": "^2.0.0",
     "@types/node": "^16.10.1",
-    "@types/node-fetch": "^3.0.2",
+    "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
     "eslint": "^7.32.0",
