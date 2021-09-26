@@ -32,3 +32,10 @@ export function exeName(isNeovim: boolean, os: Os): ExeName {
         return isNeovim ? 'nvim' : 'vim';
     }
 }
+
+export function ensureError(err: unknown): Error {
+    if (err instanceof Error) {
+        return err;
+    }
+    return new Error(`Unknown fatal error: ${err}`);
+}
