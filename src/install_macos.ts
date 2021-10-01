@@ -23,7 +23,7 @@ async function installNeovimStable(): Promise<Installed> {
     };
 }
 
-export function install(config: Config): Promise<Installed> {
+export async function install(config: Config): Promise<Installed> {
     core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} ${config.version} version on macOS`);
     if (config.neovim) {
         switch (config.version) {
@@ -31,7 +31,7 @@ export function install(config: Config): Promise<Installed> {
                 return installNeovimStable();
             case 'nightly':
                 try {
-                    return downloadNeovim(config.version, 'macos');
+                    return await downloadNeovim(config.version, 'macos'); // await is necessary to catch error
                 } catch (e) {
                     const message = e instanceof Error ? e.message : e;
                     core.warning(
