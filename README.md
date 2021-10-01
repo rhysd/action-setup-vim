@@ -161,7 +161,7 @@ GitHub API and use it instead of `stable` tag (see [#5][issue-5] for more detail
 **Note:** When downloading a Neovim asset from [`nightly` release][nvim-nightly] on GitHub, it might
 cause 'Asset Not Found' error. This is because the Nightly build failed due to some reason in
 [neovim/neovim][neovim] CI workflow. In the case, this action tries to build Neovim from sources on
-Linux workers, otherwise it gives up installation.
+Linux and macOS workers. It gives up installation on other platforms.
 
 ## Choose specific version
 
@@ -189,7 +189,6 @@ is not available for installing Neovim on Windows.
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.
 - Building Vim is not configurale. For example, arguments cannot be passed to `./configure`.
 - Installing Vim/Neovim from system's package manager is not configurable. For example, arguments cannot be passed to `brew install`.
-- Cannot build Neovim from sources in favor of [neovim releases][neovim-release].
 
 These are basically not a technical limitation. Please let me know by creating an issue if you want
 some of them.
