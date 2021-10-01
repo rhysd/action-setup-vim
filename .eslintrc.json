@@ -63,7 +63,12 @@
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-confusing-void-expression": "error",
-        "@typescript-eslint/non-nullable-type-assertion-style": "error"
+        "@typescript-eslint/non-nullable-type-assertion-style": "error",
+        "no-return-await": "off",
+        "@typescript-eslint/return-await": [
+          "error",
+          "in-try-catch"
+        ]
     },
     "overrides": [
         {
