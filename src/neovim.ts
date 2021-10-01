@@ -148,17 +148,7 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
             break;
         case 'macos':
             core.debug('Installing build dependencies via Homebrew');
-            await exec('brew', [
-                'brew',
-                'install',
-                'ninja',
-                'libtool',
-                'automake',
-                'cmake',
-                'pkg-config',
-                'gettext',
-                'curl',
-            ]);
+            await exec('brew', ['install', 'ninja', 'libtool', 'automake', 'cmake', 'pkg-config', 'gettext', 'curl']);
             break;
         default:
             throw new Error(`Building Neovim from soruce is not supported for ${os} platform`);
