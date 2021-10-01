@@ -4,7 +4,7 @@ import type { Installed } from './install';
 import type { Config } from './config';
 import { exec } from './shell';
 import { buildVim } from './vim';
-import { buildNeovim, downloadNeovim, downloadStableNeovim } from './neovim';
+import { buildNightlyNeovimOnLinux, downloadNeovim, downloadStableNeovim } from './neovim';
 
 async function isUbuntu18OrEarlier(): Promise<boolean> {
     const version = await getUbuntuVersion();
@@ -38,10 +38,15 @@ export function install(config: Config): Promise<Installed> {
             try {
                 return downloadNeovim(config.version, 'linux');
             } catch (e) {
+                if (config.version !== 'nightly') {
+                    throw e; // Give up
+                }
                 const message = e instanceof Error ? e.message : e;
-                core.debug(`Neovim download failure: ${message}.`);
+                core.warning(
+                    `Neovim download failure for nightly on Linux: ${message}. Falling back to installing Neovim by building it from source`,
+                );
+                return buildNightlyNeovimOnLinux();
             }
-            return buildNeovim(config.version, 'linux');
         }
     } else {
         if (config.version === 'stable') {

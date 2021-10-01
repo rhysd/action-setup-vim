@@ -120,10 +120,8 @@ export async function downloadStableNeovim(os: Os, token: string | null = null):
     }
 }
 
-export async function buildNeovim(version: string, os: Os): Promise<Installed> {
-    assert.equal(version, 'nightly');
-    assert.equal(os, 'linux');
-
+export async function buildNightlyNeovimOnLinux(): Promise<Installed> {
+    core.debug('Installing dependencies for building Neovim from sources via apt');
     await exec('sudo', [
         'apt-get',
         'install',
@@ -142,23 +140,20 @@ export async function buildNeovim(version: string, os: Os): Promise<Installed> {
     ]);
 
     const installDir = path.join(homedir(), 'nvim');
-    core.debug(`Building and installing Neovim to ${installDir}.`);
+    core.debug(`Building and installing Neovim to ${installDir}`);
     const dir = path.join(await makeTmpdir(), 'neovim');
 
     await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim', dir]);
 
     const opts = { cwd: dir };
-    await exec(
-        'make',
-        ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'],
-        opts,
-    );
-    core.debug(`Built Neovim in ${opts.cwd}.`);
+    const makeArgs = ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'];
+    await exec('make', makeArgs, opts);
+    core.debug(`Built Neovim in ${opts.cwd}. Installing it via 'make install'`);
     await exec('make', ['install'], opts);
-    core.debug(`Installed Neovim to ${installDir}.`);
+    core.debug(`Installed Neovim to ${installDir}`);
 
     return {
-        executable: exeName(true, os),
+        executable: exeName(true, 'linux'),
         binDir: path.join(installDir, 'bin'),
     };
 }
