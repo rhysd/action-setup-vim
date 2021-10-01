@@ -4,7 +4,7 @@ import type { Installed } from './install';
 import type { Config } from './config';
 import { exec } from './shell';
 import { buildVim } from './vim';
-import { downloadNeovim, downloadStableNeovim } from './neovim';
+import { buildNeovim, downloadNeovim, downloadStableNeovim } from './neovim';
 
 async function isUbuntu18OrEarlier(): Promise<boolean> {
     const version = await getUbuntuVersion();
@@ -35,7 +35,13 @@ export function install(config: Config): Promise<Installed> {
         if (config.version === 'stable') {
             return downloadStableNeovim('linux', config.token);
         } else {
-            return downloadNeovim(config.version, 'linux');
+            try {
+                return downloadNeovim(config.version, 'linux');
+            } catch (e) {
+                const message = e instanceof Error ? e.message : e;
+                core.debug(`Neovim download failure: ${message}.`);
+            }
+            return buildNeovim(config.version, 'linux');
         }
     } else {
         if (config.version === 'stable') {
