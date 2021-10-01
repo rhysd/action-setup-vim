@@ -1,3 +1,4 @@
+import { strict as assert } from 'assert';
 import { homedir } from 'os';
 import * as path from 'path';
 import { promises as fs } from 'fs';
@@ -117,4 +118,47 @@ export async function downloadStableNeovim(os: Os, token: string | null = null):
         }
         throw err;
     }
+}
+
+export async function buildNeovim(version: string, os: Os): Promise<Installed> {
+    assert.equal(version, 'nightly');
+    assert.equal(os, 'linux');
+
+    await exec('sudo', [
+        'apt-get',
+        'install',
+        '-y',
+        'ninja-build',
+        'gettext',
+        'libtool',
+        'libtool-bin',
+        'autoconf',
+        'automake',
+        'cmake',
+        'g++',
+        'pkg-config',
+        'unzip',
+        'curl',
+    ]);
+
+    const installDir = path.join(homedir(), 'nvim');
+    core.debug(`Building and installing Neovim to ${installDir}.`);
+    const dir = path.join(await makeTmpdir(), 'neovim');
+
+    await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim', dir]);
+
+    const opts = { cwd: dir };
+    await exec(
+        'make',
+        ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'],
+        opts,
+    );
+    core.debug(`Built Neovim in ${opts.cwd}.`);
+    await exec('make', ['install'], opts);
+    core.debug(`Installed Neovim to ${installDir}.`);
+
+    return {
+        executable: exeName(true, os),
+        binDir: path.join(installDir, 'bin'),
+    };
 }
