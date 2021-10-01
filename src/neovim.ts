@@ -1,4 +1,3 @@
-import { strict as assert } from 'assert';
 import { homedir } from 'os';
 import * as path from 'path';
 import { promises as fs } from 'fs';
@@ -120,42 +119,53 @@ export async function downloadStableNeovim(os: Os, token: string | null = null):
     }
 }
 
-export async function buildNeovim(version: string, os: Os): Promise<Installed> {
-    assert.equal(version, 'nightly');
-    assert.equal(os, 'linux');
+// Build nightly Neovim from sources as fallback of downloading nightly assets from the nightly release page of
+// neovim/neovim repository (#18).
+// https://github.com/neovim/neovim/wiki/Building-Neovim
+export async function buildNightlyNeovim(os: Os): Promise<Installed> {
+    core.debug(`Installing Neovim by building from source on ${os}`);
 
-    await exec('sudo', [
-        'apt-get',
-        'install',
-        '-y',
-        'ninja-build',
-        'gettext',
-        'libtool',
-        'libtool-bin',
-        'autoconf',
-        'automake',
-        'cmake',
-        'g++',
-        'pkg-config',
-        'unzip',
-        'curl',
-    ]);
+    switch (os) {
+        case 'linux':
+            core.debug('Installing build dependencies via apt');
+            await exec('sudo', [
+                'apt-get',
+                'install',
+                '-y',
+                '--no-install-recommends',
+                'ninja-build',
+                'gettext',
+                'libtool',
+                'libtool-bin',
+                'autoconf',
+                'automake',
+                'cmake',
+                'g++',
+                'pkg-config',
+                'unzip',
+                'curl',
+            ]);
+            break;
+        case 'macos':
+            core.debug('Installing build dependencies via Homebrew');
+            await exec('brew', ['install', 'ninja', 'libtool', 'automake', 'cmake', 'pkg-config', 'gettext', 'curl']);
+            break;
+        default:
+            throw new Error(`Building Neovim from soruce is not supported for ${os} platform`);
+    }
 
     const installDir = path.join(homedir(), 'nvim');
-    core.debug(`Building and installing Neovim to ${installDir}.`);
-    const dir = path.join(await makeTmpdir(), 'neovim');
+    core.debug(`Building and installing Neovim to ${installDir}`);
+    const dir = path.join(await makeTmpdir(), 'build-nightly-neovim');
 
-    await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim', dir]);
+    await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim.git', dir]);
 
     const opts = { cwd: dir };
-    await exec(
-        'make',
-        ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'],
-        opts,
-    );
-    core.debug(`Built Neovim in ${opts.cwd}.`);
+    const makeArgs = ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'];
+    await exec('make', makeArgs, opts);
+    core.debug(`Built Neovim in ${opts.cwd}. Installing it via 'make install'`);
     await exec('make', ['install'], opts);
-    core.debug(`Installed Neovim to ${installDir}.`);
+    core.debug(`Installed Neovim to ${installDir}`);
 
     return {
         executable: exeName(true, os),
