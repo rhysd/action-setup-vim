@@ -80,7 +80,7 @@ describe('Neovim installation', function () {
         it('builds nightly Neovim on Linux', async function () {
             const installed = await buildNightlyNeovimMocked('linux');
             A.equal(installed.executable, 'nvim');
-            A.ok(installed.binDir.endsWith(path.join('nvim', 'bin')), installed.binDir);
+            A.ok(installed.binDir.endsWith(path.join('nvim-nightly', 'bin')), installed.binDir);
             const installDir = path.dirname(installed.binDir);
 
             // apt-get -> git -> make
@@ -95,7 +95,7 @@ describe('Neovim installation', function () {
         it('builds nightly Neovim on macOS', async function () {
             const installed = await buildNightlyNeovimMocked('macos');
             A.equal(installed.executable, 'nvim');
-            A.ok(installed.binDir.endsWith(path.join('nvim', 'bin')), installed.binDir);
+            A.ok(installed.binDir.endsWith(path.join('nvim-nightly', 'bin')), installed.binDir);
             const installDir = path.dirname(installed.binDir);
 
             // brew -> git -> make

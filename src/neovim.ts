@@ -154,7 +154,8 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
             throw new Error(`Building Neovim from soruce is not supported for ${os} platform`);
     }
 
-    const installDir = path.join(homedir(), 'nvim');
+    // Add -nightly suffix since building stable Neovim from source may be supported in the future
+    const installDir = path.join(homedir(), 'nvim-nightly');
     core.debug(`Building and installing Neovim to ${installDir}`);
     const dir = path.join(await makeTmpdir(), 'build-nightly-neovim');
 
