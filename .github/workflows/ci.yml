@@ -46,8 +46,8 @@ jobs:
         id: vim
       - name: Validate action result
         run: node ./scripts/post_action_check.js "false" "v8.2.1931" "${{ steps.vim.outputs.executable }}"
-  nvim-v0_4_2:
-    name: Neovim v0.4.2
+  nvim-v0_4_4:
+    name: Neovim v0.4.4
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -62,10 +62,10 @@ jobs:
       - uses: ./
         with:
           neovim: true
-          version: v0.4.2
+          version: v0.4.4
         id: neovim
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "true" "v0.4.2" "${{ steps.neovim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js "true" "v0.4.4" "${{ steps.neovim.outputs.executable }}"
   # See #10 for more details. Vim older than 8.2.1119 cannot be built with Xcode 12 or later.
   vim-v8_1_2424-mac:
     name: Vim v8.1.2424
