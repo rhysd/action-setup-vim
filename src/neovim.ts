@@ -132,6 +132,7 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
                 'apt-get',
                 'install',
                 '-y',
+                '--no-install-recommends',
                 'ninja-build',
                 'gettext',
                 'libtool',

@@ -21,8 +21,8 @@ async function isUbuntu18OrEarlier(): Promise<boolean> {
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux using apt');
     const pkg = (await isUbuntu18OrEarlier()) ? 'vim-gnome' : 'vim-gtk3';
-    await exec('sudo', ['apt', 'update', '-y']);
-    await exec('sudo', ['apt', 'install', '-y', pkg]);
+    await exec('sudo', ['apt-get', 'update', '-y']);
+    await exec('sudo', ['apt-get', 'install', '-y', '--no-install-recommends', pkg]);
     return {
         executable: 'vim',
         binDir: '/usr/bin',
