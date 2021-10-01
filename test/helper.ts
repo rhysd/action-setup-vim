@@ -1,7 +1,7 @@
 import mock = require('mock-require');
 import { Response } from 'node-fetch';
 
-export function mockFetch() {
+export function mockFetch(): void {
     mock('node-fetch', async (url: string) =>
         Promise.resolve(new Response(`dummy response for ${url}`, { status: 404, statusText: 'Not found for dummy' })),
     );

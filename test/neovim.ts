@@ -1,7 +1,7 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { downloadNeovim, downloadStableNeovim, buildNightlyNeovimOnLinux } from '../src/neovim';
+import { downloadNeovim, downloadStableNeovim, buildNightlyNeovim } from '../src/neovim';
 import { mockFetch, ExecStub, mockExec } from './helper';
 
 function reRequire(): typeof import('../src/neovim') {
@@ -60,13 +60,13 @@ describe('Neovim installation', function () {
         });
     });
 
-    describe('buildNightlyNeovimOnLinux()', function () {
+    describe('buildNightlyNeovim()', function () {
         let stub: ExecStub;
-        let buildNightlyNeovimOnLinuxMocked: typeof buildNightlyNeovimOnLinux;
+        let buildNightlyNeovimMocked: typeof buildNightlyNeovim;
 
         before(function () {
             stub = mockExec();
-            buildNightlyNeovimOnLinuxMocked = reRequire().buildNightlyNeovimOnLinux;
+            buildNightlyNeovimMocked = reRequire().buildNightlyNeovim;
         });
 
         after(function () {
@@ -77,17 +77,45 @@ describe('Neovim installation', function () {
             stub.reset();
         });
 
-        it('builds nightly Neovim on Linux()', async function () {
-            const installed = await buildNightlyNeovimOnLinuxMocked();
+        it('builds nightly Neovim on Linux', async function () {
+            const installed = await buildNightlyNeovimMocked('linux');
             A.equal(installed.executable, 'nvim');
             A.ok(installed.binDir.endsWith(path.join('nvim', 'bin')), installed.binDir);
-
             const installDir = path.dirname(installed.binDir);
+
             // apt-get -> git -> make
+            const apt = stub.called[0];
+            A.ok(apt[0] === 'sudo' && apt[1][0] === 'apt-get', `${apt}`);
             const make = stub.called[2];
             A.equal(make[0], 'make');
             const makeArgs = make[1];
             A.ok(makeArgs[1].endsWith(installDir), `${makeArgs}`);
+        });
+
+        it('builds nightly Neovim on macOS', async function () {
+            const installed = await buildNightlyNeovimMocked('macos');
+            A.equal(installed.executable, 'nvim');
+            A.ok(installed.binDir.endsWith(path.join('nvim', 'bin')), installed.binDir);
+            const installDir = path.dirname(installed.binDir);
+
+            // brew -> git -> make
+            const brew = stub.called[0];
+            A.ok(brew[0] === 'brew', `${brew}`);
+            const make = stub.called[2];
+            A.equal(make[0], 'make');
+            const makeArgs = make[1];
+            A.ok(makeArgs[1].endsWith(installDir), `${makeArgs}`);
+        });
+
+        it('throws an error on Windows', async function () {
+            try {
+                await buildNightlyNeovimMocked('windows');
+                A.ok(false, 'exception was not thrown');
+            } catch (e) {
+                const message = e instanceof Error ? e.message : `${e}`;
+                A.ok(message.includes('Building Neovim from soruce is not supported for windows'), message);
+                // OK
+            }
         });
     });
 });
