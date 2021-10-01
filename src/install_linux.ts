@@ -4,7 +4,7 @@ import type { Installed } from './install';
 import type { Config } from './config';
 import { exec } from './shell';
 import { buildVim } from './vim';
-import { buildNightlyNeovimOnLinux, downloadNeovim, downloadStableNeovim } from './neovim';
+import { buildNightlyNeovim, downloadNeovim, downloadStableNeovim } from './neovim';
 
 async function isUbuntu18OrEarlier(): Promise<boolean> {
     const version = await getUbuntuVersion();
@@ -32,21 +32,21 @@ async function installVimStable(): Promise<Installed> {
 export function install(config: Config): Promise<Installed> {
     core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} version '${config.version}' on Linux`);
     if (config.neovim) {
-        if (config.version === 'stable') {
-            return downloadStableNeovim('linux', config.token);
-        } else {
-            try {
-                return downloadNeovim(config.version, 'linux');
-            } catch (e) {
-                if (config.version !== 'nightly') {
-                    throw e; // Give up
+        switch (config.version) {
+            case 'stable':
+                return downloadStableNeovim('linux', config.token);
+            case 'nightly':
+                try {
+                    return downloadNeovim(config.version, 'linux');
+                } catch (e) {
+                    const message = e instanceof Error ? e.message : e;
+                    core.warning(
+                        `Neovim download failure for nightly on Linux: ${message}. Falling back to installing Neovim by building it from source`,
+                    );
+                    return buildNightlyNeovim('linux');
                 }
-                const message = e instanceof Error ? e.message : e;
-                core.warning(
-                    `Neovim download failure for nightly on Linux: ${message}. Falling back to installing Neovim by building it from source`,
-                );
-                return buildNightlyNeovimOnLinux();
-            }
+            default:
+                return downloadNeovim(config.version, 'linux');
         }
     } else {
         if (config.version === 'stable') {
