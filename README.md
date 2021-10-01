@@ -160,8 +160,8 @@ GitHub API and use it instead of `stable` tag (see [#5][issue-5] for more detail
 
 **Note:** When downloading a Neovim asset from [`nightly` release][nvim-nightly] on GitHub, it might
 cause 'Asset Not Found' error. This is because the Nightly build failed due to some reason in
-[neovim/neovim][neovim] CI workflow. If it is still not fixed after a few days, please ask it at
-[Neovim chat](https://gitter.im/neovim/neovim).
+[neovim/neovim][neovim] CI workflow. In the case, this action tries to build Neovim from sources on
+Linux workers, otherwise it gives up installation.
 
 ## Choose specific version
 
