@@ -1,4 +1,3 @@
-import { strict as assert } from 'assert';
 import { homedir } from 'os';
 import * as path from 'path';
 import { promises as fs } from 'fs';
@@ -120,6 +119,8 @@ export async function downloadStableNeovim(os: Os, token: string | null = null):
     }
 }
 
+// Build nightly Neovim from sources as fallback of downloading nightly assets from the nightly release page of
+// neovim/neovim repository (#18).
 export async function buildNightlyNeovimOnLinux(): Promise<Installed> {
     core.debug('Installing dependencies for building Neovim from sources via apt');
     await exec('sudo', [
@@ -141,9 +142,9 @@ export async function buildNightlyNeovimOnLinux(): Promise<Installed> {
 
     const installDir = path.join(homedir(), 'nvim');
     core.debug(`Building and installing Neovim to ${installDir}`);
-    const dir = path.join(await makeTmpdir(), 'neovim');
+    const dir = path.join(await makeTmpdir(), 'build-nightly-neovim');
 
-    await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim', dir]);
+    await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim.git', dir]);
 
     const opts = { cwd: dir };
     const makeArgs = ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'];

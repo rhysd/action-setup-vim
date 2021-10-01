@@ -1,42 +1,14 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { Response } from 'node-fetch';
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan8_2_1119 } from '../src/vim';
 import type { Installed } from '../src/install';
 import type { Os } from '../src/utils';
 import type { Config } from '../src/config';
+import { mockFetch, ExecStub, mockExec } from './helper';
 
-function mockFetch(): typeof import('../src/vim') {
-    mock('node-fetch', async (url: string) =>
-        Promise.resolve(new Response(`dummy response for ${url}`, { status: 404, statusText: 'Not found for dummy' })),
-    );
+function reRequire(): typeof import('../src/vim') {
     return mock.reRequire('../src/vim');
-}
-
-// Arguments of exec(): cmd: string, args: string[], options?: Options
-type ExecArgs = [string, string[], { env: { [n: string]: string } } | undefined];
-class ExecStub {
-    called: ExecArgs[] = [];
-
-    onCalled(args: ExecArgs): void {
-        this.called.push(args);
-    }
-
-    reset(): void {
-        this.called = [];
-    }
-}
-
-function mockExec(): ExecStub {
-    const stub = new ExecStub();
-    const exec = async (...args: ExecArgs): Promise<string> => {
-        stub.onCalled(args);
-        return '';
-    };
-    mock('../src/shell', { exec });
-    mock.reRequire('../src/shell');
-    return stub;
 }
 
 describe('detectLatestWindowsReleaseTag()', function () {
@@ -50,7 +22,8 @@ describe('detectLatestWindowsReleaseTag()', function () {
         let detectLatestWindowsReleaseTagMocked: typeof detectLatestWindowsReleaseTag;
 
         before(function () {
-            detectLatestWindowsReleaseTagMocked = mockFetch().detectLatestWindowsReleaseTag;
+            mockFetch();
+            detectLatestWindowsReleaseTagMocked = reRequire().detectLatestWindowsReleaseTag;
         });
 
         after(function () {
@@ -75,7 +48,8 @@ describe('installVimOnWindows()', function () {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
 
         before(function () {
-            installVimOnWindowsMocked = mockFetch().installVimOnWindows;
+            mockFetch();
+            installVimOnWindowsMocked = reRequire().installVimOnWindows;
         });
 
         after(function () {
@@ -99,7 +73,7 @@ describe('buildVim()', function () {
     before(function () {
         stub = mockExec();
         // Re-requiring ../src/vim is necessary because it depends on ../src/shell
-        buildVim = mock.reRequire('../src/vim').buildVim;
+        buildVim = reRequire().buildVim;
         process.env['XCODE_11_DEVELOPER_DIR'] = './';
     });
 
