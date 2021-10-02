@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/rhysd/action-setup-vim#readme",
   "dependencies": {
-    "@actions/core": "^1.5.0",
+    "@actions/core": "^1.6.0",
     "@actions/exec": "^1.1.0",
     "@actions/github": "^5.0.0",
     "@actions/io": "^1.1.1",
@@ -42,10 +42,10 @@
   "devDependencies": {
     "@types/mocha": "^9.0.0",
     "@types/mock-require": "^2.0.0",
-    "@types/node": "^16.10.1",
+    "@types/node": "^16.10.2",
     "@types/node-fetch": "^2.5.12",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "@typescript-eslint/parser": "^4.31.2",
+    "@typescript-eslint/eslint-plugin": "^4.32.0",
+    "@typescript-eslint/parser": "^4.32.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-mocha": "^9.0.0",
