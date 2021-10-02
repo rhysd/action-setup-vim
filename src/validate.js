@@ -24,6 +24,7 @@ const fs_1 = require("fs");
 const path_1 = require("path");
 const core = __importStar(require("@actions/core"));
 const shell_1 = require("./shell");
+const utils_1 = require("./utils");
 async function validateInstallation(installed) {
     try {
         const s = await fs_1.promises.stat(installed.binDir);
@@ -31,22 +32,25 @@ async function validateInstallation(installed) {
             throw new Error(`Validation failed! '${installed.binDir}' is not a directory for executable`);
         }
     }
-    catch (err) {
+    catch (e) {
+        const err = (0, utils_1.ensureError)(e);
         throw new Error(`Validation failed! Could not stat installed directory '${installed.binDir}': ${err.message}`);
     }
     core.debug(`Installed directory '${installed.binDir}' was validated`);
-    const fullPath = path_1.join(installed.binDir, installed.executable);
+    const fullPath = (0, path_1.join)(installed.binDir, installed.executable);
     try {
         await fs_1.promises.access(fullPath, fs_1.constants.X_OK);
     }
-    catch (err) {
+    catch (e) {
+        const err = (0, utils_1.ensureError)(e);
         throw new Error(`Validation failed! Could not access the installed executable '${fullPath}': ${err.message}`);
     }
     try {
-        const ver = await shell_1.exec(fullPath, ['--version']);
+        const ver = await (0, shell_1.exec)(fullPath, ['--version']);
         console.log(`Installed version:\n${ver}`);
     }
-    catch (err) {
+    catch (e) {
+        const err = (0, utils_1.ensureError)(e);
         throw new Error(`Validation failed! Could not get version from executable '${fullPath}': ${err.message}`);
     }
     core.debug(`Installed executable '${fullPath}' was validated`);

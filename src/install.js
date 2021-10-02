@@ -28,11 +28,11 @@ function install(config) {
     core.debug(`Detected operating system: ${config.os}`);
     switch (config.os) {
         case 'linux':
-            return install_linux_1.install(config);
+            return (0, install_linux_1.install)(config);
         case 'macos':
-            return install_macos_1.install(config);
+            return (0, install_macos_1.install)(config);
         case 'windows':
-            return install_windows_1.install(config);
+            return (0, install_windows_1.install)(config);
     }
 }
 exports.install = install;

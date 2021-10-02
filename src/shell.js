@@ -33,9 +33,9 @@ async function exec(cmd, args, opts) {
                 res.stderr += data.toString();
             },
         },
-        ignoreReturnCode: true,
+        ignoreReturnCode: true, // Check exit status by myself for better error message
     };
-    const code = await exec_1.exec(cmd, args, execOpts);
+    const code = await (0, exec_1.exec)(cmd, args, execOpts);
     if (code === 0) {
         return res.stdout;
     }

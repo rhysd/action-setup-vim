@@ -26,39 +26,41 @@ const shell_1 = require("./shell");
 const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
 async function isUbuntu18OrEarlier() {
-    const ver = await ubuntu_version_1.getUbuntuVersion();
-    if (ver === null) {
+    const version = await (0, ubuntu_version_1.getUbuntuVersion)();
+    if (version.length === 0) {
         core.error('Trying to install apt package but current OS is not Ubuntu');
         return false; // Should be unreachable
     }
-    core.debug(`Ubuntu system information ${JSON.stringify(ver)}`);
-    const m = ver.release.match(/^(\d+)\./);
-    if (m === null) {
-        core.error(`Unexpected 'Release' value of OS info: ${ver.release}`);
-        return false;
-    }
-    const majorVer = parseInt(m[1], 10);
-    core.debug(`Ubuntu major version: ${majorVer}`);
-    return majorVer <= 18;
+    core.debug(`Ubuntu system version: ${version}`);
+    return version[0] <= 18;
 }
 async function installVimStable() {
     core.debug('Installing stable Vim on Linux using apt');
     const pkg = (await isUbuntu18OrEarlier()) ? 'vim-gnome' : 'vim-gtk3';
-    await shell_1.exec('sudo', ['apt', 'update', '-y']);
-    await shell_1.exec('sudo', ['apt', 'install', '-y', pkg]);
+    await (0, shell_1.exec)('sudo', ['apt-get', 'update', '-y']);
+    await (0, shell_1.exec)('sudo', ['apt-get', 'install', '-y', '--no-install-recommends', pkg]);
     return {
         executable: 'vim',
         binDir: '/usr/bin',
     };
 }
-function install(config) {
+async function install(config) {
     core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} version '${config.version}' on Linux`);
     if (config.neovim) {
-        if (config.version === 'stable') {
-            return neovim_1.downloadStableNeovim('linux', config.token);
-        }
-        else {
-            return neovim_1.downloadNeovim(config.version, 'linux');
+        switch (config.version) {
+            case 'stable':
+                return (0, neovim_1.downloadStableNeovim)('linux', config.token);
+            case 'nightly':
+                try {
+                    return await (0, neovim_1.downloadNeovim)(config.version, 'linux'); // await is necessary to catch error
+                }
+                catch (e) {
+                    const message = e instanceof Error ? e.message : e;
+                    core.warning(`Neovim download failure for nightly on Linux: ${message}. Falling back to installing Neovim by building it from source`);
+                    return (0, neovim_1.buildNightlyNeovim)('linux');
+                }
+            default:
+                return (0, neovim_1.downloadNeovim)(config.version, 'linux');
         }
     }
     else {
@@ -66,7 +68,7 @@ function install(config) {
             return installVimStable();
         }
         else {
-            return vim_1.buildVim(config.version, config.os);
+            return (0, vim_1.buildVim)(config.version, config.os);
         }
     }
 }

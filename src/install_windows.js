@@ -28,9 +28,9 @@ function install(config) {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return neovim_1.downloadStableNeovim('windows', config.token);
+                return (0, neovim_1.downloadStableNeovim)('windows', config.token);
             default:
-                return neovim_1.downloadNeovim(config.version, 'windows');
+                return (0, neovim_1.downloadNeovim)(config.version, 'windows');
         }
     }
     else {
@@ -38,11 +38,11 @@ function install(config) {
             case 'stable':
                 core.debug('Installing stable Vim on Windows');
                 core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
-                return vim_1.installNightlyVimOnWindows();
+                return (0, vim_1.installNightlyVimOnWindows)('stable');
             case 'nightly':
-                return vim_1.installNightlyVimOnWindows();
+                return (0, vim_1.installNightlyVimOnWindows)('nightly');
             default:
-                return vim_1.installVimOnWindows(config.version);
+                return (0, vim_1.installVimOnWindows)(config.version, config.version);
         }
     }
 }

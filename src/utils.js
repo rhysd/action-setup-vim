@@ -19,13 +19,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exeName = exports.getOs = exports.makeTmpdir = void 0;
+exports.ensureError = exports.exeName = exports.getOs = exports.makeTmpdir = void 0;
 const os_1 = require("os");
 const core = __importStar(require("@actions/core"));
 const io_1 = require("@actions/io");
 async function makeTmpdir() {
-    const dir = os_1.tmpdir();
-    await io_1.mkdirP(dir);
+    const dir = (0, os_1.tmpdir)();
+    await (0, io_1.mkdirP)(dir);
     core.debug(`Created temporary directory ${dir}`);
     return dir;
 }
@@ -52,4 +52,11 @@ function exeName(isNeovim, os) {
     }
 }
 exports.exeName = exeName;
+function ensureError(err) {
+    if (err instanceof Error) {
+        return err;
+    }
+    return new Error(`Unknown fatal error: ${err}`);
+}
+exports.ensureError = ensureError;
 //# sourceMappingURL=utils.js.map

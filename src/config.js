@@ -4,7 +4,7 @@ exports.loadConfigFromInputs = void 0;
 const core_1 = require("@actions/core");
 const utils_1 = require("./utils");
 function getBoolean(input, def) {
-    const i = core_1.getInput(input).toLowerCase();
+    const i = (0, core_1.getInput)(input).toLowerCase();
     switch (i) {
         case '':
             return def;
@@ -17,7 +17,7 @@ function getBoolean(input, def) {
     }
 }
 function getVersion(neovim) {
-    const v = core_1.getInput('version');
+    const v = (0, core_1.getInput)('version');
     if (v === '') {
         return 'stable';
     }
@@ -45,8 +45,8 @@ function loadConfigFromInputs() {
     return {
         version: getVersion(neovim),
         neovim,
-        os: utils_1.getOs(),
-        token: (_a = core_1.getInput('token')) !== null && _a !== void 0 ? _a : null,
+        os: (0, utils_1.getOs)(),
+        token: (_a = (0, core_1.getInput)('token')) !== null && _a !== void 0 ? _a : null,
     };
 }
 exports.loadConfigFromInputs = loadConfigFromInputs;

@@ -22,7 +22,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.downloadStableNeovim = exports.downloadNeovim = void 0;
+exports.buildNightlyNeovim = exports.downloadStableNeovim = exports.downloadNeovim = void 0;
 const os_1 = require("os");
 const path = __importStar(require("path"));
 const fs_1 = require("fs");
@@ -55,11 +55,11 @@ function assetDirName(os) {
 async function unarchiveAsset(asset, os) {
     const dir = path.dirname(asset);
     if (asset.endsWith('.tar.gz')) {
-        await shell_1.exec('tar', ['xzf', asset], { cwd: dir });
+        await (0, shell_1.exec)('tar', ['xzf', asset], { cwd: dir });
         return path.join(dir, assetDirName(os));
     }
     else if (asset.endsWith('.zip')) {
-        await shell_1.exec('unzip', [asset], { cwd: dir });
+        await (0, shell_1.exec)('unzip', [asset], { cwd: dir });
         return path.join(dir, assetDirName(os));
     }
     else {
@@ -68,15 +68,16 @@ async function unarchiveAsset(asset, os) {
 }
 // version = 'stable' or 'nightly' or version string
 async function downloadNeovim(version, os) {
+    var _a;
     const file = assetFileName(os);
-    const destDir = path.join(os_1.homedir(), 'nvim');
+    const destDir = path.join((0, os_1.homedir)(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
     console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
-    const dlDir = await utils_1.makeTmpdir();
+    const dlDir = await (0, utils_1.makeTmpdir)();
     const asset = path.join(dlDir, file);
     try {
         core.debug(`Downloading asset ${asset}`);
-        const response = await node_fetch_1.default(url);
+        const response = await (0, node_fetch_1.default)(url);
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
@@ -88,12 +89,13 @@ async function downloadNeovim(version, os) {
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
         return {
-            executable: utils_1.exeName(true, os),
+            executable: (0, utils_1.exeName)(true, os),
             binDir: path.join(destDir, 'bin'),
         };
     }
-    catch (err) {
-        core.debug(err.stack);
+    catch (e) {
+        const err = (0, utils_1.ensureError)(e);
+        core.debug((_a = err.stack) !== null && _a !== void 0 ? _a : err.message);
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
@@ -104,7 +106,7 @@ async function downloadNeovim(version, os) {
 exports.downloadNeovim = downloadNeovim;
 async function fetchLatestVersion(token) {
     const octokit = github.getOctokit(token);
-    const { data } = await octokit.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
+    const { data } = await octokit.rest.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
     const re = /^v\d+\.\d+\.\d+$/;
     for (const release of data) {
         const tagName = release.tag_name;
@@ -122,7 +124,8 @@ async function downloadStableNeovim(os, token = null) {
     try {
         return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
     }
-    catch (err) {
+    catch (e) {
+        const err = (0, utils_1.ensureError)(e);
         if (err.message.includes('Downloading asset failed:') && token !== null) {
             core.warning(`Could not download stable asset. Detecting the latest stable release from GitHub API as fallback: ${err.message}`);
             const ver = await fetchLatestVersion(token);
@@ -133,4 +136,54 @@ async function downloadStableNeovim(os, token = null) {
     }
 }
 exports.downloadStableNeovim = downloadStableNeovim;
+// Build nightly Neovim from sources as fallback of downloading nightly assets from the nightly release page of
+// neovim/neovim repository (#18).
+// https://github.com/neovim/neovim/wiki/Building-Neovim
+async function buildNightlyNeovim(os) {
+    core.debug(`Installing Neovim by building from source on ${os}`);
+    switch (os) {
+        case 'linux':
+            core.debug('Installing build dependencies via apt');
+            await (0, shell_1.exec)('sudo', [
+                'apt-get',
+                'install',
+                '-y',
+                '--no-install-recommends',
+                'ninja-build',
+                'gettext',
+                'libtool',
+                'libtool-bin',
+                'autoconf',
+                'automake',
+                'cmake',
+                'g++',
+                'pkg-config',
+                'unzip',
+                'curl',
+            ]);
+            break;
+        case 'macos':
+            core.debug('Installing build dependencies via Homebrew');
+            await (0, shell_1.exec)('brew', ['install', 'ninja', 'libtool', 'automake', 'cmake', 'pkg-config', 'gettext', 'curl']);
+            break;
+        default:
+            throw new Error(`Building Neovim from soruce is not supported for ${os} platform`);
+    }
+    // Add -nightly suffix since building stable Neovim from source may be supported in the future
+    const installDir = path.join((0, os_1.homedir)(), 'nvim-nightly');
+    core.debug(`Building and installing Neovim to ${installDir}`);
+    const dir = path.join(await (0, utils_1.makeTmpdir)(), 'build-nightly-neovim');
+    await (0, shell_1.exec)('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim.git', dir]);
+    const opts = { cwd: dir };
+    const makeArgs = ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'];
+    await (0, shell_1.exec)('make', makeArgs, opts);
+    core.debug(`Built Neovim in ${opts.cwd}. Installing it via 'make install'`);
+    await (0, shell_1.exec)('make', ['install'], opts);
+    core.debug(`Installed Neovim to ${installDir}`);
+    return {
+        executable: (0, utils_1.exeName)(true, os),
+        binDir: path.join(installDir, 'bin'),
+    };
+}
+exports.buildNightlyNeovim = buildNightlyNeovim;
 //# sourceMappingURL=neovim.js.map
