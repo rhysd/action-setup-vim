@@ -35,12 +35,12 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                     return '/usr/local/bin/nvim';
                 } else {
                     // nightly or specific version
-                    return path.join(homedir(), 'nvim/bin/nvim');
+                    return path.join(homedir(), `nvim-${ver}/bin/nvim`);
                 }
             case 'linux':
-                return path.join(homedir(), 'nvim/bin/nvim');
+                return path.join(homedir(), `nvim-${ver}/bin/nvim`);
             case 'win32':
-                return path.join(homedir(), 'nvim/bin/nvim.exe');
+                return path.join(homedir(), `nvim-${ver}/bin/nvim.exe`);
             default:
                 break;
         }
@@ -52,17 +52,17 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                     return '/usr/local/bin/vim';
                 } else {
                     // nightly or specific version
-                    return path.join(homedir(), 'vim/bin/vim');
+                    return path.join(homedir(), `vim-${ver}/bin/vim`);
                 }
             case 'linux':
                 if (ver === 'stable') {
                     return '/usr/bin/vim';
                 } else {
                     // nightly or specific version
-                    return path.join(homedir(), 'vim/bin/vim');
+                    return path.join(homedir(), `vim-${ver}/bin/vim`);
                 }
             case 'win32':
-                return path.join(homedir(), 'vim/vim.exe');
+                return path.join(homedir(), `vim-${ver}/vim.exe`);
             default:
                 break;
         }

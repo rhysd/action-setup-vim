@@ -41,7 +41,10 @@ describe('detectLatestWindowsReleaseTag()', function () {
 
 describe('installVimOnWindows()', function () {
     it('throws an error when the specified version does not exist', async function () {
-        await A.rejects(() => installVimOnWindows('v0.1.2'), /^Error: Could not download and unarchive asset/);
+        await A.rejects(
+            () => installVimOnWindows('v0.1.2', 'v0.1.2'),
+            /^Error: Could not download and unarchive asset/,
+        );
     });
 
     context('with mocking fetch()', function () {
@@ -58,7 +61,7 @@ describe('installVimOnWindows()', function () {
 
         it('throws an error when receiving unsuccessful response', async function () {
             await A.rejects(
-                () => installVimOnWindowsMocked('nightly'),
+                () => installVimOnWindowsMocked('nightly', 'nightly'),
                 /Downloading asset failed: Not found for dummy/,
             );
         });

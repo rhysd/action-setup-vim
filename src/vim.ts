@@ -52,7 +52,7 @@ async function getXcode11DevDir(): Promise<string | null> {
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
 export async function buildVim(version: string, os: Os): Promise<Installed> {
     assert.notEqual(version, 'stable');
-    const installDir = path.join(homedir(), 'vim');
+    const installDir = path.join(homedir(), `vim-${version}`);
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
     const dir = path.join(await makeTmpdir(), 'vim');
 
@@ -147,7 +147,7 @@ export async function detectLatestWindowsReleaseTag(): Promise<string> {
     }
 }
 
-async function installVimAssetOnWindows(file: string, url: string): Promise<string> {
+async function installVimAssetOnWindows(file: string, url: string, dirSuffix: string): Promise<string> {
     const tmpdir = await makeTmpdir();
     const dlDir = path.join(tmpdir, 'vim-installer');
     await io.mkdirP(dlDir);
@@ -174,26 +174,26 @@ async function installVimAssetOnWindows(file: string, url: string): Promise<stri
     const vimDir = await getVimRootDirAt(unzippedDir);
     core.debug(`Unzipped installer from ${url} and found Vim directory ${vimDir}`);
 
-    const destDir = path.join(homedir(), 'vim');
+    const destDir = path.join(homedir(), `vim-${dirSuffix}`);
     await io.mv(vimDir, destDir);
     core.debug(`Vim was installed to ${destDir}`);
 
     return destDir;
 }
 
-export async function installVimOnWindows(tag: string): Promise<Installed> {
+export async function installVimOnWindows(tag: string, dirSuffix: string): Promise<Installed> {
     const ver = tag.slice(1); // Strip 'v' prefix
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
-    const destDir = await installVimAssetOnWindows(file, url);
+    const destDir = await installVimAssetOnWindows(file, url, dirSuffix);
     return {
         executable: exeName(false, 'windows'),
         binDir: destDir,
     };
 }
 
-export async function installNightlyVimOnWindows(): Promise<Installed> {
+export async function installNightlyVimOnWindows(dirSuffix: string): Promise<Installed> {
     const latestTag = await detectLatestWindowsReleaseTag();
-    return installVimOnWindows(latestTag);
+    return installVimOnWindows(latestTag, dirSuffix);
 }

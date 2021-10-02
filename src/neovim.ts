@@ -47,7 +47,7 @@ async function unarchiveAsset(asset: string, os: Os): Promise<string> {
 // version = 'stable' or 'nightly' or version string
 export async function downloadNeovim(version: string, os: Os): Promise<Installed> {
     const file = assetFileName(os);
-    const destDir = path.join(homedir(), 'nvim');
+    const destDir = path.join(homedir(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
     console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
 

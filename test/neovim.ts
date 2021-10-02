@@ -108,14 +108,10 @@ describe('Neovim installation', function () {
         });
 
         it('throws an error on Windows', async function () {
-            try {
-                await buildNightlyNeovimMocked('windows');
-                A.ok(false, 'exception was not thrown');
-            } catch (e) {
-                const message = e instanceof Error ? e.message : `${e}`;
-                A.ok(message.includes('Building Neovim from soruce is not supported for windows'), message);
-                // OK
-            }
+            await A.rejects(
+                () => buildNightlyNeovimMocked('windows'),
+                /Building Neovim from soruce is not supported for windows/,
+            );
         });
     });
 });
