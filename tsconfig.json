@@ -15,7 +15,7 @@
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
     "strict": true,
-    "target": "es2019",
+    "target": "es2021",
     "sourceMap": true,
     "esModuleInterop": true,
     "resolveJsonModule": true
