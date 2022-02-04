@@ -83,6 +83,7 @@ echo "Releasing to ${target_branch} branch for ${version}... (minor=${minor_vers
 set -x
 npm install
 npm run build
+npm test
 npm prune --production
 
 # Remove all type definitions from node_modules since @octokit/rest/index.d.ts is very big (1.3MB)
