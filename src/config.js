@@ -40,13 +40,12 @@ function getNeovim() {
     return getBoolean('neovim', false);
 }
 function loadConfigFromInputs() {
-    var _a;
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),
         neovim,
         os: (0, utils_1.getOs)(),
-        token: (_a = (0, core_1.getInput)('token')) !== null && _a !== void 0 ? _a : null,
+        token: (0, core_1.getInput)('token') ?? null,
     };
 }
 exports.loadConfigFromInputs = loadConfigFromInputs;

@@ -68,7 +68,6 @@ async function unarchiveAsset(asset, os) {
 }
 // version = 'stable' or 'nightly' or version string
 async function downloadNeovim(version, os) {
-    var _a;
     const file = assetFileName(os);
     const destDir = path.join((0, os_1.homedir)(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
@@ -95,7 +94,7 @@ async function downloadNeovim(version, os) {
     }
     catch (e) {
         const err = (0, utils_1.ensureError)(e);
-        core.debug((_a = err.stack) !== null && _a !== void 0 ? _a : err.message);
+        core.debug(err.stack ?? err.message);
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";

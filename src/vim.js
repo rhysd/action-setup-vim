@@ -34,9 +34,8 @@ const shell_1 = require("./shell");
 const utils_1 = require("./utils");
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function versionIsOlderThan8_2_1119(version) {
-    var _a;
     // Note: Patch version may not exist on v7 or earlier
-    const majorStr = (_a = version.match(/^v(\d+)\./)) === null || _a === void 0 ? void 0 : _a[1];
+    const majorStr = version.match(/^v(\d+)\./)?.[1];
     if (!majorStr) {
         return false; // Invalid case. Should be unreachable
     }
@@ -73,7 +72,7 @@ async function getXcode11DevDir() {
 async function buildVim(version, os) {
     assert_1.strict.notEqual(version, 'stable');
     const installDir = path.join((0, os_1.homedir)(), `vim-${version}`);
-    core.debug(`Building and installing Vim to ${installDir} (version=${version !== null && version !== void 0 ? version : 'HEAD'})`);
+    core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
     const dir = path.join(await (0, utils_1.makeTmpdir)(), 'vim');
     const args = ['clone', '--depth=1', '--single-branch'];
     if (version === 'nightly') {
@@ -129,7 +128,6 @@ async function getVimRootDirAt(dir) {
     throw new Error(`Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
 }
 async function detectLatestWindowsReleaseTag() {
-    var _a;
     const url = 'https://github.com/vim/vim-win32-installer/releases/latest';
     try {
         const res = await (0, node_fetch_1.default)(url, {
@@ -152,13 +150,12 @@ async function detectLatestWindowsReleaseTag() {
     }
     catch (e) {
         const err = (0, utils_1.ensureError)(e);
-        core.debug((_a = err.stack) !== null && _a !== void 0 ? _a : err.message);
+        core.debug(err.stack ?? err.message);
         throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
     }
 }
 exports.detectLatestWindowsReleaseTag = detectLatestWindowsReleaseTag;
 async function installVimAssetOnWindows(file, url, dirSuffix) {
-    var _a;
     const tmpdir = await (0, utils_1.makeTmpdir)();
     const dlDir = path.join(tmpdir, 'vim-installer');
     await io.mkdirP(dlDir);
@@ -176,7 +173,7 @@ async function installVimAssetOnWindows(file, url, dirSuffix) {
     }
     catch (e) {
         const err = (0, utils_1.ensureError)(e);
-        core.debug((_a = err.stack) !== null && _a !== void 0 ? _a : err.message);
+        core.debug(err.stack ?? err.message);
         throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
     }
     const unzippedDir = path.join(dlDir, 'vim'); // Unarchived to 'vim' directory

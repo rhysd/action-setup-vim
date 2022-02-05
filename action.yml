@@ -31,5 +31,5 @@ outputs:
       Absolute file path to the installed executable.
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'src/index.js'
