@@ -1,3 +1,12 @@
+<a name="v1.2.9"></a>
+# [v1.2.9](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.9) - 05 Feb 2022
+
+- Use `node16` runner to run this action.
+- Update dependencies. Now TypeScript source compiles to ES2021 code since Node.js v16 supports all ES2021 features.
+
+[Changes][v1.2.9]
+
+
 <a name="v1.2.8"></a>
 # [v1.2.8](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.8) - 02 Oct 2021
 
@@ -5,7 +14,7 @@
   - This fallback logic is currently only for Linux and macOS
   - This fallback happens when [the release workflow](https://github.com/neovim/neovim/actions/workflows/release.yml) of [neovim/neovim](https://github.com/neovim/neovim) failed to update [the nightly release page](https://github.com/neovim/neovim/tree/nightly)
 - Update many dependencies including all `@actions/*` packages and TypeScript compiler
-- Now multiple versions of Vim/Neovim can be installed within the same job. Previously, Vim/Neovim installed via release archives or building from source were installed in `~/vim`/`~/nvim`. It meant that trying to install multiple versions caused a directory name conflict. Now they are installed in `~/vim-{ver}`/`~/nvim-{ver}` (e.g. `~/vim-v8.2.1234`, `~/nvim-nightly`) so that the conflict no longer happens.
+- Now multiple versions of Vim/Neovim can be installed within the same job. Previously, Vim/Neovim installed via release archives or built from source were installed in `~/vim`/`~/nvim`. It meant that trying to install multiple versions caused a directory name conflict. Now they are installed in `~/vim-{ver}`/`~/nvim-{ver}` (e.g. `~/vim-v8.2.1234`, `~/nvim-nightly`) so that the conflict no longer happens.
 
 [Changes][v1.2.8]
 
@@ -145,6 +154,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.9]: https://github.com/rhysd/action-setup-vim/compare/v1.2.8...v1.2.9
 [v1.2.8]: https://github.com/rhysd/action-setup-vim/compare/v1.2.7...v1.2.8
 [v1.2.7]: https://github.com/rhysd/action-setup-vim/compare/v1.2.6...v1.2.7
 [v1.2.6]: https://github.com/rhysd/action-setup-vim/compare/v1.2.5...v1.2.6
