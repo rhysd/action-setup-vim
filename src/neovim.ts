@@ -20,25 +20,30 @@ function assetFileName(os: Os): string {
     }
 }
 
-function assetDirName(os: Os): string {
+function assetDirName(version: string, os: Os): string {
     switch (os) {
         case 'macos':
             return 'nvim-osx64';
         case 'linux':
             return 'nvim-linux64';
         case 'windows':
-            return 'Neovim';
+            switch (version) {
+                case 'nightly':
+                    return 'nvim-win64';
+                default:
+                    return 'Neovim';
+            }
     }
 }
 
-async function unarchiveAsset(asset: string, os: Os): Promise<string> {
+async function unarchiveAsset(asset: string, version: string, os: Os): Promise<string> {
     const dir = path.dirname(asset);
     if (asset.endsWith('.tar.gz')) {
         await exec('tar', ['xzf', asset], { cwd: dir });
-        return path.join(dir, assetDirName(os));
+        return path.join(dir, assetDirName(version, os));
     } else if (asset.endsWith('.zip')) {
         await exec('unzip', [asset], { cwd: dir });
-        return path.join(dir, assetDirName(os));
+        return path.join(dir, assetDirName(version, os));
     } else {
         throw new Error(`FATAL: Don't know how to unarchive ${asset} on ${os}`);
     }
@@ -64,7 +69,7 @@ export async function downloadNeovim(version: string, os: Os): Promise<Installed
         await fs.writeFile(asset, buffer, { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
 
-        const unarchived = await unarchiveAsset(asset, os);
+        const unarchived = await unarchiveAsset(asset, version, os);
         core.debug(`Unarchived asset ${unarchived}`);
 
         await io.mv(unarchived, destDir);
