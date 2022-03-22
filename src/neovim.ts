@@ -27,6 +27,9 @@ function assetDirName(version: string, os: Os): string {
         case 'linux':
             return 'nvim-linux64';
         case 'windows':
+            // Until v0.6.1 release, 'Neovim' is the asset directory name on Windows. However it is now 'nvim-win64' on nightly.
+            // At the next stable release, 'nvim-win64' will be the asset directory on stable release also. It means, 'Neovim'
+            // is the asset directory on v0.6.1 or earlier, and 'nvim-win64' otherwise. (#20)
             switch (version) {
                 case 'nightly':
                     return 'nvim-win64';
