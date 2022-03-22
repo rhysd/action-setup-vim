@@ -39,17 +39,18 @@ function assetDirName(version: string, os: Os): string {
     }
 }
 
-async function unarchiveAsset(asset: string, version: string, os: Os): Promise<string> {
+async function unarchiveAsset(asset: string, dirName: string): Promise<string> {
     const dir = path.dirname(asset);
+    const dest = path.join(dir, dirName);
     if (asset.endsWith('.tar.gz')) {
         await exec('tar', ['xzf', asset], { cwd: dir });
-        return path.join(dir, assetDirName(version, os));
-    } else if (asset.endsWith('.zip')) {
-        await exec('unzip', [asset], { cwd: dir });
-        return path.join(dir, assetDirName(version, os));
-    } else {
-        throw new Error(`FATAL: Don't know how to unarchive ${asset} on ${os}`);
+        return dest;
     }
+    if (asset.endsWith('.zip')) {
+        await exec('unzip', [asset], { cwd: dir });
+        return dest;
+    }
+    throw new Error(`FATAL: Don't know how to unarchive ${asset} to ${dest}`);
 }
 
 // version = 'stable' or 'nightly' or version string
@@ -72,7 +73,7 @@ export async function downloadNeovim(version: string, os: Os): Promise<Installed
         await fs.writeFile(asset, buffer, { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
 
-        const unarchived = await unarchiveAsset(asset, version, os);
+        const unarchived = await unarchiveAsset(asset, assetDirName(version, os));
         core.debug(`Unarchived asset ${unarchived}`);
 
         await io.mv(unarchived, destDir);
