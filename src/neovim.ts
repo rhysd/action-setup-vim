@@ -27,7 +27,7 @@ function assetDirName(os: Os): string {
         case 'linux':
             return 'nvim-linux64';
         case 'windows':
-            return 'Neovim';
+            return 'nvim-win64';
     }
 }
 
