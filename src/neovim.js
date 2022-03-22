@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -42,29 +46,36 @@ function assetFileName(os) {
             return 'nvim-win64.zip';
     }
 }
-function assetDirName(os) {
+function assetDirName(version, os) {
     switch (os) {
         case 'macos':
             return 'nvim-osx64';
         case 'linux':
             return 'nvim-linux64';
         case 'windows':
-            return 'Neovim';
+            // Until v0.6.1 release, 'Neovim' is the asset directory name on Windows. However it is now 'nvim-win64' on nightly.
+            // At the next stable release, 'nvim-win64' will be the asset directory on stable release also. It means, 'Neovim'
+            // is the asset directory on v0.6.1 or earlier, and 'nvim-win64' otherwise. (#20)
+            switch (version) {
+                case 'nightly':
+                    return 'nvim-win64';
+                default:
+                    return 'Neovim';
+            }
     }
 }
-async function unarchiveAsset(asset, os) {
+async function unarchiveAsset(asset, dirName) {
     const dir = path.dirname(asset);
+    const dest = path.join(dir, dirName);
     if (asset.endsWith('.tar.gz')) {
         await (0, shell_1.exec)('tar', ['xzf', asset], { cwd: dir });
-        return path.join(dir, assetDirName(os));
+        return dest;
     }
-    else if (asset.endsWith('.zip')) {
+    if (asset.endsWith('.zip')) {
         await (0, shell_1.exec)('unzip', [asset], { cwd: dir });
-        return path.join(dir, assetDirName(os));
+        return dest;
     }
-    else {
-        throw new Error(`FATAL: Don't know how to unarchive ${asset} on ${os}`);
-    }
+    throw new Error(`FATAL: Don't know how to unarchive ${asset} to ${dest}`);
 }
 // version = 'stable' or 'nightly' or version string
 async function downloadNeovim(version, os) {
@@ -83,7 +94,7 @@ async function downloadNeovim(version, os) {
         const buffer = await response.buffer();
         await fs_1.promises.writeFile(asset, buffer, { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
-        const unarchived = await unarchiveAsset(asset, os);
+        const unarchived = await unarchiveAsset(asset, assetDirName(version, os));
         core.debug(`Unarchived asset ${unarchived}`);
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
