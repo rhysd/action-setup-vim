@@ -1,3 +1,12 @@
+<a name="v1.2.10"></a>
+# [v1.2.10](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.10) - 23 Mar 2022
+
+- Fix installing nightly Neovim on Windows. (thanks @notomo, #20 #21)
+- Update dependencies to the latest. (including new `@actions/exec` and `@actions/io`)
+
+[Changes][v1.2.10]
+
+
 <a name="v1.2.9"></a>
 # [v1.2.9](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.9) - 05 Feb 2022
 
@@ -154,6 +163,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.10]: https://github.com/rhysd/action-setup-vim/compare/v1.2.9...v1.2.10
 [v1.2.9]: https://github.com/rhysd/action-setup-vim/compare/v1.2.8...v1.2.9
 [v1.2.8]: https://github.com/rhysd/action-setup-vim/compare/v1.2.7...v1.2.8
 [v1.2.7]: https://github.com/rhysd/action-setup-vim/compare/v1.2.6...v1.2.7
