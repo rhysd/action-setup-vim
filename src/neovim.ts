@@ -20,7 +20,7 @@ function assetFileName(os: Os): string {
     }
 }
 
-function assetDirName(version: string, os: Os): string {
+export function assetDirName(version: string, os: Os): string {
     switch (os) {
         case 'macos':
             return 'nvim-osx64';
