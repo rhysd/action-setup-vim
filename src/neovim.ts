@@ -20,22 +20,21 @@ function assetFileName(os: Os): string {
     }
 }
 
-function assetDirName(version: string, os: Os): string {
+export function assetDirName(version: string, os: Os): string {
     switch (os) {
         case 'macos':
             return 'nvim-osx64';
         case 'linux':
             return 'nvim-linux64';
-        case 'windows':
-            // Until v0.6.1 release, 'Neovim' is the asset directory name on Windows. However it is now 'nvim-win64' on nightly.
-            // At the next stable release, 'nvim-win64' will be the asset directory on stable release also. It means, 'Neovim'
-            // is the asset directory on v0.6.1 or earlier, and 'nvim-win64' otherwise. (#20)
-            switch (version) {
-                case 'nightly':
-                    return 'nvim-win64';
-                default:
-                    return 'Neovim';
+        case 'windows': {
+            // Until v0.6.1 release, 'Neovim' was the asset directory name on Windows. However it was changed to 'nvim-win64'
+            // from v0.7.0. (#20)
+            const m = version.match(/^v0\.(\d+)\.\d+$/);
+            if (m !== null && parseInt(m[1]) < 7) {
+                return 'Neovim';
             }
+            return 'nvim-win64';
+        }
     }
 }
 

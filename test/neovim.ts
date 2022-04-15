@@ -1,7 +1,7 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { downloadNeovim, downloadStableNeovim, buildNightlyNeovim } from '../src/neovim';
+import { downloadNeovim, downloadStableNeovim, buildNightlyNeovim, assetDirName } from '../src/neovim';
 import { mockFetch, ExecStub, mockExec } from './helper';
 
 function reRequire(): typeof import('../src/neovim') {
@@ -112,6 +112,18 @@ describe('Neovim installation', function () {
                 () => buildNightlyNeovimMocked('windows'),
                 /Building Neovim from soruce is not supported for windows/,
             );
+        });
+    });
+
+    describe('assetDirName', function () {
+        it('returns "Neovim" when Neovim version is earlier than 0.7', function () {
+            A.equal(assetDirName('v0.6.1', 'windows'), 'Neovim');
+            A.equal(assetDirName('v0.4.3', 'windows'), 'Neovim');
+        });
+        it('returns "Neovim" when Neovim version is 0.7 or later', function () {
+            A.equal(assetDirName('v0.7.0', 'windows'), 'nvim-win64');
+            A.equal(assetDirName('v0.10.0', 'windows'), 'nvim-win64');
+            A.equal(assetDirName('v1.0.0', 'windows'), 'nvim-win64');
         });
     });
 });
