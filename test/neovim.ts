@@ -124,6 +124,8 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v0.7.0', 'windows'), 'nvim-win64');
             A.equal(assetDirName('v0.10.0', 'windows'), 'nvim-win64');
             A.equal(assetDirName('v1.0.0', 'windows'), 'nvim-win64');
+            A.equal(assetDirName('nightly', 'windows'), 'nvim-win64');
+            A.equal(assetDirName('stable', 'windows'), 'nvim-win64');
         });
         it('returns "nvim-osx64" when Neovim version is earlier than 0.7.1 on macOS', function () {
             A.equal(assetDirName('v0.7.0', 'macos'), 'nvim-osx64');
@@ -133,6 +135,8 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v0.7.1', 'macos'), 'nvim-macos');
             A.equal(assetDirName('v0.10.0', 'macos'), 'nvim-macos');
             A.equal(assetDirName('v1.0.0', 'macos'), 'nvim-macos');
+            A.equal(assetDirName('nightly', 'macos'), 'nvim-macos');
+            A.equal(assetDirName('stable', 'macos'), 'nvim-macos');
         });
     });
 });
