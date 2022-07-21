@@ -1,7 +1,16 @@
+<a name="v1.2.12"></a>
+# [v1.2.12](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.12) - 21 Jul 2022
+
+- Fix the Neovim asset directory name for macOS was changed from `neovim-osx64` to `neovim-macos` on Neovim v0.7.1. (thanks @notomo, #22)
+- Update dependencies including `@actions/core` and `@actions/github`.
+
+[Changes][v1.2.12]
+
+
 <a name="v1.2.11"></a>
 # [v1.2.11](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.11) - 15 Apr 2022
 
-- Fix installing `stable` or `v0.7.0` Neovim. The asset directory name was changed from 'Neovim' to 'nvim-win64' at v0.7.0 and the change broke this action.
+- Fix installing `stable` or `v0.7.0` Neovim on Windows runner. The asset directory name was changed from 'Neovim' to 'nvim-win64' at v0.7.0 and the change broke this action.
 
 [Changes][v1.2.11]
 
@@ -171,6 +180,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.2.12]: https://github.com/rhysd/action-setup-vim/compare/v1.2.11...v1.2.12
 [v1.2.11]: https://github.com/rhysd/action-setup-vim/compare/v1.2.10...v1.2.11
 [v1.2.10]: https://github.com/rhysd/action-setup-vim/compare/v1.2.9...v1.2.10
 [v1.2.9]: https://github.com/rhysd/action-setup-vim/compare/v1.2.8...v1.2.9
