@@ -22,8 +22,15 @@ function assetFileName(os: Os): string {
 
 export function assetDirName(version: string, os: Os): string {
     switch (os) {
-        case 'macos':
-            return 'nvim-osx64';
+        case 'macos': {
+            // Until v0.7.0 release, 'nvim-osx64' was the asset directory name on macOS. However it was changed to 'nvim-macos'
+            // from v0.7.1.
+            const m = version.match(/^v0\.(\d+)\.(\d+)$/);
+            if ((m !== null && parseInt(m[1]) < 7) || (m !== null && parseInt(m[1]) === 7 && parseInt(m[2]) < 1)) {
+                return 'nvim-osx64';
+            }
+            return 'nvim-macos';
+        }
         case 'linux':
             return 'nvim-linux64';
         case 'windows': {
