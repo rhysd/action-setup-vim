@@ -46,17 +46,34 @@ function assetFileName(os) {
             return 'nvim-win64.zip';
     }
 }
+function parseVersion(v) {
+    const m = v.match(/^v0\.(\d+)\.(\d+)$/);
+    if (m === null) {
+        return null;
+    }
+    return {
+        minor: parseInt(m[1]),
+        patch: parseInt(m[2]),
+    };
+}
 function assetDirName(version, os) {
     switch (os) {
-        case 'macos':
-            return 'nvim-osx64';
+        case 'macos': {
+            // Until v0.7.0 release, 'nvim-osx64' was the asset directory name on macOS. However it was changed to 'nvim-macos'
+            // from v0.7.1: https://github.com/neovim/neovim/pull/19029
+            const v = parseVersion(version);
+            if (v !== null && (v.minor < 7 || (v.minor === 7 && v.patch < 1))) {
+                return 'nvim-osx64';
+            }
+            return 'nvim-macos';
+        }
         case 'linux':
             return 'nvim-linux64';
         case 'windows': {
             // Until v0.6.1 release, 'Neovim' was the asset directory name on Windows. However it was changed to 'nvim-win64'
             // from v0.7.0. (#20)
-            const m = version.match(/^v0\.(\d+)\.\d+$/);
-            if (m !== null && parseInt(m[1]) < 7) {
+            const v = parseVersion(version);
+            if (v !== null && v.minor < 7) {
                 return 'Neovim';
             }
             return 'nvim-win64';
