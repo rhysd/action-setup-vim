@@ -20,13 +20,30 @@ function assetFileName(os: Os): string {
     }
 }
 
+interface Version {
+    minor: number;
+    patch: number;
+}
+
+function parseVersion(v: string): Version | null {
+    const m = v.match(/^v0\.(\d+)\.(\d+)$/);
+    if (m === null) {
+        return null;
+    }
+
+    return {
+        minor: parseInt(m[1]),
+        patch: parseInt(m[2]),
+    };
+}
+
 export function assetDirName(version: string, os: Os): string {
     switch (os) {
         case 'macos': {
             // Until v0.7.0 release, 'nvim-osx64' was the asset directory name on macOS. However it was changed to 'nvim-macos'
-            // from v0.7.1.
-            const m = version.match(/^v0\.(\d+)\.(\d+)$/);
-            if ((m !== null && parseInt(m[1]) < 7) || (m !== null && parseInt(m[1]) === 7 && parseInt(m[2]) < 1)) {
+            // from v0.7.1: https://github.com/neovim/neovim/pull/19029
+            const v = parseVersion(version);
+            if (v !== null && (v.minor < 7 || (v.minor === 7 && v.patch < 1))) {
                 return 'nvim-osx64';
             }
             return 'nvim-macos';
@@ -36,8 +53,8 @@ export function assetDirName(version: string, os: Os): string {
         case 'windows': {
             // Until v0.6.1 release, 'Neovim' was the asset directory name on Windows. However it was changed to 'nvim-win64'
             // from v0.7.0. (#20)
-            const m = version.match(/^v0\.(\d+)\.\d+$/);
-            if (m !== null && parseInt(m[1]) < 7) {
+            const v = parseVersion(version);
+            if (v !== null && v.minor < 7) {
                 return 'Neovim';
             }
             return 'nvim-win64';
