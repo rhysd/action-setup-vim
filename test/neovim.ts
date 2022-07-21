@@ -120,7 +120,7 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v0.6.1', 'windows'), 'Neovim');
             A.equal(assetDirName('v0.4.3', 'windows'), 'Neovim');
         });
-        it('returns "Neovim" when Neovim version is 0.7 or later on Windows', function () {
+        it('returns "nvim-win64" when Neovim version is 0.7 or later on Windows', function () {
             A.equal(assetDirName('v0.7.0', 'windows'), 'nvim-win64');
             A.equal(assetDirName('v0.10.0', 'windows'), 'nvim-win64');
             A.equal(assetDirName('v1.0.0', 'windows'), 'nvim-win64');
