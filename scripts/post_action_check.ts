@@ -89,15 +89,17 @@ function main(): void {
 
     log('Validating executable');
     const proc = spawnSync(exe, ['-N', '-c', 'quit']);
-    assert.equal(proc.status, 0);
+    let stderr = proc.stderr.toString();
     assert.equal(proc.error, undefined);
-    assert.equal(proc.signal, null);
+    assert.equal(proc.status, 0, `stderr: ${stderr}`);
+    assert.equal(proc.signal, null, `stderr: ${stderr}`);
 
     log('Validating version');
     const ver = spawnSync(exe, ['--version']);
-    assert.equal(ver.status, 0);
+    stderr = ver.stderr.toString();
     assert.equal(ver.error, undefined);
-    assert.equal(ver.signal, null);
+    assert.equal(ver.status, 0, `stderr: ${stderr}`);
+    assert.equal(ver.signal, null, `stderr: ${stderr}`);
     const stdout = ver.stdout.toString();
 
     if (args.version !== 'stable' && args.version !== 'nightly') {
