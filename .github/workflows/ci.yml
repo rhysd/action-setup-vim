@@ -69,7 +69,7 @@ jobs:
   # See #10 for more details. Vim older than 8.2.1119 cannot be built with Xcode 12 or later.
   vim-v8_1_2424-mac:
     name: Vim v8.1.2424
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
