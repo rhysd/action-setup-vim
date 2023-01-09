@@ -79,7 +79,7 @@ export async function buildVim(version: string, os: Os): Promise<Installed> {
             core.debug(`Building Vim older than 8.2.1119 on macOS with Xcode11 at ${dir} instead of the latest Xcode`);
         } else {
             core.warning(
-                `Building Vim older than 8.2.1119 on macOS but proper Xcode is not found at ${dir}. Using the latest Xcode`,
+                `Building Vim older than 8.2.1119 on macOS needs Xcode11 but proper Xcode is not found at ${dir}. Using the latest Xcode as fallback. If you're using macos-latest or macos-12 runner and see some build error, try macos-11 runner`,
             );
         }
     }
