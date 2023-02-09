@@ -32,7 +32,7 @@ describe('Neovim installation', function () {
             it('throws an error when receiving unsuccessful response', async function () {
                 try {
                     const ret = await downloadNeovimMocked('nightly', 'linux');
-                    A.ok(false, `Exception was not thrown: ${ret}`);
+                    A.ok(false, `Exception was not thrown: ${JSON.stringify(ret)}`);
                 } catch (err) {
                     const msg = (err as Error).message;
                     A.ok(msg.includes('Could not download Neovim release from'), msg);
@@ -49,7 +49,7 @@ describe('Neovim installation', function () {
                 }
                 try {
                     const ret = await downloadStableNeovimMocked('linux', token);
-                    A.ok(false, `Exception was not thrown: ${ret}`);
+                    A.ok(false, `Exception was not thrown: ${JSON.stringify(ret)}`);
                 } catch (e) {
                     const err = e as Error;
                     // Matches to version tag like '/v0.4.4/' as part of download URL in error message

@@ -1,6 +1,6 @@
 import { exec as origExec } from '@actions/exec';
 
-export type Env = { [k: string]: string };
+export type Env = Record<string, string>;
 
 interface Options {
     readonly cwd?: string;

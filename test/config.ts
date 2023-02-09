@@ -1,7 +1,7 @@
 import { strict as A } from 'assert';
 import { loadConfigFromInputs } from '../src/config';
 
-function setInputs(inputs: { [k: string]: string }): void {
+function setInputs(inputs: Record<string, string>): void {
     for (const key of Object.keys(inputs)) {
         const k = `INPUT_${key.toUpperCase().replace(' ', '_')}`;
         process.env[k] = inputs[key];
@@ -9,7 +9,7 @@ function setInputs(inputs: { [k: string]: string }): void {
 }
 
 describe('loadConfigFromInputs()', function () {
-    let savedEnv: { [k: string]: string | undefined };
+    let savedEnv: Record<string, string | undefined>;
 
     before(function () {
         savedEnv = { ...process.env };
@@ -107,7 +107,7 @@ describe('loadConfigFromInputs()', function () {
 
     const errorCases: Array<{
         what: string;
-        inputs: { [k: string]: string };
+        inputs: Record<string, string>;
         expected: RegExp;
     }> = [
         {

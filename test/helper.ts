@@ -8,7 +8,7 @@ export function mockFetch(): void {
 }
 
 // Arguments of exec(): cmd: string, args: string[], options?: Options
-export type ExecArgs = [string, string[], { env: { [n: string]: string } } | undefined];
+export type ExecArgs = [string, string[], { env: Record<string, string> } | undefined];
 export class ExecStub {
     called: ExecArgs[] = [];
 
