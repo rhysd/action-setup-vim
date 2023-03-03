@@ -3,8 +3,7 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:n/recommended",
-        "prettier",
-        "plugin:prettier/recommended"
+        "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -12,8 +11,7 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "n",
-        "prettier"
+        "n"
     ],
     "env": {
         "es2020": true,
