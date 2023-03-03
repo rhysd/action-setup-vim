@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -p .",
@@ -51,6 +54,7 @@
     "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-mocha": "^10.1.0",
+    "eslint-plugin-n": "^15.6.1",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
