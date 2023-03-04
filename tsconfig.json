@@ -36,6 +36,7 @@
     "test/validate.ts",
     "test/vim.ts",
     "test/neovim.ts",
+    "test/shell.ts",
     "test/helper.ts",
     "scripts/post_action_check.ts"
   ]
