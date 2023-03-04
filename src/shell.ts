@@ -52,3 +52,11 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
         throw new Error(`Command '${cmd} ${args.join(' ')}' exited non-zero status ${code}: ${stderr}`);
     }
 }
+
+const IS_DEBUG = !!process.env['RUNNER_DEBUG'];
+
+export async function unzip(file: string, cwd: string): Promise<void> {
+    // Suppress large output on unarchiving assets when RUNNER_DEBUG is not set (#25)
+    const args = IS_DEBUG ? [file] : ['-q', file];
+    await exec('unzip', args, { cwd });
+}
