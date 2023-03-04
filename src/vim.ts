@@ -5,7 +5,7 @@ import { strict as assert } from 'assert';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
-import { exec, Env } from './shell';
+import { exec, unzip, Env } from './shell';
 import { makeTmpdir, exeName, Os, ensureError } from './utils';
 import type { Installed } from './install';
 
@@ -163,7 +163,7 @@ async function installVimAssetOnWindows(file: string, url: string, dirSuffix: st
         await fs.writeFile(assetFile, buffer, { encoding: null });
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
 
-        await exec('unzip', [assetFile], { cwd: dlDir });
+        await unzip(assetFile, dlDir);
     } catch (e) {
         const err = ensureError(e);
         core.debug(err.stack ?? err.message);

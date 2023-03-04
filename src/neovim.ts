@@ -6,7 +6,7 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
 import { makeTmpdir, Os, exeName, ensureError } from './utils';
-import { exec } from './shell';
+import { exec, unzip } from './shell';
 import type { Installed } from './install';
 
 function assetFileName(os: Os): string {
@@ -70,7 +70,7 @@ async function unarchiveAsset(asset: string, dirName: string): Promise<string> {
         return dest;
     }
     if (asset.endsWith('.zip')) {
-        await exec('unzip', [asset], { cwd: dir });
+        await unzip(asset, dir);
         return dest;
     }
     throw new Error(`FATAL: Don't know how to unarchive ${asset} to ${dest}`);
