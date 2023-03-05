@@ -26,7 +26,6 @@ export async function exec(cmd: string, args: string[], opts?: Options): Promise
     const res = {
         stdout: '',
         stderr: '',
-        code: null,
     };
 
     const execOpts = {
