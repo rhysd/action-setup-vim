@@ -89,6 +89,9 @@ npm prune --production
 # Remove all type definitions from node_modules since @octokit/rest/index.d.ts is very big (1.3MB)
 find ./node_modules/ -name '*.d.ts' -exec rm '{}' \;
 
+# Remove coverage files
+rm -rf ./node_modules/.cache ./.nyc_output ./coverage
+
 rm -rf .release
 mkdir -p .release
 

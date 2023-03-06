@@ -4,3 +4,5 @@
 /scripts/*.js
 *.js.map
 /env.sh
+/.nyc_output
+/coverage
