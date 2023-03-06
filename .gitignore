@@ -3,3 +3,6 @@
 /scripts/*.js
 /node_modules/.bin
 /prepare-release.sh
+/.nyc_output
+/coverage
+/env.sh
