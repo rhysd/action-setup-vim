@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exec = void 0;
+exports.unzip = exports.exec = void 0;
 const exec_1 = require("@actions/exec");
 // Avoid leaking $INPUT_* variables to subprocess
 //   ref: https://github.com/actions/toolkit/issues/309
@@ -20,7 +20,6 @@ async function exec(cmd, args, opts) {
     const res = {
         stdout: '',
         stderr: '',
-        code: null,
     };
     const execOpts = {
         cwd: opts?.cwd,
@@ -45,4 +44,11 @@ async function exec(cmd, args, opts) {
     }
 }
 exports.exec = exec;
+const IS_DEBUG = !!process.env['RUNNER_DEBUG'];
+async function unzip(file, cwd) {
+    // Suppress large output on unarchiving assets when RUNNER_DEBUG is not set (#25)
+    const args = IS_DEBUG ? [file] : ['-q', file];
+    await exec('unzip', args, { cwd });
+}
+exports.unzip = unzip;
 //# sourceMappingURL=shell.js.map

@@ -89,7 +89,7 @@ async function unarchiveAsset(asset, dirName) {
         return dest;
     }
     if (asset.endsWith('.zip')) {
-        await (0, shell_1.exec)('unzip', [asset], { cwd: dir });
+        await (0, shell_1.unzip)(asset, dir);
         return dest;
     }
     throw new Error(`FATAL: Don't know how to unarchive ${asset} to ${dest}`);

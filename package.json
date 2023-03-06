@@ -3,17 +3,25 @@
   "version": "0.0.0",
   "private": true,
   "description": "",
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -p .",
     "watch:tsc": "tsc -p . --watch --preserveWatchOutput --pretty",
     "watch:mocha": "mocha --watch-files './test/*.js'",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:mocha",
-    "lint": "eslint --max-warnings 0 ./**/*.ts",
-    "fix": "eslint --fix './**/*.ts'",
+    "lint:eslint": "eslint --max-warnings 0 './**/*.ts'",
+    "lint:prettier": "prettier --check './**/*.ts'",
+    "lint": "concurrently -c auto npm:lint:eslint npm:lint:prettier",
+    "fix:eslint": "eslint --fix './**/*.ts'",
+    "fix:prettier": "prettier --write './**/*.ts'",
+    "fix": "concurrently -m 1 -c auto npm:fix:eslint npm:fix:prettier",
     "mocha": "mocha ./test",
     "test": "concurrently -m 1 -c auto npm:build npm:mocha",
-    "cov": "nyc --reporter=lcov --reporter=text-summary npm test && open ./coverage/lcov-report/index.html",
+    "nyc": "nyc --reporter=lcov --reporter=text-summary npm run mocha && (which open && open ./coverage/lcov-report/index.html || true)",
+    "cov": "concurrently -m 1 -c auto npm:build npm:nyc",
     "prepare": "husky install"
   },
   "repository": {
@@ -37,26 +45,26 @@
     "@actions/exec": "^1.1.1",
     "@actions/github": "^5.1.1",
     "@actions/io": "^1.1.2",
-    "node-fetch": "^2.6.5",
+    "node-fetch": "^2.6.7",
     "ubuntu-version": "^2.0.0"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
     "@types/mock-require": "^2.0.1",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.14.6",
     "@types/node-fetch": "^2.6.2",
-    "@typescript-eslint/eslint-plugin": "^5.48.0",
-    "@typescript-eslint/parser": "^5.48.0",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
     "concurrently": "^7.6.0",
-    "eslint": "^8.31.0",
+    "eslint": "^8.35.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-mocha": "^10.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-n": "^15.6.1",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "mock-require": "^3.0.3",
     "nyc": "^15.1.0",
-    "prettier": "^2.8.2",
-    "typescript": "^4.9.4"
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
   }
 }
