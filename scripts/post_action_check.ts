@@ -2,6 +2,7 @@ import { homedir } from 'os';
 import * as path from 'path';
 import { strict as assert } from 'assert';
 import { spawnSync } from 'child_process';
+import { existsSync } from 'fs';
 
 function log(...args: unknown[]): void {
     console.log('[post_action_check]:', ...args);
@@ -79,6 +80,7 @@ function main(): void {
     const exe = expectedExecutable(args.neovim, args.version);
     log('Validating output. Expected executable:', exe);
     assert.equal(exe, args.output);
+    assert.ok(existsSync(exe));
 
     const bin = path.dirname(exe);
     log(`Validating '${bin}' is in $PATH`);
@@ -88,14 +90,14 @@ function main(): void {
     ok(paths.includes(bin), `'${bin}' is not included in '${process.env['PATH']}'`);
 
     log('Validating executable');
-    const proc = spawnSync(exe, ['-N', '-c', 'quit']);
+    const proc = spawnSync(exe, ['-N', '-c', 'quit'], { timeout: 5000 });
     let stderr = proc.stderr.toString();
     assert.equal(proc.error, undefined);
     assert.equal(proc.status, 0, `stderr: ${stderr}`);
     assert.equal(proc.signal, null, `stderr: ${stderr}`);
 
     log('Validating version');
-    const ver = spawnSync(exe, ['--version']);
+    const ver = spawnSync(exe, ['--version'], { timeout: 5000 });
     stderr = ver.stderr.toString();
     assert.equal(ver.error, undefined);
     assert.equal(ver.status, 0, `stderr: ${stderr}`);
