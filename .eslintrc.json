@@ -60,7 +60,6 @@
                 "leadingUnderscore": "allow"
             }
         ],
-        "@typescript-eslint/no-duplicate-imports": "error",
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "error",
         "@typescript-eslint/no-confusing-void-expression": "error",
@@ -97,6 +96,14 @@
                 "mocha/no-hooks-for-single-case": "off",
                 "mocha/max-top-level-suites": "off",
                 "mocha/no-exclusive-tests": "error"
+            }
+        },
+        {
+            "files": [
+                "scripts/post_action_check.ts"
+            ],
+            "rules": {
+                "n/no-sync": "off"
             }
         }
     ]
