@@ -30,13 +30,13 @@ one step. You don't need to separate workflow jobs for each platforms and Vim/Ne
 
 ## Usage
 
-Install the latest stable Vim
+Install the latest stable Vim:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
 ```
 
-Install the latest nightly Vim
+Install the latest nightly Vim:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -45,7 +45,7 @@ Install the latest nightly Vim
 ```
 
 Install the latest Vim v8.1.123. The version is a tag name in [vim/vim][vim] repository. Please see
-the following 'Choose specific version' section also
+the following 'Choose specific version' section as well:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -53,7 +53,18 @@ the following 'Choose specific version' section also
     version: v8.1.0123
 ```
 
-Install the latest stable Neovim
+When you want to customize the build configuration for Vim, `configure-args` input is available.
+The input is passed to `./configure` option when building Vim from source:
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  with:
+    version: nightly
+    configure-args: |
+      --with-features=huge --enable-fail-if-missing --disable-nls
+```
+
+Install the latest stable Neovim:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -61,7 +72,7 @@ Install the latest stable Neovim
     neovim: true
 ```
 
-Install the latest nightly Neovim
+Install the latest nightly Neovim:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -70,7 +81,7 @@ Install the latest nightly Neovim
     version: nightly
 ```
 
-Install the Neovim v0.4.3. Please see the following 'Choose specific version' section also
+Install the Neovim v0.4.3. Please see the following 'Choose specific version' section as well:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -190,7 +201,6 @@ is not available for installing Neovim on Windows.
 ## Current limitation
 
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.
-- Building Vim is not configurale. For example, arguments cannot be passed to `./configure`.
 - Installing Vim/Neovim from system's package manager is not configurable. For example, arguments cannot be passed to `brew install`.
 
 These are basically not a technical limitation. Please let me know by creating an issue if you want

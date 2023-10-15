@@ -23,6 +23,7 @@ describe('loadConfigFromInputs()', function () {
         const c = loadConfigFromInputs();
         A.equal(c.version, 'stable');
         A.equal(c.neovim, false);
+        A.equal(c.configureArgs, null);
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
     });
 
@@ -30,10 +31,13 @@ describe('loadConfigFromInputs()', function () {
         setInputs({
             version: 'nightly',
             neovim: 'true',
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'configure-args': '--with-features=huge --disable-nls',
         });
         const c = loadConfigFromInputs();
         A.equal(c.version, 'nightly');
         A.equal(c.neovim, true);
+        A.equal(c.configureArgs, '--with-features=huge --disable-nls');
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
     });
 

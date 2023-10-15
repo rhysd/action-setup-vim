@@ -52,7 +52,7 @@ export async function install(config: Config): Promise<Installed> {
         if (config.version === 'stable') {
             return installVimStable();
         } else {
-            return buildVim(config.version, config.os);
+            return buildVim(config.version, config.os, config.configureArgs);
         }
     }
 }
