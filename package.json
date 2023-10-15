@@ -46,6 +46,7 @@
     "@actions/github": "^5.1.1",
     "@actions/io": "^1.1.2",
     "node-fetch": "^2.6.7",
+    "shlex": "^2.1.2",
     "ubuntu-version": "^2.0.0"
   },
   "devDependencies": {

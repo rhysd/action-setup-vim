@@ -18,6 +18,10 @@ inputs:
       Setting to true will install Neovim.
     required: false
     default: false
+  configure-args:
+    description: >
+      Arguments passed to ./configure execution when building Vim from source.
+    required: false
   token:
     description: >
       Personal access token for GitHub API. It is used for calling GitHub API when Neovim asset is

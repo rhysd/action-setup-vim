@@ -70,7 +70,7 @@ describe('installVimOnWindows()', function () {
 
 describe('buildVim()', function () {
     let stub: ExecStub;
-    let buildVim: (v: string, os: Os) => Promise<Installed>;
+    let buildVim: (v: string, os: Os, configureArgs: string | null) => Promise<Installed>;
     const savedXcode11Env = process.env['XCODE_11_DEVELOPER_DIR'];
 
     before(function () {
@@ -91,7 +91,7 @@ describe('buildVim()', function () {
     });
 
     it('builds nightly Vim from source', async function () {
-        const installed = await buildVim('nightly', 'linux');
+        const installed = await buildVim('nightly', 'linux', null);
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith('bin'), installed.binDir);
         A.ok(stub.called.length > 0);
@@ -110,7 +110,7 @@ describe('buildVim()', function () {
 
     it('builds recent Vim from source', async function () {
         const version = 'v8.2.2424';
-        const installed = await buildVim(version, 'linux');
+        const installed = await buildVim(version, 'linux', null);
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith('bin'), installed.binDir);
         A.ok(stub.called.length > 0);
@@ -130,7 +130,7 @@ describe('buildVim()', function () {
 
     it('builds older Vim from source on macOS', async function () {
         const version = 'v8.2.0000';
-        await buildVim(version, 'macos');
+        await buildVim(version, 'macos', null);
 
         // For older Vim (before 8.2.1119), Xcode11 is necessary to build
         // Check `./configure`, `make` and `make install` are run with Xcode11
@@ -141,6 +141,25 @@ describe('buildVim()', function () {
             const env = opts['env'];
             A.ok('DEVELOPER_DIR' in env);
         }
+    });
+
+    it('builds Vim from source with specified configure arguments', async function () {
+        const version = 'v8.2.2424';
+        const installed = await buildVim(
+            version,
+            'linux',
+            '--with-features=huge --enable-fail-if-missing --disable-nls',
+        );
+
+        const [cmd, args] = stub.called[1];
+        A.equal(cmd, './configure');
+        const expected = [
+            `--prefix=${path.dirname(installed.binDir)}`,
+            '--with-features=huge',
+            '--enable-fail-if-missing',
+            '--disable-nls',
+        ];
+        A.deepEqual(args, expected);
     });
 });
 
@@ -203,6 +222,7 @@ describe('installVimStable()', function () {
             version: 'stable',
             neovim: false,
             os: 'linux',
+            configureArgs: null,
             token: null,
         });
 
@@ -223,6 +243,7 @@ describe('installVimStable()', function () {
             version: 'stable',
             neovim: false,
             os: 'linux',
+            configureArgs: null,
             token: null,
         });
 
