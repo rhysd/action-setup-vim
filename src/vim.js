@@ -34,6 +34,7 @@ const assert_1 = require("assert");
 const node_fetch_1 = __importDefault(require("node-fetch"));
 const core = __importStar(require("@actions/core"));
 const io = __importStar(require("@actions/io"));
+const shlex_1 = require("shlex");
 const shell_1 = require("./shell");
 const utils_1 = require("./utils");
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -73,20 +74,22 @@ async function getXcode11DevDir() {
     }
 }
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
-async function buildVim(version, os) {
+async function buildVim(version, os, configureArgs) {
     assert_1.strict.notEqual(version, 'stable');
     const installDir = path.join((0, os_1.homedir)(), `vim-${version}`);
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
     const dir = path.join(await (0, utils_1.makeTmpdir)(), 'vim');
-    const args = ['clone', '--depth=1', '--single-branch'];
-    if (version === 'nightly') {
-        args.push('--no-tags');
+    {
+        const args = ['clone', '--depth=1', '--single-branch'];
+        if (version === 'nightly') {
+            args.push('--no-tags');
+        }
+        else {
+            args.push('--branch', version);
+        }
+        args.push('https://github.com/vim/vim', dir);
+        await (0, shell_1.exec)('git', args);
     }
-    else {
-        args.push('--branch', version);
-    }
-    args.push('https://github.com/vim/vim', dir);
-    await (0, shell_1.exec)('git', args);
     const env = {};
     if (os === 'macos' && versionIsOlderThan8_2_1119(version)) {
         const dir = await getXcode11DevDir();
@@ -104,7 +107,16 @@ async function buildVim(version, os) {
         }
     }
     const opts = { cwd: dir, env };
-    await (0, shell_1.exec)('./configure', [`--prefix=${installDir}`, '--with-features=huge', '--enable-fail-if-missing'], opts);
+    {
+        const args = [`--prefix=${installDir}`];
+        if (configureArgs === null) {
+            args.push('--with-features=huge', '--enable-fail-if-missing');
+        }
+        else {
+            args.push(...(0, shlex_1.split)(configureArgs));
+        }
+        await (0, shell_1.exec)('./configure', args, opts);
+    }
     await (0, shell_1.exec)('make', ['-j'], opts);
     await (0, shell_1.exec)('make', ['install'], opts);
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);

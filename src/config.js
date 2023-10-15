@@ -45,7 +45,8 @@ function loadConfigFromInputs() {
         version: getVersion(neovim),
         neovim,
         os: (0, utils_1.getOs)(),
-        token: (0, core_1.getInput)('token') ?? null,
+        configureArgs: (0, core_1.getInput)('configure-args') || null,
+        token: (0, core_1.getInput)('token') || null,
     };
 }
 exports.loadConfigFromInputs = loadConfigFromInputs;

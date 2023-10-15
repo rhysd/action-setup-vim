@@ -74,7 +74,7 @@ async function install(config) {
             return installVimStable();
         }
         else {
-            return (0, vim_1.buildVim)(config.version, config.os);
+            return (0, vim_1.buildVim)(config.version, config.os, config.configureArgs);
         }
     }
 }
