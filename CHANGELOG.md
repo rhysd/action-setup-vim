@@ -1,3 +1,20 @@
+<a name="v1.3.0"></a>
+# [v1.3.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.0) - 15 Oct 2023
+
+- `configure-args` input was added to customize build configurations on building Vim from source. This input is useful to change `./configure` arguments to enable/disable some features of Vim. For example, when you're facing some issue on generating translation files (this sometimes happens when building older Vim), disabling the native language support would be able to avoid the issue. ([#27](https://github.com/rhysd/action-setup-vim/issues/27))
+  ```yaml
+  - uses: rhysd/action-setup-vim@v1
+    with:
+      version: 8.0.0000
+      configure-args: |
+        --with-features=huge --enable-fail-if-missing --disable-nls
+  ```
+- Update the action runtime to `node20`. Now this action is run with Node.js v20.
+- Update all dependencies to the latest including `@actions/github` v6.0.0 and some security fixes.
+
+[Changes][v1.3.0]
+
+
 <a name="v1.2.15"></a>
 # [v1.2.15](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.15) - 06 Mar 2023
 
@@ -209,6 +226,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.3.0]: https://github.com/rhysd/action-setup-vim/compare/v1.2.15...v1.3.0
 [v1.2.15]: https://github.com/rhysd/action-setup-vim/compare/v1.2.14...v1.2.15
 [v1.2.14]: https://github.com/rhysd/action-setup-vim/compare/v1.2.13...v1.2.14
 [v1.2.13]: https://github.com/rhysd/action-setup-vim/compare/v1.2.12...v1.2.13
