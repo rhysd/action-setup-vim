@@ -131,6 +131,9 @@ For stable releases on all platforms and nightly on Windows, `gvim` executable i
 
 When installing without system's package manager, Vim is installed at `$HOME/vim`.
 
+**Note:** When you build Vim older than 8.2.1119 on macOS, Xcode 11 or earlier is necessary due to
+lack of [this patch][vim_8_2_1119]. Please try `macos-11` runner instead of the latest macOS runner.
+
 ### Neovim
 
 `vX.Y.Z` represents a specific version such as `v0.4.3`.
@@ -219,3 +222,4 @@ Distributed under [the MIT license](./LICENSE.txt).
 [generate-pat]: https://github.com/settings/tokens/new
 [gh-action-secrets]: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets
 [issue-5]: https://github.com/rhysd/action-setup-vim/issues/5
+[vim_8_2_1119]: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
