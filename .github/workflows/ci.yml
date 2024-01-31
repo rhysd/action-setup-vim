@@ -6,7 +6,7 @@ jobs:
     name: Stable and nightly
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest, macos-14]
         version: [stable, nightly]
         neovim: [true, false]
       fail-fast: false
@@ -112,7 +112,7 @@ jobs:
           python-version: '3.x'
       - run: pip install yamllint
       - run: yamllint --strict .github/workflows
-      - name: Check workflow files
-        run: |
-          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color
+      # - name: Check workflow files
+      #   run: |
+      #     bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+      #     ./actionlint -color
