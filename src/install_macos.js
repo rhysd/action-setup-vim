@@ -28,12 +28,15 @@ const core = __importStar(require("@actions/core"));
 const shell_1 = require("./shell");
 const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
+function homebrewBinDir() {
+    return process.arch === 'arm64' ? '/opt/homebrew/bin' : '/usr/local/bin';
+}
 async function installVimStable() {
     core.debug('Installing stable Vim on macOS using Homebrew');
     await (0, shell_1.exec)('brew', ['install', 'macvim']);
     return {
         executable: 'vim',
-        binDir: '/usr/local/bin',
+        binDir: homebrewBinDir(),
     };
 }
 async function installNeovimStable() {
@@ -41,7 +44,7 @@ async function installNeovimStable() {
     await (0, shell_1.exec)('brew', ['install', 'neovim']);
     return {
         executable: 'nvim',
-        binDir: '/usr/local/bin',
+        binDir: homebrewBinDir(),
     };
 }
 async function install(config) {

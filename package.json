@@ -4,8 +4,9 @@
   "private": true,
   "description": "",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
+  "type": "commonjs",
   "main": "src/index.js",
   "scripts": {
     "build": "tsc -p .",
@@ -50,22 +51,22 @@
     "ubuntu-version": "^2.0.0"
   },
   "devDependencies": {
-    "@types/mocha": "^10.0.2",
-    "@types/mock-require": "^2.0.1",
-    "@types/node": "^20.8.6",
-    "@types/node-fetch": "^2.6.6",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
-    "concurrently": "^8.2.1",
-    "eslint": "^8.51.0",
-    "eslint-config-prettier": "^9.0.0",
+    "@types/mocha": "^10.0.6",
+    "@types/mock-require": "^2.0.3",
+    "@types/node": "^20.10.6",
+    "@types/node-fetch": "^2.6.10",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "concurrently": "^8.2.2",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-mocha": "^10.2.0",
-    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-n": "^16.6.1",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "mock-require": "^3.0.3",
     "nyc": "^15.1.0",
-    "prettier": "^3.0.3",
-    "typescript": "^5.2.2"
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3"
   }
 }
