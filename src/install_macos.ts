@@ -5,12 +5,16 @@ import { exec } from './shell';
 import { buildVim } from './vim';
 import { buildNightlyNeovim, downloadNeovim } from './neovim';
 
+function homebrewBinDir(): string {
+    return process.arch === 'arm64' ? '/opt/homebrew/bin' : '/usr/local/bin';
+}
+
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on macOS using Homebrew');
     await exec('brew', ['install', 'macvim']);
     return {
         executable: 'vim',
-        binDir: '/usr/local/bin',
+        binDir: homebrewBinDir(),
     };
 }
 
@@ -19,7 +23,7 @@ async function installNeovimStable(): Promise<Installed> {
     await exec('brew', ['install', 'neovim']);
     return {
         executable: 'nvim',
-        binDir: '/usr/local/bin',
+        binDir: homebrewBinDir(),
     };
 }
 

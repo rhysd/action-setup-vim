@@ -33,7 +33,11 @@ function expectedExecutable(neovim: boolean, ver: string): string {
         switch (process.platform) {
             case 'darwin':
                 if (ver === 'stable') {
-                    return '/usr/local/bin/nvim';
+                    if (process.arch === 'arm64') {
+                        return '/opt/homebrew/bin/nvim';
+                    } else {
+                        return '/usr/local/bin/nvim';
+                    }
                 } else {
                     // nightly or specific version
                     return path.join(homedir(), `nvim-${ver}/bin/nvim`);
@@ -50,7 +54,11 @@ function expectedExecutable(neovim: boolean, ver: string): string {
         switch (process.platform) {
             case 'darwin':
                 if (ver === 'stable') {
-                    return '/usr/local/bin/vim';
+                    if (process.arch === 'arm64') {
+                        return '/opt/homebrew/bin/vim';
+                    } else {
+                        return '/usr/local/bin/vim';
+                    }
                 } else {
                     // nightly or specific version
                     return path.join(homedir(), `vim-${ver}/bin/vim`);
