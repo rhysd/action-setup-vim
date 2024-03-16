@@ -13,9 +13,10 @@
     "watch:tsc": "tsc -p . --watch --preserveWatchOutput --pretty",
     "watch:mocha": "mocha --watch-files './test/*.js'",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:mocha",
-    "lint:eslint": "eslint --max-warnings 0 './**/*.ts'",
+    "lint:eslint": "eslint --max-warnings 0 './**/*.ts' eslint.config.mjs",
+    "lint:tsc-eslint": "tsc -p eslint/tsconfig.json --noEmit --allowJs",
     "lint:prettier": "prettier --check './**/*.ts'",
-    "lint": "concurrently -c auto npm:lint:eslint npm:lint:prettier",
+    "lint": "concurrently -c auto npm:lint:eslint npm:lint:prettier npm:lint:tsc-eslint",
     "fix:eslint": "eslint --fix './**/*.ts'",
     "fix:prettier": "prettier --write './**/*.ts'",
     "fix": "concurrently -m 1 -c auto npm:fix:eslint npm:fix:prettier",
@@ -51,6 +52,8 @@
     "ubuntu-version": "^2.0.0"
   },
   "devDependencies": {
+    "@types/eslint__js": "^8.42.3",
+    "@types/eslint-plugin-mocha": "^10.4.0",
     "@types/mocha": "^10.0.6",
     "@types/mock-require": "^2.0.3",
     "@types/node": "^20.11.28",

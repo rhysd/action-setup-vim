@@ -98,4 +98,16 @@ export default ts.config(
             'mocha/no-top-level-hooks': 'error',
         },
     },
+    {
+        files: ['eslint.config.mjs', 'eslint/*.ts'],
+        languageOptions: {
+            parserOptions: {
+                project: 'eslint/tsconfig.json',
+            },
+        },
+        rules: {
+            '@typescript-eslint/naming-convention': 'off',
+            'n/no-extraneous-import': 'off',
+        },
+    },
 );
