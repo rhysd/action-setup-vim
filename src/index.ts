@@ -21,7 +21,7 @@ async function main(): Promise<void> {
     console.log('Installation successfully done:', installed);
 }
 
-main().catch(e => {
+main().catch((e: Error) => {
     core.debug(e.stack);
     core.error(e.message);
     core.setFailed(e.message);

@@ -23,6 +23,7 @@ export class ExecStub {
 
 export function mockExec(): ExecStub {
     const stub = new ExecStub();
+    // eslint-disable-next-line @typescript-eslint/require-await
     const exec = async (...args: ExecArgs): Promise<string> => {
         stub.onCalled(args);
         return '';

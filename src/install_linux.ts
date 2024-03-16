@@ -13,7 +13,7 @@ async function isUbuntu18OrEarlier(): Promise<boolean> {
         return false; // Should be unreachable
     }
 
-    core.debug(`Ubuntu system version: ${version}`);
+    core.debug(`Ubuntu system version: ${version.join('.')}`);
 
     return version[0] <= 18;
 }
@@ -39,7 +39,7 @@ export async function install(config: Config): Promise<Installed> {
                 try {
                     return await downloadNeovim(config.version, 'linux'); // await is necessary to catch error
                 } catch (e) {
-                    const message = e instanceof Error ? e.message : e;
+                    const message = e instanceof Error ? e.message : String(e);
                     core.warning(
                         `Neovim download failure for nightly on Linux: ${message}. Falling back to installing Neovim by building it from source`,
                     );
