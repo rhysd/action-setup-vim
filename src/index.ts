@@ -22,7 +22,9 @@ async function main(): Promise<void> {
 }
 
 main().catch((e: Error) => {
-    core.debug(e.stack);
+    if (e.stack) {
+        core.debug(e.stack);
+    }
     core.error(e.message);
     core.setFailed(e.message);
 });
