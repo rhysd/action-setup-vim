@@ -12,12 +12,14 @@ import type { Installed } from './install';
 function assetFileName(os: Os, version: string): string {
     switch (os) {
         case 'macos':
-            if (version == 'nightly') {
+            if (version === 'nightly') {
                 switch (process.arch) {
                     case 'arm64':
                         return 'nvim-macos-arm64.tar.gz';
                     case 'x64':
                         return 'nvim-macos-x86_64.tar.gz';
+                    default:
+                        break;
                 }
             }
             return 'nvim-macos.tar.gz';
@@ -56,12 +58,14 @@ export function assetDirName(version: string, os: Os): string {
             }
             // Until v0.9.5 release, 'nvim-macos' was the asset directory name on macOS. However it was changed to 'nvim-macos-arm64'
             // and 'nvim-macos-x86_64' from v0.10.0: https://github.com/neovim/neovim/pull/28000
-            if (version == 'nightly') {
+            if (version === 'nightly') {
                 switch (process.arch) {
                     case 'arm64':
                         return 'nvim-macos-arm64';
                     case 'x64':
                         return 'nvim-macos-x86_64';
+                    default:
+                        break;
                 }
             }
             return 'nvim-macos';
