@@ -138,7 +138,16 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v0.7.1', 'macos'), 'nvim-macos');
             A.equal(assetDirName('v0.10.0', 'macos'), 'nvim-macos');
             A.equal(assetDirName('v1.0.0', 'macos'), 'nvim-macos');
-            A.equal(assetDirName('nightly', 'macos'), 'nvim-macos');
+            switch (process.arch) {
+                case 'arm64':
+                    A.equal(assetDirName('nightly', 'macos'), 'nvim-macos-arm64');
+                    break;
+                case 'x64':
+                    A.equal(assetDirName('nightly', 'macos'), 'nvim-macos-x86_64');
+                    break;
+                default:
+                    A.equal(assetDirName('nightly', 'macos'), 'nvim-macos');
+            }
             A.equal(assetDirName('stable', 'macos'), 'nvim-macos');
         });
     });
