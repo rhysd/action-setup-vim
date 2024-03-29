@@ -9,9 +9,17 @@ import { makeTmpdir, Os, exeName, ensureError } from './utils';
 import { exec, unzip } from './shell';
 import type { Installed } from './install';
 
-function assetFileName(os: Os): string {
+function assetFileName(os: Os, version: string): string {
     switch (os) {
         case 'macos':
+            if (version == 'nightly') {
+                switch (process.arch) {
+                    case 'arm64':
+                        return 'nvim-macos-arm64.tar.gz';
+                    case 'x64':
+                        return 'nvim-macos-x86_64.tar.gz';
+                }
+            }
             return 'nvim-macos.tar.gz';
         case 'linux':
             return 'nvim-linux64.tar.gz';
@@ -46,6 +54,16 @@ export function assetDirName(version: string, os: Os): string {
             if (v !== null && (v.minor < 7 || (v.minor === 7 && v.patch < 1))) {
                 return 'nvim-osx64';
             }
+            // Until v0.9.5 release, 'nvim-macos' was the asset directory name on macOS. However it was changed to 'nvim-macos-arm64'
+            // and 'nvim-macos-x86_64' from v0.10.0: https://github.com/neovim/neovim/pull/28000
+            if (version == 'nightly') {
+                switch (process.arch) {
+                    case 'arm64':
+                        return 'nvim-macos-arm64';
+                    case 'x64':
+                        return 'nvim-macos-x86_64';
+                }
+            }
             return 'nvim-macos';
         }
         case 'linux':
@@ -78,7 +96,7 @@ async function unarchiveAsset(asset: string, dirName: string): Promise<string> {
 
 // version = 'stable' or 'nightly' or version string
 export async function downloadNeovim(version: string, os: Os): Promise<Installed> {
-    const file = assetFileName(os);
+    const file = assetFileName(os, version);
     const destDir = path.join(homedir(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
     console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
