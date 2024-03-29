@@ -19,7 +19,7 @@ function assetFileName(os: Os, version: string): string {
                     case 'x64':
                         return 'nvim-macos-x86_64.tar.gz';
                     default:
-                        break;
+                        throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
                 }
             }
             return 'nvim-macos.tar.gz';
@@ -68,7 +68,7 @@ export function assetDirName(version: string, os: Os): string {
                     case 'x64':
                         return 'nvim-macos-x86_64';
                     default:
-                        break;
+                        throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
                 }
             }
             return 'nvim-macos';
