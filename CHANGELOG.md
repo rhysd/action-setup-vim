@@ -1,3 +1,14 @@
+<a name="v1.3.2"></a>
+# [v1.3.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.2) - 29 Mar 2024
+
+- Fix the nightly Neovim installation was broken due to https://github.com/neovim/neovim/pull/28000. ([#30](https://github.com/rhysd/action-setup-vim/issues/30), thanks [@linrongbin16](https://github.com/linrongbin16))
+  - Neovim now provides `neovim-macos-arm64.tar.gz` (for Apple Silicon) and `neovim-macos-x86_64.tar.gz` (for Intel Mac) separately rather than the single `neovim-macos.tar.gz`. This change will be applied to the next stable version.
+- Update npm dependencies to the latest. This update includes some small security fixes.
+- Fix an incorrect OS version was reported in debug message on Ubuntu.
+
+[Changes][v1.3.2]
+
+
 <a name="v1.3.1"></a>
 # [v1.3.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.1) - 31 Jan 2024
 
@@ -235,6 +246,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.3.2]: https://github.com/rhysd/action-setup-vim/compare/v1.3.1...v1.3.2
 [v1.3.1]: https://github.com/rhysd/action-setup-vim/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/rhysd/action-setup-vim/compare/v1.2.15...v1.3.0
 [v1.2.15]: https://github.com/rhysd/action-setup-vim/compare/v1.2.14...v1.2.15
