@@ -60,6 +60,7 @@ function ensureError(err) {
     if (err instanceof Error) {
         return err;
     }
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return new Error(`Unknown fatal error: ${err}`);
 }
 exports.ensureError = ensureError;

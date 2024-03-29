@@ -36,9 +36,19 @@ const io = __importStar(require("@actions/io"));
 const github = __importStar(require("@actions/github"));
 const utils_1 = require("./utils");
 const shell_1 = require("./shell");
-function assetFileName(os) {
+function assetFileName(os, version) {
     switch (os) {
         case 'macos':
+            if (version === 'nightly') {
+                switch (process.arch) {
+                    case 'arm64':
+                        return 'nvim-macos-arm64.tar.gz';
+                    case 'x64':
+                        return 'nvim-macos-x86_64.tar.gz';
+                    default:
+                        throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+                }
+            }
             return 'nvim-macos.tar.gz';
         case 'linux':
             return 'nvim-linux64.tar.gz';
@@ -52,8 +62,8 @@ function parseVersion(v) {
         return null;
     }
     return {
-        minor: parseInt(m[1]),
-        patch: parseInt(m[2]),
+        minor: parseInt(m[1], 10),
+        patch: parseInt(m[2], 10),
     };
 }
 function assetDirName(version, os) {
@@ -64,6 +74,21 @@ function assetDirName(version, os) {
             const v = parseVersion(version);
             if (v !== null && (v.minor < 7 || (v.minor === 7 && v.patch < 1))) {
                 return 'nvim-osx64';
+            }
+            // TODO: This 'nightly' check is temporary.
+            // Once the next version is released, nvim-macos-arm64.tar.gz and nvim-macos-x86_64.tar.gz will be released on 'stable'
+            // channel. We would need to check the version is 0.9.5 or earlier instead of checking the version is nightly.
+            if (version === 'nightly') {
+                // Until v0.9.5, the single asset nvim-macos.tar.gz was released. From v0.10.0, Neovim will provide
+                // nvim-macos-arm64.tar.gz (for Apple Silicon) and nvim-macos-x86_64.tar.gz (for Intel Mac). (#30)
+                switch (process.arch) {
+                    case 'arm64':
+                        return 'nvim-macos-arm64';
+                    case 'x64':
+                        return 'nvim-macos-x86_64';
+                    default:
+                        throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+                }
             }
             return 'nvim-macos';
         }
@@ -96,7 +121,7 @@ async function unarchiveAsset(asset, dirName) {
 }
 // version = 'stable' or 'nightly' or version string
 async function downloadNeovim(version, os) {
-    const file = assetFileName(os);
+    const file = assetFileName(os, version);
     const destDir = path.join((0, os_1.homedir)(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
     console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);

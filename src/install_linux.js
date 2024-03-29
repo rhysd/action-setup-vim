@@ -35,7 +35,7 @@ async function isUbuntu18OrEarlier() {
         core.error('Trying to install apt package but current OS is not Ubuntu');
         return false; // Should be unreachable
     }
-    core.debug(`Ubuntu system version: ${version}`);
+    core.debug(`Ubuntu system version: ${version.join('.')}`);
     return version[0] <= 18;
 }
 async function installVimStable() {
@@ -59,7 +59,7 @@ async function install(config) {
                     return await (0, neovim_1.downloadNeovim)(config.version, 'linux'); // await is necessary to catch error
                 }
                 catch (e) {
-                    const message = e instanceof Error ? e.message : e;
+                    const message = e instanceof Error ? e.message : String(e);
                     core.warning(`Neovim download failure for nightly on Linux: ${message}. Falling back to installing Neovim by building it from source`);
                     return (0, neovim_1.buildNightlyNeovim)('linux');
                 }

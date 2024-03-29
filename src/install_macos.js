@@ -58,7 +58,7 @@ async function install(config) {
                     return await (0, neovim_1.downloadNeovim)(config.version, 'macos'); // await is necessary to catch error
                 }
                 catch (e) {
-                    const message = e instanceof Error ? e.message : e;
+                    const message = e instanceof Error ? e.message : String(e);
                     core.warning(`Neovim download failure for nightly on macOS: ${message}. Falling back to installing Neovim by building it from source`);
                     return (0, neovim_1.buildNightlyNeovim)('macos');
                 }

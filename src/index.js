@@ -41,8 +41,10 @@ async function main() {
     console.log('Installed executable:', fullPath);
     console.log('Installation successfully done:', installed);
 }
-main().catch(e => {
-    core.debug(e.stack);
+main().catch((e) => {
+    if (e.stack) {
+        core.debug(e.stack);
+    }
     core.error(e.message);
     core.setFailed(e.message);
 });
