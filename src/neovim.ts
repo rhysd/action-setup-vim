@@ -42,8 +42,8 @@ function parseVersion(v: string): Version | null {
     }
 
     return {
-        minor: parseInt(m[1]),
-        patch: parseInt(m[2]),
+        minor: parseInt(m[1], 10),
+        patch: parseInt(m[2], 10),
     };
 }
 
@@ -56,9 +56,12 @@ export function assetDirName(version: string, os: Os): string {
             if (v !== null && (v.minor < 7 || (v.minor === 7 && v.patch < 1))) {
                 return 'nvim-osx64';
             }
-            // Until v0.9.5 release, 'nvim-macos' was the asset directory name on macOS. However it was changed to 'nvim-macos-arm64'
-            // and 'nvim-macos-x86_64' from v0.10.0: https://github.com/neovim/neovim/pull/28000
+            // TODO: This 'nightly' check is temporary.
+            // Once the next version is released, nvim-macos-arm64.tar.gz and nvim-macos-x86_64.tar.gz will be released on 'stable'
+            // channel. We would need to check the version is 0.9.5 or earlier instead of checking the version is nightly.
             if (version === 'nightly') {
+                // Until v0.9.5, the single asset nvim-macos.tar.gz was released. From v0.10.0, Neovim will provide
+                // nvim-macos-arm64.tar.gz (for Apple Silicon) and nvim-macos-x86_64.tar.gz (for Intel Mac). (#30)
                 switch (process.arch) {
                     case 'arm64':
                         return 'nvim-macos-arm64';
