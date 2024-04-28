@@ -13,7 +13,7 @@ jobs:
     name: Validate release
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-14]
+        os: [ubuntu-latest, macos-latest, windows-latest, macos-12]
         neovim: [true, false]
     runs-on: ${{ matrix.os }}
     steps:

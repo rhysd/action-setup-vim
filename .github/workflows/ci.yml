@@ -6,7 +6,7 @@ jobs:
     name: Stable and nightly
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-14]
+        os: [ubuntu-latest, macos-latest, windows-latest, macos-12]
         version: [stable, nightly]
         neovim: [true, false]
       fail-fast: false
@@ -96,7 +96,7 @@ jobs:
     name: Check unit tests and linter
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-14]
+        os: [ubuntu-latest, macos-latest, macos-12]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
