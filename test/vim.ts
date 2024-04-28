@@ -201,44 +201,14 @@ describe('installVimStable()', function () {
 
     before(function () {
         stub = mockExec();
+        installVimOnLinux = mock.reRequire('../src/install_linux').install;
     });
 
     after(function () {
         mock.stop('../src/shell');
     });
 
-    afterEach(function () {
-        mock.stop('ubuntu-version');
-    });
-
-    it('installs vim-gnome package for Ubuntu 18.10 or earlier (#11)', async function () {
-        async function getUbuntuVersion(): Promise<unknown> {
-            return Promise.resolve([18, 4]);
-        }
-        mock('ubuntu-version', { getUbuntuVersion });
-        installVimOnLinux = mock.reRequire('../src/install_linux').install;
-
-        const installed = await installVimOnLinux({
-            version: 'stable',
-            neovim: false,
-            os: 'linux',
-            configureArgs: null,
-            token: null,
-        });
-
-        A.equal(installed.executable, 'vim');
-        A.equal(installed.binDir, '/usr/bin');
-        const aptArgs = stub.called[stub.called.length - 1][1];
-        A.equal(aptArgs[aptArgs.length - 1], 'vim-gnome', aptArgs.join(' '));
-    });
-
-    it('installs vim-gtk3 package for Ubuntu 19.04 or later (#11)', async function () {
-        async function getUbuntuVersion(): Promise<unknown> {
-            return Promise.resolve([20, 4, 2]);
-        }
-        mock('ubuntu-version', { getUbuntuVersion });
-        installVimOnLinux = mock.reRequire('../src/install_linux').install;
-
+    it('installs vim-gtk3 package', async function () {
         const installed = await installVimOnLinux({
             version: 'stable',
             neovim: false,
