@@ -1,3 +1,13 @@
+<a name="v1.3.3"></a>
+# [v1.3.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.3) - 07 May 2024
+
+- Remove the support for Ubuntu 18.04, which was removed from GitHub-hosted runners more than one year ago.
+- Improve adding `bin` directory to the `$PATH` environment variable by using `core.addPath` rather than modifying the environment variable directly. ([#33](https://github.com/rhysd/action-setup-vim/issues/33), thanks [@ObserverOfTime](https://github.com/ObserverOfTime))
+- Update dependencies including some security patches.
+
+[Changes][v1.3.3]
+
+
 <a name="v1.3.2"></a>
 # [v1.3.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.2) - 29 Mar 2024
 
@@ -246,6 +256,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.3.3]: https://github.com/rhysd/action-setup-vim/compare/v1.3.2...v1.3.3
 [v1.3.2]: https://github.com/rhysd/action-setup-vim/compare/v1.3.1...v1.3.2
 [v1.3.1]: https://github.com/rhysd/action-setup-vim/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/rhysd/action-setup-vim/compare/v1.2.15...v1.3.0
