@@ -8,12 +8,11 @@ async function main(): Promise<void> {
     const config = loadConfigFromInputs();
     console.log('Extracted configuration:', config);
 
-    const pathSep = process.platform === 'win32' ? ';' : ':';
     const installed = await install(config);
     await validateInstallation(installed);
 
-    core.exportVariable('PATH', `${installed.binDir}${pathSep}${process.env['PATH']}`);
-    core.debug(`'${installed.binDir}' was set to $PATH`);
+    core.addPath(installed.binDir);
+    core.debug(`'${installed.binDir}' was added to $PATH`);
 
     const fullPath = join(installed.binDir, installed.executable);
     core.setOutput('executable', fullPath);
