@@ -31,11 +31,10 @@ const validate_1 = require("./validate");
 async function main() {
     const config = (0, config_1.loadConfigFromInputs)();
     console.log('Extracted configuration:', config);
-    const pathSep = process.platform === 'win32' ? ';' : ':';
     const installed = await (0, install_1.install)(config);
     await (0, validate_1.validateInstallation)(installed);
-    core.exportVariable('PATH', `${installed.binDir}${pathSep}${process.env['PATH']}`);
-    core.debug(`'${installed.binDir}' was set to $PATH`);
+    core.addPath(installed.binDir);
+    core.debug(`'${installed.binDir}' was added to $PATH`);
     const fullPath = (0, path_1.join)(installed.binDir, installed.executable);
     core.setOutput('executable', fullPath);
     console.log('Installed executable:', fullPath);

@@ -25,24 +25,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.install = void 0;
 const core = __importStar(require("@actions/core"));
-const ubuntu_version_1 = require("ubuntu-version");
 const shell_1 = require("./shell");
 const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
-async function isUbuntu18OrEarlier() {
-    const version = await (0, ubuntu_version_1.getUbuntuVersion)();
-    if (version.length === 0) {
-        core.error('Trying to install apt package but current OS is not Ubuntu');
-        return false; // Should be unreachable
-    }
-    core.debug(`Ubuntu system version: ${version.join('.')}`);
-    return version[0] <= 18;
-}
 async function installVimStable() {
     core.debug('Installing stable Vim on Linux using apt');
-    const pkg = (await isUbuntu18OrEarlier()) ? 'vim-gnome' : 'vim-gtk3';
     await (0, shell_1.exec)('sudo', ['apt-get', 'update', '-y']);
-    await (0, shell_1.exec)('sudo', ['apt-get', 'install', '-y', '--no-install-recommends', pkg]);
+    await (0, shell_1.exec)('sudo', ['apt-get', 'install', '-y', '--no-install-recommends', 'vim-gtk3']);
     return {
         executable: 'vim',
         binDir: '/usr/bin',
