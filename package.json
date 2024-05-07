@@ -24,7 +24,7 @@
     "test": "concurrently -m 1 -c auto npm:build npm:mocha",
     "nyc": "nyc --reporter=lcov --reporter=text-summary npm run mocha && (which open && open ./coverage/lcov-report/index.html || true)",
     "cov": "concurrently -m 1 -c auto npm:build npm:nyc",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
