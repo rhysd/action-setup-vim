@@ -210,8 +210,8 @@ some of them.
 
 Distributed under [the MIT license](./LICENSE.txt).
 
-[ci-badge]: https://github.com/rhysd/action-setup-vim/workflows/CI/badge.svg?branch=master&event=push
-[ci]: https://github.com/rhysd/action-setup-vim/actions?query=workflow%3ACI+branch%3Amaster
+[ci-badge]: https://github.com/rhysd/action-setup-vim/actions/workflows/ci.yml/badge.svg
+[ci]: https://github.com/rhysd/action-setup-vim/actions/workflows/ci.yml
 [release-badge]: https://img.shields.io/github/v/release/rhysd/action-setup-vim.svg
 [marketplace]: https://github.com/marketplace/actions/setup-vim
 [proj]: https://github.com/rhysd/action-setup-vim
