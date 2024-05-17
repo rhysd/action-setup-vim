@@ -134,20 +134,22 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v0.6.1', 'macos'), 'nvim-osx64');
         });
 
-        it('returns "nvim-macos" when Neovim version is 0.7.1 or later on macOS', function () {
+        it('returns "nvim-macos" when Neovim version is 0.7.1 or later and 0.9.5 or earlier on macOS', function () {
             A.equal(assetDirName('v0.7.1', 'macos'), 'nvim-macos');
-            A.equal(assetDirName('v0.10.0', 'macos'), 'nvim-macos');
-            A.equal(assetDirName('v1.0.0', 'macos'), 'nvim-macos');
-            A.equal(assetDirName('stable', 'macos'), 'nvim-macos');
+            A.equal(assetDirName('v0.8.0', 'macos'), 'nvim-macos');
+            A.equal(assetDirName('v0.9.5', 'macos'), 'nvim-macos');
         });
 
-        it('returns "nvim-macos-arm64" or "nvim-macos-x86_64" based on the CPU arch when Neovim version is nightly on macOS', function () {
+        it('returns "nvim-macos-arm64" or "nvim-macos-x86_64" based on the CPU arch when Neovim version is 0.10.0 later on macOS', function () {
             const expected =
                 process.arch === 'arm64'
                     ? 'nvim-macos-arm64'
                     : process.arch === 'x64'
                       ? 'nvim-macos-x86_64'
                       : 'nvim-macos';
+            A.equal(assetDirName('v0.10.0', 'macos'), expected);
+            A.equal(assetDirName('v1.0.0', 'macos'), expected);
+            A.equal(assetDirName('stable', 'macos'), expected);
             A.equal(assetDirName('nightly', 'macos'), expected);
         });
     });
