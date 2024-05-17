@@ -2,7 +2,7 @@
   "name": "action-setup-vim",
   "version": "0.0.0",
   "private": true,
-  "description": "",
+  "description": "GitHub Actions action for installing Vim/Neovim",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -14,7 +14,7 @@
     "watch:mocha": "mocha --watch-files \"./test/*.js\"",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:mocha",
     "lint:eslint": "eslint --max-warnings 0 \"./**/*.ts\" eslint.config.mjs",
-    "lint:tsc-eslint": "tsc -p tsconfig.eslint.json --noEmit --allowJs",
+    "lint:tsc-eslint": "tsc -p tsconfig.eslint.json",
     "lint:prettier": "prettier --check \"./**/*.ts\" \"./**/*.mjs\"",
     "lint": "concurrently -c auto npm:lint:eslint npm:lint:prettier npm:lint:tsc-eslint",
     "fix:eslint": "eslint --fix \"./**/*.ts\"",
@@ -34,6 +34,7 @@
     "github",
     "action",
     "vim",
+    "neovim",
     "text editor"
   ],
   "author": "rhysd <https://rhysd.github.io>",

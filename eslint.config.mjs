@@ -99,7 +99,7 @@ export default ts.config(
         },
     },
     {
-        files: ['eslint.config.mjs', 'types/eslint.d.ts'],
+        files: ['eslint.config.mjs'],
         languageOptions: {
             parserOptions: {
                 project: 'tsconfig.eslint.json',
