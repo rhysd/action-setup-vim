@@ -6,7 +6,7 @@ jobs:
     name: Stable and nightly
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-12]
+        os: [ubuntu-latest, macos-latest, windows-latest, macos-12, ubuntu-24.04]
         version: [stable, nightly]
         neovim: [true, false]
       fail-fast: false
@@ -93,10 +93,11 @@ jobs:
         run: node ./scripts/post_action_check.js "false" "v8.1.2424" "${{ steps.vim.outputs.executable }}"
 
   test-and-lint:
-    name: Check unit tests and linter
+    name: Check unit tests and lints
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-12]
+        # macos-latest for tests on arm64
+        os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -118,4 +119,4 @@ jobs:
       - name: Check workflow files
         run: |
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
-          ./actionlint -color
+          ./actionlint -color -ignore 'label "ubuntu-24\.04" is unknown\.'
