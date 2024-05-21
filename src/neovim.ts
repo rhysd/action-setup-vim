@@ -5,8 +5,8 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
-import { makeTmpdir, ensureError } from './utils';
-import { type Os, type System, exeName } from './system';
+import { ensureError } from './error';
+import { type Os, type System, exeName, makeTmpdir } from './system';
 import { exec, unzip } from './shell';
 import type { Installed } from './install';
 

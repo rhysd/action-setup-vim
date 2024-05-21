@@ -1,3 +1,7 @@
+import { tmpdir } from 'os';
+import * as core from '@actions/core';
+import { mkdirP } from '@actions/io';
+
 export type Os = 'macos' | 'linux' | 'windows';
 export type Arch = 'x64' | 'arm64' | 'other';
 export type ExeName = 'vim' | 'nvim' | 'vim.exe' | 'nvim.exe';
@@ -44,4 +48,11 @@ export function exeName(isNeovim: boolean, os: Os): ExeName {
     } else {
         return isNeovim ? 'nvim' : 'vim';
     }
+}
+
+export async function makeTmpdir(): Promise<string> {
+    const dir = tmpdir();
+    await mkdirP(dir);
+    core.debug(`Created temporary directory ${dir}`);
+    return dir;
 }
