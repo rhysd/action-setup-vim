@@ -3,12 +3,16 @@ import * as core from '@actions/core';
 import { loadConfigFromInputs } from './config';
 import { install } from './install';
 import { validateInstallation } from './validate';
+import { detectSystem } from './system';
 
 async function main(): Promise<void> {
     const config = loadConfigFromInputs();
     console.log('Extracted configuration:', config);
 
-    const installed = await install(config);
+    const system = detectSystem();
+    console.log('Detected system information:', system);
+
+    const installed = await install(config, system);
     await validateInstallation(installed);
 
     core.addPath(installed.binDir);

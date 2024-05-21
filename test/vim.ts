@@ -3,8 +3,7 @@ import * as path from 'path';
 import mock = require('mock-require');
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan8_2_1119 } from '../src/vim';
 import type { Installed } from '../src/install';
-import type { Os } from '../src/utils';
-import type { Config } from '../src/config';
+import type { Os } from '../src/system';
 import { mockFetch, ExecStub, mockExec } from './helper';
 
 function reRequire(): typeof import('../src/vim') {
@@ -197,7 +196,7 @@ describe('versionIsOlderThan8_2_1119()', function () {
 
 describe('installVimStable()', function () {
     let stub: ExecStub;
-    let installVimOnLinux: (config: Config) => Promise<Installed>;
+    let installVimOnLinux: typeof import('../src/install_linux').install;
 
     before(function () {
         stub = mockExec();
@@ -209,13 +208,18 @@ describe('installVimStable()', function () {
     });
 
     it('installs vim-gtk3 package', async function () {
-        const installed = await installVimOnLinux({
-            version: 'stable',
-            neovim: false,
-            os: 'linux',
-            configureArgs: null,
-            token: null,
-        });
+        const installed = await installVimOnLinux(
+            {
+                version: 'stable',
+                neovim: false,
+                configureArgs: null,
+                token: null,
+            },
+            {
+                os: 'linux',
+                arch: 'x64',
+            },
+        );
 
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/usr/bin');

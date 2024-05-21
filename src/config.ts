@@ -1,10 +1,8 @@
 import { getInput } from '@actions/core';
-import { Os, getOs } from './utils';
 
 export interface Config {
     readonly version: string;
     readonly neovim: boolean;
-    readonly os: Os;
     readonly token: string | null;
     readonly configureArgs: string | null;
 }
@@ -56,7 +54,6 @@ export function loadConfigFromInputs(): Config {
     return {
         version: getVersion(neovim),
         neovim,
-        os: getOs(),
         configureArgs: getInput('configure-args') || null,
         token: getInput('token') || null,
     };

@@ -7,7 +7,8 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
 import { exec, unzip, Env } from './shell';
-import { makeTmpdir, exeName, Os, ensureError } from './utils';
+import { makeTmpdir, ensureError } from './utils';
+import { type Os, exeName } from './system';
 import type { Installed } from './install';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
