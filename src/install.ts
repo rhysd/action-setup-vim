@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import type { Config } from './config';
+import type { Inputs } from './inputs';
 import type { System, ExeName } from './system';
 import { install as installOnLinux } from './install_linux';
 import { install as installOnMacOs } from './install_macos';
@@ -10,14 +10,14 @@ export interface Installed {
     readonly binDir: string;
 }
 
-export function install(config: Config, system: System): Promise<Installed> {
+export function install(inputs: Inputs, system: System): Promise<Installed> {
     core.debug(`Detected operating system: ${system.os}`);
     switch (system.os) {
         case 'linux':
-            return installOnLinux(config, system);
+            return installOnLinux(inputs, system);
         case 'macos':
-            return installOnMacOs(config, system);
+            return installOnMacOs(inputs, system);
         case 'windows':
-            return installOnWindows(config, system);
+            return installOnWindows(inputs, system);
     }
 }

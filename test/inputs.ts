@@ -1,5 +1,5 @@
 import { strict as A } from 'assert';
-import { loadConfigFromInputs } from '../src/config';
+import { getInputs } from '../src/inputs';
 
 function setInputs(inputs: Record<string, string>): void {
     for (const key of Object.keys(inputs)) {
@@ -8,7 +8,7 @@ function setInputs(inputs: Record<string, string>): void {
     }
 }
 
-describe('loadConfigFromInputs()', function () {
+describe('getInputs()', function () {
     let savedEnv: Record<string, string | undefined>;
 
     before(function () {
@@ -20,10 +20,10 @@ describe('loadConfigFromInputs()', function () {
     });
 
     it('returns default configurations with no input', function () {
-        const c = loadConfigFromInputs();
-        A.equal(c.version, 'stable');
-        A.equal(c.neovim, false);
-        A.equal(c.configureArgs, null);
+        const i = getInputs();
+        A.equal(i.version, 'stable');
+        A.equal(i.neovim, false);
+        A.equal(i.configureArgs, null);
     });
 
     it('returns validated configurations with user inputs', function () {
@@ -33,26 +33,26 @@ describe('loadConfigFromInputs()', function () {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'configure-args': '--with-features=huge --disable-nls',
         });
-        const c = loadConfigFromInputs();
-        A.equal(c.version, 'nightly');
-        A.equal(c.neovim, true);
-        A.equal(c.configureArgs, '--with-features=huge --disable-nls');
+        const i = getInputs();
+        A.equal(i.version, 'nightly');
+        A.equal(i.neovim, true);
+        A.equal(i.configureArgs, '--with-features=huge --disable-nls');
     });
 
     for (const version of ['STABLE', 'Nightly']) {
         it(`sets '${version}' for ${version.toLowerCase()}`, function () {
             setInputs({ version });
-            const c = loadConfigFromInputs();
-            A.equal(c.version, version.toLowerCase());
+            const i = getInputs();
+            A.equal(i.version, version.toLowerCase());
         });
     }
 
     for (const b of ['TRUE', 'False']) {
         it(`sets '${b}' for boolean value ${b.toLowerCase()}`, function () {
             setInputs({ neovim: b });
-            const c = loadConfigFromInputs();
+            const i = getInputs();
             const expected = b.toLowerCase() === 'true';
-            A.equal(c.neovim, expected);
+            A.equal(i.neovim, expected);
         });
     }
 
@@ -101,9 +101,9 @@ describe('loadConfigFromInputs()', function () {
                 version: t.version,
                 neovim: t.neovim.toString(),
             });
-            const c = loadConfigFromInputs();
-            A.equal(c.version, t.version);
-            A.equal(c.neovim, t.neovim);
+            const i = getInputs();
+            A.equal(i.version, t.version);
+            A.equal(i.neovim, t.neovim);
         });
     }
 
@@ -191,7 +191,7 @@ describe('loadConfigFromInputs()', function () {
     for (const t of errorCases) {
         it(`causes an error on ${t.what}`, function () {
             setInputs(t.inputs);
-            A.throws(loadConfigFromInputs, t.expected);
+            A.throws(getInputs, t.expected);
         });
     }
 });

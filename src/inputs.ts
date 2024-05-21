@@ -1,6 +1,6 @@
 import { getInput } from '@actions/core';
 
-export interface Config {
+export interface Inputs {
     readonly version: string;
     readonly neovim: boolean;
     readonly token: string | null;
@@ -49,7 +49,7 @@ function getNeovim(): boolean {
     return getBoolean('neovim', false);
 }
 
-export function loadConfigFromInputs(): Config {
+export function getInputs(): Inputs {
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),

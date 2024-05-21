@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import type { Installed } from './install';
-import type { Config } from './config';
+import type { Inputs } from './inputs';
 import type { System } from './system';
 import { exec } from './shell';
 import { buildVim } from './vim';
@@ -16,15 +16,15 @@ async function installVimStable(): Promise<Installed> {
     };
 }
 
-export async function install(config: Config, system: System): Promise<Installed> {
-    core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} version '${config.version}' on Linux`);
-    if (config.neovim) {
-        switch (config.version) {
+export async function install(inputs: Inputs, system: System): Promise<Installed> {
+    core.debug(`Installing ${inputs.neovim ? 'Neovim' : 'Vim'} version '${inputs.version}' on Linux`);
+    if (inputs.neovim) {
+        switch (inputs.version) {
             case 'stable':
-                return downloadStableNeovim(system, config.token);
+                return downloadStableNeovim(system, inputs.token);
             case 'nightly':
                 try {
-                    return await downloadNeovim(config.version, system); // await is necessary to catch error
+                    return await downloadNeovim(inputs.version, system); // await is necessary to catch error
                 } catch (e) {
                     const message = e instanceof Error ? e.message : String(e);
                     core.warning(
@@ -33,13 +33,13 @@ export async function install(config: Config, system: System): Promise<Installed
                     return buildNightlyNeovim('linux');
                 }
             default:
-                return downloadNeovim(config.version, system);
+                return downloadNeovim(inputs.version, system);
         }
     } else {
-        if (config.version === 'stable') {
+        if (inputs.version === 'stable') {
             return installVimStable();
         } else {
-            return buildVim(config.version, system.os, config.configureArgs);
+            return buildVim(inputs.version, system.os, inputs.configureArgs);
         }
     }
 }

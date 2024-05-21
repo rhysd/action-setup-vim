@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import type { Installed } from './install';
-import type { Config } from './config';
+import type { Inputs } from './inputs';
 import type { System } from './system';
 import { exec } from './shell';
 import { buildVim } from './vim';
@@ -28,15 +28,15 @@ async function installNeovimStable(): Promise<Installed> {
     };
 }
 
-export async function install(config: Config, system: System): Promise<Installed> {
-    core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} ${config.version} version on macOS`);
-    if (config.neovim) {
-        switch (config.version) {
+export async function install(inputs: Inputs, system: System): Promise<Installed> {
+    core.debug(`Installing ${inputs.neovim ? 'Neovim' : 'Vim'} ${inputs.version} version on macOS`);
+    if (inputs.neovim) {
+        switch (inputs.version) {
             case 'stable':
                 return installNeovimStable();
             case 'nightly':
                 try {
-                    return await downloadNeovim(config.version, system); // await is necessary to catch error
+                    return await downloadNeovim(inputs.version, system); // await is necessary to catch error
                 } catch (e) {
                     const message = e instanceof Error ? e.message : String(e);
                     core.warning(
@@ -45,18 +45,18 @@ export async function install(config: Config, system: System): Promise<Installed
                     return buildNightlyNeovim('macos');
                 }
             default:
-                return downloadNeovim(config.version, system);
+                return downloadNeovim(inputs.version, system);
         }
-        if (config.version === 'stable') {
+        if (inputs.version === 'stable') {
             return installNeovimStable();
         } else {
-            return downloadNeovim(config.version, system);
+            return downloadNeovim(inputs.version, system);
         }
     } else {
-        if (config.version === 'stable') {
+        if (inputs.version === 'stable') {
             return installVimStable();
         } else {
-            return buildVim(config.version, system.os, config.configureArgs);
+            return buildVim(inputs.version, system.os, inputs.configureArgs);
         }
     }
 }

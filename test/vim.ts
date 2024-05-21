@@ -208,18 +208,14 @@ describe('installVimStable()', function () {
     });
 
     it('installs vim-gtk3 package', async function () {
-        const installed = await installVimOnLinux(
-            {
-                version: 'stable',
-                neovim: false,
-                configureArgs: null,
-                token: null,
-            },
-            {
-                os: 'linux',
-                arch: 'x64',
-            },
-        );
+        const inputs = {
+            version: 'stable',
+            neovim: false,
+            configureArgs: null,
+            token: null,
+        };
+        const system = { os: 'linux', arch: 'x64' } as const;
+        const installed = await installVimOnLinux(inputs, system);
 
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/usr/bin');

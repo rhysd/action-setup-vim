@@ -1,18 +1,18 @@
 import { join } from 'path';
 import * as core from '@actions/core';
-import { loadConfigFromInputs } from './config';
+import { getInputs } from './inputs';
 import { install } from './install';
 import { validateInstallation } from './validate';
 import { detectSystem } from './system';
 
 async function main(): Promise<void> {
-    const config = loadConfigFromInputs();
-    console.log('Extracted configuration:', config);
+    const inputs = getInputs();
+    console.log('Extracted inputs:', inputs);
 
     const system = detectSystem();
     console.log('Detected system information:', system);
 
-    const installed = await install(config, system);
+    const installed = await install(inputs, system);
     await validateInstallation(installed);
 
     core.addPath(installed.binDir);

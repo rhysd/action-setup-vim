@@ -21,25 +21,25 @@
     "resolveJsonModule": true
   },
   "files": [
-    "src/config.ts",
-    "src/shell.ts",
-    "src/validate.ts",
-    "src/vim.ts",
-    "src/neovim.ts",
+    "scripts/post_action_check.ts",
     "src/error.ts",
-    "src/system.ts",
+    "src/index.ts",
+    "src/inputs.ts",
     "src/install.ts",
     "src/install_linux.ts",
     "src/install_macos.ts",
     "src/install_windows.ts",
-    "src/index.ts",
-    "test/config.ts",
-    "test/system.ts",
-    "test/validate.ts",
-    "test/vim.ts",
+    "src/neovim.ts",
+    "src/shell.ts",
+    "src/system.ts",
+    "src/validate.ts",
+    "src/vim.ts",
+    "test/helper.ts",
+    "test/inputs.ts",
     "test/neovim.ts",
     "test/shell.ts",
-    "test/helper.ts",
-    "scripts/post_action_check.ts"
+    "test/system.ts",
+    "test/validate.ts",
+    "test/vim.ts"
   ]
 }
