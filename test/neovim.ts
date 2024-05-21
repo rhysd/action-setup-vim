@@ -38,7 +38,7 @@ describe('Neovim installation', function () {
                 } catch (err) {
                     const msg = (err as Error).message;
                     A.ok(msg.includes('Could not download Neovim release from'), msg);
-                    A.ok(msg.includes('check the asset for linux was really uploaded'), msg);
+                    A.ok(msg.includes('check the asset for linux on x64 was really uploaded'), msg);
                     // Special message only for nightly build
                     A.ok(msg.includes('Note that some assets are sometimes missing on nightly build'), msg);
                 }

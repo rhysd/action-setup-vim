@@ -35,8 +35,8 @@ describe('validateInstallation()', function () {
     });
 
     it("throws an error when file specified with 'executable' is actually not executable", async function () {
-        // This file exists but not executable
-        const executable = path.basename(__filename) as ExeName;
+        // README.md exists but is not executable
+        const executable = path.join(path.dirname(__dirname), 'README.md') as ExeName;
         const installed = { binDir: __dirname, executable };
         await A.rejects(() => validateInstallation(installed), /Could not access the installed executable/);
     });
