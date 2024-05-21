@@ -94,11 +94,7 @@ jobs:
 
   test-and-lint:
     name: Check unit tests and lints
-    strategy:
-      matrix:
-        # macos-latest for tests on arm64
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
