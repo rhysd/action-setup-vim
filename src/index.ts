@@ -4,6 +4,7 @@ import { getInputs } from './inputs';
 import { install } from './install';
 import { validateInstallation } from './validate';
 import { detectSystem } from './system';
+import { ensureError } from './error';
 
 async function main(): Promise<void> {
     const inputs = getInputs();
@@ -24,10 +25,11 @@ async function main(): Promise<void> {
     console.log('Installation successfully done:', installed);
 }
 
-main().catch((e: Error) => {
-    if (e.stack) {
-        core.debug(e.stack);
+main().catch((e: unknown) => {
+    const err = ensureError(e);
+    if (err.stack) {
+        core.debug(err.stack);
     }
-    core.error(e.message);
-    core.setFailed(e.message);
+    core.error(err.message);
+    core.setFailed(err.message);
 });
