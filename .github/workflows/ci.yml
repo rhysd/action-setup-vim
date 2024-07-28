@@ -27,7 +27,8 @@ jobs:
       - name: Validate action result
         run: node ./scripts/post_action_check.js "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
 
-  # separate from stable-and-nightly since jobs.{id}.name.strategy.matrix.exclude seems not working
+  # Note: separate from stable-and-nightly since jobs.{id}.name.strategy.matrix.exclude seems not working
+  # Note: This is the last version which should not run `vim.exe -silent -register` on Windows (#37)
   vim-v9_1_0626:
     name: Vim v9.1.0626
     strategy:

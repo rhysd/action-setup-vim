@@ -1,7 +1,7 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan8_2_1119 } from '../src/vim';
+import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan } from '../src/vim';
 import type { Installed } from '../src/install';
 import type { Os } from '../src/utils';
 import type { Config } from '../src/config';
@@ -163,7 +163,7 @@ describe('buildVim()', function () {
     });
 });
 
-describe('versionIsOlderThan8_2_1119()', function () {
+describe('versionIsOlderThan()', function () {
     const testCases: [string, boolean][] = [
         // Equal
         ['v8.2.1119', false],
@@ -190,7 +190,7 @@ describe('versionIsOlderThan8_2_1119()', function () {
     for (const tc of testCases) {
         const [v, expected] = tc;
         it(`${v} is ${expected ? 'older' : 'equal or newer than'} 8.2.1119`, function () {
-            A.equal(versionIsOlderThan8_2_1119(v), expected);
+            A.equal(versionIsOlderThan(v, 8, 2, 1119), expected);
         });
     }
 });
