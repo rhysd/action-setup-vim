@@ -1,8 +1,18 @@
+<a name="v1.3.5"></a>
+# [v1.3.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.5) - 28 Jul 2024
+
+- Fix `vim` command hangs on Windows after Vim 9.1.0631. ([#37](https://github.com/rhysd/action-setup-vim/issues/37))
+  - Shout out to [@k-takata](https://github.com/k-takata) to say thank you for the great help at https://github.com/vim/vim/issues/15372.
+- Update the dependencies to the latest. This includes small security fixes.
+
+[Changes][v1.3.5]
+
+
 <a name="v1.3.4"></a>
 # [v1.3.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.4) - 17 May 2024
 
 - Support [Neovim v0.10](https://github.com/neovim/neovim/releases/tag/v0.10.0) new asset file names for macOS. ([#30](https://github.com/rhysd/action-setup-vim/issues/30))
-  - Until v0.9.5, Neovim provided a single universal executable. From v0.10.0, Neovim now provides separate two executables for arm64 and x86_64. action-setup-vim downloads a proper asset file looking at the current architecture.
+  - Until v0.9.5, Neovim provided a single universal executable. From v0.10.0, Neovim now provides separate two executables for arm64 and x86_64. action-setup-vim downloads a proper asset file looking at the current system's architecture.
 
 [Changes][v1.3.4]
 
@@ -265,6 +275,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.3.5]: https://github.com/rhysd/action-setup-vim/compare/v1.3.4...v1.3.5
 [v1.3.4]: https://github.com/rhysd/action-setup-vim/compare/v1.3.3...v1.3.4
 [v1.3.3]: https://github.com/rhysd/action-setup-vim/compare/v1.3.2...v1.3.3
 [v1.3.2]: https://github.com/rhysd/action-setup-vim/compare/v1.3.1...v1.3.2
