@@ -23,19 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeTmpdir = makeTmpdir;
-exports.getOs = getOs;
-exports.exeName = exeName;
-exports.ensureError = ensureError;
+exports.makeTmpdir = exports.exeName = exports.detectSystem = void 0;
 const os_1 = require("os");
 const core = __importStar(require("@actions/core"));
 const io_1 = require("@actions/io");
-async function makeTmpdir() {
-    const dir = (0, os_1.tmpdir)();
-    await (0, io_1.mkdirP)(dir);
-    core.debug(`Created temporary directory ${dir}`);
-    return dir;
-}
 function getOs() {
     switch (process.platform) {
         case 'darwin':
@@ -48,6 +39,23 @@ function getOs() {
             throw new Error(`Platform '${process.platform}' is not supported`);
     }
 }
+function getArch() {
+    switch (process.arch) {
+        case 'x64':
+        case 'arm64':
+            return process.arch;
+        default:
+            return 'other';
+    }
+}
+function detectSystem() {
+    // TODO: Add more validation.
+    // - GitHub Actions supports arm64 Windows but neither Neovim nor Vim supports it
+    // - GitHub Actions supports arm 32bit Linux but Neovim doesn't provide prebuilt binaries for it
+    // See: https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners
+    return { os: getOs(), arch: getArch() };
+}
+exports.detectSystem = detectSystem;
 function exeName(isNeovim, os) {
     if (os === 'windows') {
         return isNeovim ? 'nvim.exe' : 'vim.exe';
@@ -56,11 +64,12 @@ function exeName(isNeovim, os) {
         return isNeovim ? 'nvim' : 'vim';
     }
 }
-function ensureError(err) {
-    if (err instanceof Error) {
-        return err;
-    }
-    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    return new Error(`Unknown fatal error: ${err}`);
+exports.exeName = exeName;
+async function makeTmpdir() {
+    const dir = (0, os_1.tmpdir)();
+    await (0, io_1.mkdirP)(dir);
+    core.debug(`Created temporary directory ${dir}`);
+    return dir;
 }
-//# sourceMappingURL=utils.js.map
+exports.makeTmpdir = makeTmpdir;
+//# sourceMappingURL=system.js.map

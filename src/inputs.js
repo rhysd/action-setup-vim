@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadConfigFromInputs = loadConfigFromInputs;
+exports.getInputs = void 0;
 const core_1 = require("@actions/core");
-const utils_1 = require("./utils");
 function getBoolean(input, def) {
     const i = (0, core_1.getInput)(input).toLowerCase();
     switch (i) {
@@ -39,14 +38,14 @@ function getVersion(neovim) {
 function getNeovim() {
     return getBoolean('neovim', false);
 }
-function loadConfigFromInputs() {
+function getInputs() {
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),
         neovim,
-        os: (0, utils_1.getOs)(),
         configureArgs: (0, core_1.getInput)('configure-args') || null,
         token: (0, core_1.getInput)('token') || null,
     };
 }
-//# sourceMappingURL=config.js.map
+exports.getInputs = getInputs;
+//# sourceMappingURL=inputs.js.map

@@ -26,7 +26,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildNightlyNeovim = exports.downloadStableNeovim = exports.downloadNeovim = exports.assetDirName = void 0;
+exports.assetDirName = assetDirName;
+exports.downloadNeovim = downloadNeovim;
+exports.downloadStableNeovim = downloadStableNeovim;
+exports.buildNightlyNeovim = buildNightlyNeovim;
 const os_1 = require("os");
 const path = __importStar(require("path"));
 const fs_1 = require("fs");
@@ -106,7 +109,6 @@ function assetDirName(version, os) {
         }
     }
 }
-exports.assetDirName = assetDirName;
 async function unarchiveAsset(asset, dirName) {
     const dir = path.dirname(asset);
     const dest = path.join(dir, dirName);
@@ -156,7 +158,6 @@ async function downloadNeovim(version, os) {
         throw new Error(msg);
     }
 }
-exports.downloadNeovim = downloadNeovim;
 async function fetchLatestVersion(token) {
     const octokit = github.getOctokit(token);
     const { data } = await octokit.rest.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
@@ -188,7 +189,6 @@ async function downloadStableNeovim(os, token = null) {
         throw err;
     }
 }
-exports.downloadStableNeovim = downloadStableNeovim;
 // Build nightly Neovim from sources as fallback of downloading nightly assets from the nightly release page of
 // neovim/neovim repository (#18).
 // https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -238,5 +238,4 @@ async function buildNightlyNeovim(os) {
         binDir: path.join(installDir, 'bin'),
     };
 }
-exports.buildNightlyNeovim = buildNightlyNeovim;
 //# sourceMappingURL=neovim.js.map

@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.install = void 0;
+exports.install = install;
 const core = __importStar(require("@actions/core"));
 const shell_1 = require("./shell");
 const vim_1 = require("./vim");
@@ -81,5 +81,4 @@ async function install(config) {
         }
     }
 }
-exports.install = install;
 //# sourceMappingURL=install_macos.js.map

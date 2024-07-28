@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.install = void 0;
+exports.install = install;
 const core = __importStar(require("@actions/core"));
 const install_linux_1 = require("./install_linux");
 const install_macos_1 = require("./install_macos");
@@ -39,5 +39,4 @@ function install(config) {
             return (0, install_windows_1.install)(config);
     }
 }
-exports.install = install;
 //# sourceMappingURL=install.js.map

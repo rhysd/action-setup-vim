@@ -26,7 +26,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.installNightlyVimOnWindows = exports.installVimOnWindows = exports.detectLatestWindowsReleaseTag = exports.buildVim = exports.versionIsOlderThan8_2_1119 = void 0;
+exports.versionIsOlderThan = versionIsOlderThan;
+exports.buildVim = buildVim;
+exports.detectLatestWindowsReleaseTag = detectLatestWindowsReleaseTag;
+exports.installVimOnWindows = installVimOnWindows;
+exports.installNightlyVimOnWindows = installNightlyVimOnWindows;
 const os_1 = require("os");
 const path = __importStar(require("path"));
 const fs_1 = require("fs");
@@ -37,29 +41,27 @@ const io = __importStar(require("@actions/io"));
 const shlex_1 = require("shlex");
 const shell_1 = require("./shell");
 const utils_1 = require("./utils");
-// eslint-disable-next-line @typescript-eslint/naming-convention
-function versionIsOlderThan8_2_1119(version) {
+function versionIsOlderThan(version, vmajor, vminor, vpatch) {
     // Note: Patch version may not exist on v7 or earlier
     const majorStr = version.match(/^v(\d+)\./)?.[1];
     if (!majorStr) {
         return false; // Invalid case. Should be unreachable
     }
     const major = parseInt(majorStr, 10);
-    if (major !== 8) {
-        return major < 8;
+    if (major !== vmajor) {
+        return major < vmajor;
     }
     const m = version.match(/\.(\d+)\.(\d{4})$/); // Extract minor and patch versions
     if (!m) {
         return false; // Invalid case. Should be unreachable
     }
     const minor = parseInt(m[1], 10);
-    if (minor !== 2) {
-        return minor < 2;
+    if (minor !== vminor) {
+        return minor < vminor;
     }
     const patch = parseInt(m[2], 10);
-    return patch < 1119;
+    return patch < vpatch;
 }
-exports.versionIsOlderThan8_2_1119 = versionIsOlderThan8_2_1119;
 async function getXcode11DevDir() {
     // Xcode10~12 are available at this point:
     // https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md#xcode
@@ -91,7 +93,7 @@ async function buildVim(version, os, configureArgs) {
         await (0, shell_1.exec)('git', args);
     }
     const env = {};
-    if (os === 'macos' && versionIsOlderThan8_2_1119(version)) {
+    if (os === 'macos' && versionIsOlderThan(version, 8, 2, 1119)) {
         const dir = await getXcode11DevDir();
         if (dir !== null) {
             // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
@@ -125,7 +127,6 @@ async function buildVim(version, os, configureArgs) {
         binDir: path.join(installDir, 'bin'),
     };
 }
-exports.buildVim = buildVim;
 async function getVimRootDirAt(dir) {
     // Search root Vim directory such as 'vim82' in unarchived directory
     const entries = await fs_1.promises.readdir(dir);
@@ -170,7 +171,6 @@ async function detectLatestWindowsReleaseTag() {
         throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
     }
 }
-exports.detectLatestWindowsReleaseTag = detectLatestWindowsReleaseTag;
 async function installVimAssetOnWindows(file, url, dirSuffix) {
     const tmpdir = await (0, utils_1.makeTmpdir)();
     const dlDir = path.join(tmpdir, 'vim-installer');
@@ -200,21 +200,27 @@ async function installVimAssetOnWindows(file, url, dirSuffix) {
     core.debug(`Vim was installed to ${destDir}`);
     return destDir;
 }
-async function installVimOnWindows(tag, dirSuffix) {
+async function installVimOnWindows(tag, version) {
     const ver = tag.slice(1); // Strip 'v' prefix
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
-    const destDir = await installVimAssetOnWindows(file, url, dirSuffix);
-    return {
-        executable: (0, utils_1.exeName)(false, 'windows'),
-        binDir: destDir,
-    };
+    const destDir = await installVimAssetOnWindows(file, url, version);
+    const executable = (0, utils_1.exeName)(false, 'windows');
+    // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
+    // This command registers the vim64.dll as a type library. Without the command, vim.exe will
+    // ask the registration with GUI dialog and the process looks hanging. (#37)
+    //
+    // See: https://github.com/vim/vim/issues/15372
+    if (version === 'stable' || version === 'nightly' || !versionIsOlderThan(version, 9, 1, 631)) {
+        const bin = path.join(destDir, executable);
+        await (0, shell_1.exec)(bin, ['-silent', '-register']);
+        core.debug('Registered vim.exe as a type library');
+    }
+    return { executable, binDir: destDir };
 }
-exports.installVimOnWindows = installVimOnWindows;
-async function installNightlyVimOnWindows(dirSuffix) {
+async function installNightlyVimOnWindows(version) {
     const latestTag = await detectLatestWindowsReleaseTag();
-    return installVimOnWindows(latestTag, dirSuffix);
+    return installVimOnWindows(latestTag, version);
 }
-exports.installNightlyVimOnWindows = installNightlyVimOnWindows;
 //# sourceMappingURL=vim.js.map

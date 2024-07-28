@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateInstallation = void 0;
+exports.validateInstallation = validateInstallation;
 const fs_1 = require("fs");
 const path_1 = require("path");
 const core = __importStar(require("@actions/core"));
@@ -59,5 +59,4 @@ async function validateInstallation(installed) {
     }
     core.debug(`Installed executable '${fullPath}' was validated`);
 }
-exports.validateInstallation = validateInstallation;
 //# sourceMappingURL=validate.js.map

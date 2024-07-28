@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.install = void 0;
+exports.install = install;
 const core = __importStar(require("@actions/core"));
 const vim_1 = require("./vim");
 const neovim_1 = require("./neovim");
@@ -50,5 +50,4 @@ function install(config) {
         }
     }
 }
-exports.install = install;
 //# sourceMappingURL=install_windows.js.map
