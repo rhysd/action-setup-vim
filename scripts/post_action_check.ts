@@ -120,15 +120,15 @@ function main(): void {
             const m = args.version.match(/^v(\d+\.\d+)\.(\d+)$/);
             ok(m);
             const major = m[1];
-            const patch = m[2];
+            const patch = parseInt(m[2], 10);
 
             const l = `VIM - Vi IMproved ${major}`;
             ok(stdout.includes(l), `First line '${l}' should be included in stdout: ${stdout}`);
 
             // assert.match is not available since it is experimental
             ok(
-                stdout.match(new RegExp(`Included patches: .*${patch}`)),
-                `Patch ${patch} should be included in stdout: ${stdout}`,
+                stdout.includes(`Included patches: 1-${patch}`),
+                `Patch 1-${patch} should be included in stdout: ${stdout}`,
             );
         }
     } else {
