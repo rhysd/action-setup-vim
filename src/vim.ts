@@ -198,8 +198,18 @@ export async function installVimOnWindows(tag: string, dirSuffix: string): Promi
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
     const destDir = await installVimAssetOnWindows(file, url, dirSuffix);
+    const executable = exeName(false, 'windows');
+
+    // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
+    // This command registers the vim64.dll as a type library. Without the command, vim.exe will
+    // ask the registration with GUI dialog and the process looks hanging. (#37)
+    //
+    // See: https://github.com/vim/vim/issues/15372
+    const bin = path.join(destDir, executable);
+    await exec(bin, ['-silent', '-register']);
+
     return {
-        executable: exeName(false, 'windows'),
+        executable,
         binDir: destDir,
     };
 }
