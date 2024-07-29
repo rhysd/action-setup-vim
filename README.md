@@ -126,24 +126,25 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 `vX.Y.Z` represents a specific version such as `v8.2.0126`.
 
-| OS      | Version   | Installation                                                                                                                  |
-|---------|-----------|-------------------------------------------------------------------------------------------------------------------------------|
-| Linux   | `stable`  | Install [`vim-gnome`][vim-gnome] for `ubuntu-18.04` or later and [`vim-gtk3`][vim-gtk3] for `ubuntu-18.04` or later via `apt` |
-| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                                                                   |
-| Linux   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                                                           |
-| macOS   | `stable`  | Install MacVim via `brew install macvim`                                                                                      |
-| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                                                                   |
-| macOS   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                                                                           |
-| Windows | `stable`  | There is no stable release for Windows so fall back to `nightly`                                                              |
-| Windows | `nightly` | Install the latest release from [installer repository][win-inst]                                                              |
-| Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [installer repository][win-inst] repository                                            |
+| OS      | Version   | Installation                                                                |
+|---------|-----------|-----------------------------------------------------------------------------|
+| Linux   | `stable`  | Install [`vim-gtk3`][vim-gtk3] via `apt` package manager                    |
+| Linux   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                 |
+| Linux   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                         |
+| macOS   | `stable`  | Install MacVim via `brew install macvim`                                    |
+| macOS   | `nightly` | Build the HEAD of [vim/vim][vim] repository                                 |
+| macOS   | `vX.Y.Z`  | Build the `vX.Y.Z` tag of [vim/vim][vim] repository                         |
+| Windows | `stable`  | There is no stable release for Windows so fall back to `nightly`            |
+| Windows | `nightly` | Install the latest release from [the installer repository][win-inst]        |
+| Windows | `vX.Y.Z`  | Install the release at `vX.Y.Z` tag of [the installer repository][win-inst] |
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
 When installing without system's package manager, Vim is installed at `$HOME/vim`.
 
 **Note:** When you build Vim older than 8.2.1119 on macOS, Xcode 11 or earlier is necessary due to
-lack of [this patch][vim_8_2_1119]. Please try `macos-11` runner instead of the latest macOS runner.
+lack of [this patch][vim_8_2_1119]. Please try `macos-11` runner instead of the latest macOS runner
+in the case.
 
 ### Neovim
 
@@ -201,7 +202,8 @@ is not available for installing Neovim on Windows.
 ## Current limitation
 
 - GUI version (gVim and nvim-qt) is supported partially as described in above section.
-- Installing Vim/Neovim from system's package manager is not configurable. For example, arguments cannot be passed to `brew install`.
+- Installing Vim/Neovim from system's package manager is not configurable. For example, arguments
+  cannot be passed to `brew install`.
 
 These are basically not a technical limitation. Please let me know by creating an issue if you want
 some of them.
@@ -223,7 +225,6 @@ Distributed under [the MIT license](./LICENSE.txt).
 [nvim-nightly]: https://github.com/neovim/neovim/releases/tag/nightly
 [clever-f-workflow]: https://github.com/rhysd/clever-f.vim/blob/master/.github/workflows/ci.yml
 [git-messenger-workflow]: https://github.com/rhysd/git-messenger.vim/blob/master/.github/workflows/ci.yml
-[vim-gnome]: https://packages.ubuntu.com/search?keywords=vim-gnome
 [vim-gtk3]: https://packages.ubuntu.com/search?keywords=vim-gtk3
 [ubuntu-nvim]: https://packages.ubuntu.com/search?keywords=neovim
 [vim-themis]: https://github.com/thinca/vim-themis
