@@ -110,7 +110,7 @@ describe('Neovim installation', function () {
         it('throws an error on Windows', async function () {
             await A.rejects(
                 () => buildNightlyNeovimMocked('windows'),
-                /Building Neovim from soruce is not supported for windows/,
+                /Building Neovim from source is not supported for windows/,
             );
         });
     });

@@ -148,7 +148,7 @@ export async function detectLatestWindowsReleaseTag(): Promise<string> {
             throw new Error(`Unexpected redirect to ${location}. Redirected URL is not for release`);
         }
 
-        core.debug(`Latest Vim relese tag ${m[1]} was extracted from redirect`);
+        core.debug(`Latest Vim release tag ${m[1]} was extracted from redirect`);
         return m[1];
     } catch (e) {
         const err = ensureError(e);

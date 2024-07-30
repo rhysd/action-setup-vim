@@ -209,7 +209,7 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
             await exec('brew', ['install', 'ninja', 'libtool', 'automake', 'cmake', 'pkg-config', 'gettext', 'curl']);
             break;
         default:
-            throw new Error(`Building Neovim from soruce is not supported for ${os} platform`);
+            throw new Error(`Building Neovim from source is not supported for ${os} platform`);
     }
 
     // Add -nightly suffix since building stable Neovim from source may be supported in the future
