@@ -44,7 +44,7 @@ async function getXcode11DevDir(): Promise<string | null> {
     try {
         await fs.access(dir);
         return dir;
-    } catch (e) {
+    } catch (/* eslint-disable-line @typescript-eslint/no-unused-vars */ e) {
         return null;
     }
 }

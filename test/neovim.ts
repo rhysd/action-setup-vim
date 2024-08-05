@@ -1,7 +1,7 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { downloadNeovim, downloadStableNeovim, buildNightlyNeovim, assetDirName } from '../src/neovim';
+import { downloadNeovim, type downloadStableNeovim, type buildNightlyNeovim, assetDirName } from '../src/neovim';
 import { mockFetch, ExecStub, mockExec } from './helper';
 
 function reRequire(): typeof import('../src/neovim') {
