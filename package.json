@@ -13,9 +13,10 @@
     "watch:tsc": "tsc -p . --watch --preserveWatchOutput --pretty",
     "watch:mocha": "mocha --watch-files \"./test/*.js\"",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:mocha",
-    "lint:eslint": "eslint --max-warnings 0 \"./**/*.ts\"",
+    "lint:eslint": "eslint --max-warnings 0 \"./**/*.ts\" eslint.config.mjs",
+    "lint:tsc-eslint": "tsc -p tsconfig.eslint.json --pretty",
     "lint:prettier": "prettier --check \"./**/*.ts\" \"./**/*.mjs\"",
-    "lint": "concurrently -c auto npm:lint:eslint npm:lint:prettier",
+    "lint": "concurrently -c auto npm:lint:eslint npm:lint:prettier npm:lint:tsc-eslint",
     "fix:eslint": "eslint --fix \"./**/*.ts\"",
     "fix:prettier": "prettier --write \"./**/*.ts\" \"./**/*.mjs\"",
     "fix": "concurrently -m 1 -c auto npm:fix:eslint npm:fix:prettier",
@@ -51,6 +52,9 @@
     "shlex": "^2.1.2"
   },
   "devDependencies": {
+    "@types/eslint": "^9.6.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/eslint-plugin-mocha": "^10.4.0",
     "@types/mocha": "^10.0.7",
     "@types/mock-require": "^2.0.3",
     "@types/node": "^22.1.0",
