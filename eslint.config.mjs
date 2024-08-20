@@ -8,12 +8,6 @@ import n from 'eslint-plugin-n';
 export default ts.config(
     eslint.configs.recommended,
     ...ts.configs.recommendedTypeChecked,
-    // @ts-expect-error Types of typescript-eslint is not compatible with @types/eslint.
-    // These packages provide their own types for eslint.config.mjs and they are not compatible with each other.
-    // eslint-plugin-n uses @types/eslint but `ts.config()` does not accept the flat config of the plugin.
-    // The maintainer of typescript-eslint won't improve this situation. So ignoring type error here is the best
-    // we can do.
-    // See https://github.com/typescript-eslint/typescript-eslint/issues/8613#issuecomment-1983488262
     n.configs['flat/recommended'],
     {
         languageOptions: {
