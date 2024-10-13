@@ -1,15 +1,15 @@
-<a name="v1.3.5"></a>
-# [v1.3.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.5) - 28 Jul 2024
+<a id="v1.3.5"></a>
+# [v1.3.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.5) - 2024-07-28
 
 - Fix `vim` command hangs on Windows after Vim 9.1.0631. ([#37](https://github.com/rhysd/action-setup-vim/issues/37))
-  - Shout out to [@k-takata](https://github.com/k-takata) to say thank you for the great help at https://github.com/vim/vim/issues/15372.
+  - Shout out to [@k-takata](https://github.com/k-takata) to say thank you for the great help at [vim/vim#15372](https://github.com/vim/vim/issues/15372).
 - Update the dependencies to the latest. This includes small security fixes.
 
 [Changes][v1.3.5]
 
 
-<a name="v1.3.4"></a>
-# [v1.3.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.4) - 17 May 2024
+<a id="v1.3.4"></a>
+# [v1.3.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.4) - 2024-05-17
 
 - Support [Neovim v0.10](https://github.com/neovim/neovim/releases/tag/v0.10.0) new asset file names for macOS. ([#30](https://github.com/rhysd/action-setup-vim/issues/30))
   - Until v0.9.5, Neovim provided a single universal executable. From v0.10.0, Neovim now provides separate two executables for arm64 and x86_64. action-setup-vim downloads a proper asset file looking at the current system's architecture.
@@ -17,8 +17,8 @@
 [Changes][v1.3.4]
 
 
-<a name="v1.3.3"></a>
-# [v1.3.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.3) - 07 May 2024
+<a id="v1.3.3"></a>
+# [v1.3.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.3) - 2024-05-07
 
 - Remove the support for Ubuntu 18.04, which was removed from GitHub-hosted runners more than one year ago.
 - Improve adding `bin` directory to the `$PATH` environment variable by using `core.addPath` rather than modifying the environment variable directly. ([#33](https://github.com/rhysd/action-setup-vim/issues/33), thanks [@ObserverOfTime](https://github.com/ObserverOfTime))
@@ -27,10 +27,10 @@
 [Changes][v1.3.3]
 
 
-<a name="v1.3.2"></a>
-# [v1.3.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.2) - 29 Mar 2024
+<a id="v1.3.2"></a>
+# [v1.3.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.2) - 2024-03-29
 
-- Fix the nightly Neovim installation was broken due to https://github.com/neovim/neovim/pull/28000. ([#30](https://github.com/rhysd/action-setup-vim/issues/30), thanks [@linrongbin16](https://github.com/linrongbin16))
+- Fix the nightly Neovim installation was broken due to [neovim/neovim#28000](https://github.com/neovim/neovim/pull/28000). ([#30](https://github.com/rhysd/action-setup-vim/issues/30), thanks [@linrongbin16](https://github.com/linrongbin16))
   - Neovim now provides `neovim-macos-arm64.tar.gz` (for Apple Silicon) and `neovim-macos-x86_64.tar.gz` (for Intel Mac) separately rather than the single `neovim-macos.tar.gz`. This change will be applied to the next stable version.
 - Update npm dependencies to the latest. This update includes some small security fixes.
 - Fix an incorrect OS version was reported in debug message on Ubuntu.
@@ -38,8 +38,8 @@
 [Changes][v1.3.2]
 
 
-<a name="v1.3.1"></a>
-# [v1.3.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.1) - 31 Jan 2024
+<a id="v1.3.1"></a>
+# [v1.3.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.1) - 2024-01-31
 
 - Support [the new M1 Mac runner](https://github.blog/changelog/2024-01-30-github-actions-introducing-the-new-m1-macos-runner-available-to-open-source/) ([#28](https://github.com/rhysd/action-setup-vim/issues/28))
   - On M1 Mac, Homebrew installation directory was changed from `/usr/local` to `/opt/homebrew`
@@ -47,8 +47,8 @@
 [Changes][v1.3.1]
 
 
-<a name="v1.3.0"></a>
-# [v1.3.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.0) - 15 Oct 2023
+<a id="v1.3.0"></a>
+# [v1.3.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.3.0) - 2023-10-15
 
 - `configure-args` input was added to customize build configurations on building Vim from source. This input is useful to change `./configure` arguments to enable/disable some features of Vim. For example, when you're facing some issue on generating translation files (this sometimes happens when building older Vim), disabling the native language support would be able to avoid the issue. ([#27](https://github.com/rhysd/action-setup-vim/issues/27))
   ```yaml
@@ -64,8 +64,8 @@
 [Changes][v1.3.0]
 
 
-<a name="v1.2.15"></a>
-# [v1.2.15](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.15) - 06 Mar 2023
+<a id="v1.2.15"></a>
+# [v1.2.15](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.15) - 2023-03-06
 
 - Show less output on unarchiving downloaded assets with `unzip -q` to reduce amount of logs. When [debugging is enabled](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/enabling-debug-logging), `-q` is not added and `unzip` shows all retrieved file paths for debugging. ([#25](https://github.com/rhysd/action-setup-vim/issues/25))
 - Upgrade the lock file version from v2 to v3, which largely reduces size of `package-lock.json`.
@@ -74,8 +74,8 @@
 [Changes][v1.2.15]
 
 
-<a name="v1.2.14"></a>
-# [v1.2.14](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.14) - 09 Jan 2023
+<a id="v1.2.14"></a>
+# [v1.2.14](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.14) - 2023-01-09
 
 - Improve warning message when trying to build Vim older than 8.2.1119 on `macos-latest` or `macos-12` runner since the build would fail. `macos-11` runner should be used instead.
   - Vim older than 8.2.1119 can be built with Xcode 11 or earlier only. `macos-12` runner does not include Xcode 11 by default. And now `macos-latest` label points to `macos-12` runner. So building Vim 8.2.1119 or older on `macos-latest` would fail.
@@ -84,8 +84,8 @@
 [Changes][v1.2.14]
 
 
-<a name="v1.2.13"></a>
-# [v1.2.13](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.13) - 13 Oct 2022
+<a id="v1.2.13"></a>
+# [v1.2.13](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.13) - 2022-10-13
 
 - Update `@actions/core` to v1.10.0 to follow the change that [GitHub deprecated `set-output` command](https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/) recently.
 - Update other dependencies including `@actions/github` v5.1.1
@@ -93,8 +93,8 @@
 [Changes][v1.2.13]
 
 
-<a name="v1.2.12"></a>
-# [v1.2.12](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.12) - 21 Jul 2022
+<a id="v1.2.12"></a>
+# [v1.2.12](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.12) - 2022-07-21
 
 - Fix the Neovim asset directory name for macOS has been changed from `nvim-osx64` to `nvim-macos` at Neovim v0.7.1. (thanks [@notomo](https://github.com/notomo), [#22](https://github.com/rhysd/action-setup-vim/issues/22))
 - Update dependencies including `@actions/core` v1.9.0 and `@actions/github` v5.0.3.
@@ -102,16 +102,16 @@
 [Changes][v1.2.12]
 
 
-<a name="v1.2.11"></a>
-# [v1.2.11](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.11) - 15 Apr 2022
+<a id="v1.2.11"></a>
+# [v1.2.11](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.11) - 2022-04-15
 
 - Fix installing `stable` or `v0.7.0` Neovim on Windows runner. The asset directory name was changed from 'Neovim' to 'nvim-win64' at v0.7.0 and the change broke this action.
 
 [Changes][v1.2.11]
 
 
-<a name="v1.2.10"></a>
-# [v1.2.10](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.10) - 23 Mar 2022
+<a id="v1.2.10"></a>
+# [v1.2.10](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.10) - 2022-03-23
 
 - Fix installing nightly Neovim on Windows. (thanks [@notomo](https://github.com/notomo), [#20](https://github.com/rhysd/action-setup-vim/issues/20) [#21](https://github.com/rhysd/action-setup-vim/issues/21))
 - Update dependencies to the latest. (including new `@actions/exec` and `@actions/io`)
@@ -119,8 +119,8 @@
 [Changes][v1.2.10]
 
 
-<a name="v1.2.9"></a>
-# [v1.2.9](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.9) - 05 Feb 2022
+<a id="v1.2.9"></a>
+# [v1.2.9](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.9) - 2022-02-05
 
 - Use `node16` runner to run this action.
 - Update dependencies. Now TypeScript source compiles to ES2021 code since Node.js v16 supports all ES2021 features.
@@ -128,8 +128,8 @@
 [Changes][v1.2.9]
 
 
-<a name="v1.2.8"></a>
-# [v1.2.8](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.8) - 02 Oct 2021
+<a id="v1.2.8"></a>
+# [v1.2.8](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.8) - 2021-10-02
 
 - Installing Neovim nightly now fallbacks to building from source when downloading assets failed (thanks [@glacambre](https://github.com/glacambre), [#18](https://github.com/rhysd/action-setup-vim/issues/18), [#9](https://github.com/rhysd/action-setup-vim/issues/9))
   - This fallback logic is currently only for Linux and macOS
@@ -140,8 +140,8 @@
 [Changes][v1.2.8]
 
 
-<a name="v1.2.7"></a>
-# [v1.2.7](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.7) - 05 Feb 2021
+<a id="v1.2.7"></a>
+# [v1.2.7](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.7) - 2021-02-05
 
 - Fix: Installing stable Vim on `ubuntu-20.04` worker. `vim-gnome` was removed at Ubuntu 19.10. In the case, this action installs `vim-gtk3` instead. The worker is now used for `ubuntu-latest` also. ([#11](https://github.com/rhysd/action-setup-vim/issues/11))
 - Improve: Better error message on an invalid value for `version` input
@@ -150,8 +150,8 @@
 [Changes][v1.2.7]
 
 
-<a name="v1.2.6"></a>
-# [v1.2.6](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.6) - 15 Nov 2020
+<a id="v1.2.6"></a>
+# [v1.2.6](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.6) - 2020-11-15
 
 - Fix: Build failed on building Vim older than v8.2.1119 on macOS worker. Now Vim before v8.2.1119 is built with Xcode11 since it cannot be built with Xcode12. ([#10](https://github.com/rhysd/action-setup-vim/issues/10))
 - Improve: Update dependencies
@@ -159,8 +159,8 @@
 [Changes][v1.2.6]
 
 
-<a name="v1.2.5"></a>
-# [v1.2.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.5) - 02 Oct 2020
+<a id="v1.2.5"></a>
+# [v1.2.5](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.5) - 2020-10-02
 
 - Fix: Update `@actions/core` for security patch
 - Improve: Internal refactoring
@@ -169,8 +169,8 @@
 [Changes][v1.2.5]
 
 
-<a name="v1.2.4"></a>
-# [v1.2.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.4) - 08 Sep 2020
+<a id="v1.2.4"></a>
+# [v1.2.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.4) - 2020-09-08
 
 - Improve: When an asset for stable Neovim in `stable` release is not found, fallback to the latest version release by detecting the latest version via GitHub API. API token will be given via `token` input. You don't need to set it because it is set automatically. ([#5](https://github.com/rhysd/action-setup-vim/issues/5))
 - Improve: Update dependencies to the latest
@@ -178,32 +178,32 @@
 [Changes][v1.2.4]
 
 
-<a name="v1.2.3"></a>
-# [v1.2.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.3) - 29 Mar 2020
+<a id="v1.2.3"></a>
+# [v1.2.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.3) - 2020-03-29
 
 - Fix: Run `apt update` before `apt install` on installing stable Vim on Linux. `apt install vim-gnome` caused an error without this
 
 [Changes][v1.2.3]
 
 
-<a name="v1.2.2"></a>
-# [v1.2.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.2) - 22 Feb 2020
+<a id="v1.2.2"></a>
+# [v1.2.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.2) - 2020-02-22
 
 - Improve: Better error message when no asset is found on installing Neovim
 
 [Changes][v1.2.2]
 
 
-<a name="v1.2.1"></a>
-# [v1.2.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.1) - 15 Feb 2020
+<a id="v1.2.1"></a>
+# [v1.2.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.1) - 2020-02-15
 
 - Improve: Validate the executable file before getting `--version` output
 
 [Changes][v1.2.1]
 
 
-<a name="v1.2.0"></a>
-# [v1.2.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.0) - 02 Feb 2020
+<a id="v1.2.0"></a>
+# [v1.2.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.2.0) - 2020-02-02
 
 - Improve: `github-token` input was removed since it is no longer necessary. This is not a breaking change since `github-token` input is now simply ignored.
   - GitHub API token was used only for getting the latest release of vim-win32-installer repository on Windows. But now the latest release is detected from redirect URL.
@@ -211,8 +211,8 @@
 [Changes][v1.2.0]
 
 
-<a name="v1.1.3"></a>
-# [v1.1.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.3) - 31 Jan 2020
+<a id="v1.1.3"></a>
+# [v1.1.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.3) - 2020-01-31
 
 - Fix: `version` input check was not correct for Vim 7.x (e.g. `7.4.100`, `7.4`). [Thanks @itchyny!](https://github.com/rhysd/action-setup-vim/pull/1)
 - Fix: Path separator was not correct on Windows
@@ -221,16 +221,16 @@
 [Changes][v1.1.3]
 
 
-<a name="v1.1.2"></a>
-# [v1.1.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.2) - 31 Jan 2020
+<a id="v1.1.2"></a>
+# [v1.1.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.2) - 2020-01-31
 
 - Fix: GitHub API call may fail relying on IP address of the worker (ref: [actions/setup-go#16](https://github.com/actions/setup-go/issues/16))
 
 [Changes][v1.1.2]
 
 
-<a name="v1.1.1"></a>
-# [v1.1.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.1) - 31 Jan 2020
+<a id="v1.1.1"></a>
+# [v1.1.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.1) - 2020-01-31
 
 - Improve: `github-token` input is now optional even if you install Vim on Windows worker
 - Improve: Update dev-dependencies
@@ -238,16 +238,16 @@
 [Changes][v1.1.1]
 
 
-<a name="v1.1.0"></a>
-# [v1.1.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.0) - 29 Jan 2020
+<a id="v1.1.0"></a>
+# [v1.1.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.1.0) - 2020-01-29
 
 - New: Specific version tag can be set to `version` input like `version: v8.2.0126`. Please read [documentation](https://github.com/rhysd/action-setup-vim#readme) for more details.
 
 [Changes][v1.1.0]
 
 
-<a name="v1.0.2"></a>
-# [v1.0.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.2) - 28 Jan 2020
+<a id="v1.0.2"></a>
+# [v1.0.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.2) - 2020-01-28
 
 - Improve: Now all input environment variables (starting with `INPUT_`) are filtered on executing subprocesses ([actions/toolkit#309](https://github.com/actions/toolkit/issues/309))
 - Improve: Unit tests were added for validation of inputs and outputs
@@ -257,16 +257,16 @@
 [Changes][v1.0.2]
 
 
-<a name="v1.0.1"></a>
-# [v1.0.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.1) - 25 Jan 2020
+<a id="v1.0.1"></a>
+# [v1.0.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.1) - 2020-01-25
 
 - Improve: Install stable Neovim with Homebrew on macOS. Now it is installed via `brew install neovim`
 
 [Changes][v1.0.1]
 
 
-<a name="v1.0.0"></a>
-# [v1.0.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.0) - 24 Jan 2020
+<a id="v1.0.0"></a>
+# [v1.0.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.0.0) - 2020-01-24
 
 First release :tada:
 
