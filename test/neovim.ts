@@ -153,7 +153,7 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('nightly', 'macos'), expected);
         });
 
-        it('returns "nvim-linux-arm64" or "nvim-linux-x86_64" based on the CPU arch when Neovim version is 0.10.4 later on macOS', function () {
+        it('returns "nvim-linux-arm64" or "nvim-linux-x86_64" based on the CPU arch when Neovim version is 0.10.4 later on linux', function () {
             const expected =
                 process.arch === 'arm64'
                     ? 'nvim-linux-arm64'
