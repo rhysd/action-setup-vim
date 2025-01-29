@@ -27,9 +27,9 @@ function parseVersion(v: string): Version | null {
 }
 
 function assetFileName(os: Os, version: string): string {
+    const v = parseVersion(version);
     switch (os) {
         case 'macos': {
-            const v = parseVersion(version);
             if (v !== null && v.minor < 10) {
                 return 'nvim-macos.tar.gz';
             }
@@ -42,17 +42,28 @@ function assetFileName(os: Os, version: string): string {
                     throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
             }
         }
-        case 'linux':
-            return 'nvim-linux64.tar.gz';
+        case 'linux': {
+            if (v !== null && v.minor <= 10 && v.patch <= 3) {
+                return 'nvim-linux64.tar.gz';
+            }
+            switch (process.arch) {
+                case 'arm64':
+                    return 'nvim-linux-arm64.tar.gz';
+                case 'x64':
+                    return 'nvim-linux-x86_64.tar.gz';
+                default:
+                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`);
+            }
+        }
         case 'windows':
             return 'nvim-win64.zip';
     }
 }
 
 export function assetDirName(version: string, os: Os): string {
+    const v = parseVersion(version);
     switch (os) {
         case 'macos': {
-            const v = parseVersion(version);
             if (v !== null) {
                 // Until v0.7.0 release, 'nvim-osx64' was the asset directory name on macOS. However it was changed to
                 // 'nvim-macos' from v0.7.1: https://github.com/neovim/neovim/pull/19029
@@ -74,8 +85,19 @@ export function assetDirName(version: string, os: Os): string {
                     throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
             }
         }
-        case 'linux':
-            return 'nvim-linux64';
+        case 'linux': {
+            if (v !== null && v.minor <= 10 && v.patch <= 3) {
+                return 'nvim-linux64';
+            }
+            switch (process.arch) {
+                case 'arm64':
+                    return 'nvim-linux-arm64';
+                case 'x64':
+                    return 'nvim-linux-x86_64';
+                default:
+                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`);
+            }
+        }
         case 'windows': {
             // Until v0.6.1 release, 'Neovim' was the asset directory name on Windows. However it was changed to 'nvim-win64'
             // from v0.7.0. (#20)

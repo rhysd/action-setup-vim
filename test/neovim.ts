@@ -152,5 +152,18 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('stable', 'macos'), expected);
             A.equal(assetDirName('nightly', 'macos'), expected);
         });
+
+        it('returns "nvim-linux-arm64" or "nvim-linux-x86_64" based on the CPU arch when Neovim version is 0.10.4 later on macOS', function () {
+            const expected =
+                process.arch === 'arm64'
+                    ? 'nvim-linux-arm64'
+                    : process.arch === 'x64'
+                      ? 'nvim-linux-x86_64'
+                      : 'nvim-linux64';
+            A.equal(assetDirName('v0.10.4', 'linux'), expected);
+            A.equal(assetDirName('v1.0.0', 'linux'), expected);
+            A.equal(assetDirName('stable', 'linux'), expected);
+            A.equal(assetDirName('nightly', 'linux'), expected);
+        });
     });
 });
