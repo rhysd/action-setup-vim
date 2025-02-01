@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loadConfigFromInputs = loadConfigFromInputs;
 const core_1 = require("@actions/core");
-const utils_1 = require("./utils");
+const system_1 = require("./system");
 function getBoolean(input, def) {
     const i = (0, core_1.getInput)(input).toLowerCase();
     switch (i) {
@@ -44,8 +44,8 @@ function loadConfigFromInputs() {
     return {
         version: getVersion(neovim),
         neovim,
-        os: (0, utils_1.getOs)(),
-        arch: (0, utils_1.getArch)(),
+        os: (0, system_1.getOs)(),
+        arch: (0, system_1.getArch)(),
         configureArgs: (0, core_1.getInput)('configure-args') || null,
         token: (0, core_1.getInput)('token') || null,
     };

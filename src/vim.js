@@ -50,7 +50,10 @@ const core = __importStar(require("@actions/core"));
 const io = __importStar(require("@actions/io"));
 const shlex_1 = require("shlex");
 const shell_1 = require("./shell");
-const utils_1 = require("./utils");
+const system_1 = require("./system");
+function exeName(os) {
+    return os === 'windows' ? 'vim.exe' : 'vim';
+}
 function versionIsOlderThan(version, vmajor, vminor, vpatch) {
     // Note: Patch version may not exist on v7 or earlier
     const majorStr = version.match(/^v(\d+)\./)?.[1];
@@ -90,7 +93,7 @@ async function buildVim(version, os, configureArgs) {
     assert_1.strict.notEqual(version, 'stable');
     const installDir = path.join((0, os_1.homedir)(), `vim-${version}`);
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
-    const dir = path.join(await (0, utils_1.makeTmpdir)(), 'vim');
+    const dir = path.join(await (0, system_1.makeTmpdir)(), 'vim');
     {
         const args = ['clone', '--depth=1', '--single-branch'];
         if (version === 'nightly') {
@@ -133,7 +136,7 @@ async function buildVim(version, os, configureArgs) {
     await (0, shell_1.exec)('make', ['install'], opts);
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
     return {
-        executable: (0, utils_1.exeName)(false, os),
+        executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
     };
 }
@@ -176,13 +179,13 @@ async function detectLatestWindowsReleaseTag() {
         return m[1];
     }
     catch (e) {
-        const err = (0, utils_1.ensureError)(e);
+        const err = (0, system_1.ensureError)(e);
         core.debug(err.stack ?? err.message);
         throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
     }
 }
 async function installVimAssetOnWindows(file, url, dirSuffix) {
-    const tmpdir = await (0, utils_1.makeTmpdir)();
+    const tmpdir = await (0, system_1.makeTmpdir)();
     const dlDir = path.join(tmpdir, 'vim-installer');
     await io.mkdirP(dlDir);
     const assetFile = path.join(dlDir, file);
@@ -198,7 +201,7 @@ async function installVimAssetOnWindows(file, url, dirSuffix) {
         await (0, shell_1.unzip)(assetFile, dlDir);
     }
     catch (e) {
-        const err = (0, utils_1.ensureError)(e);
+        const err = (0, system_1.ensureError)(e);
         core.debug(err.stack ?? err.message);
         throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
     }
@@ -216,7 +219,7 @@ async function installVimOnWindows(tag, version) {
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
     const destDir = await installVimAssetOnWindows(file, url, version);
-    const executable = (0, utils_1.exeName)(false, 'windows');
+    const executable = exeName('windows');
     // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
     // This command registers the vim64.dll as a type library. Without the command, vim.exe will
     // ask the registration with GUI dialog and the process looks hanging. (#37)
