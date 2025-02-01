@@ -26,7 +26,7 @@ function parseVersion(v: string): Version | null {
     };
 }
 
-function assetFileName(os: Os, arch: Arch, version: string): string {
+function assetFileName(version: string, os: Os, arch: Arch): string {
     switch (os) {
         case 'macos': {
             const v = parseVersion(version);
@@ -43,23 +43,7 @@ function assetFileName(os: Os, arch: Arch, version: string): string {
             }
         }
         case 'linux': {
-            const v = parseVersion(version);
-            if (v !== null && (v.minor < 10 || (v.minor === 10 && v.patch < 4))) {
-                if (arch === 'arm64') {
-                    throw Error(
-                        `Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`,
-                    );
-                }
-                return 'nvim-linux64.tar.gz';
-            }
-            switch (arch) {
-                case 'arm64':
-                    return 'nvim-linux-arm64.tar.gz';
-                case 'x86_64':
-                    return 'nvim-linux-x86_64.tar.gz';
-                default:
-                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
-            }
+            return assetDirName(version, os, arch) + '.tar.gz';
         }
         case 'windows':
             return 'nvim-win64.zip';
@@ -139,7 +123,7 @@ async function unarchiveAsset(asset: string, dirName: string): Promise<string> {
 
 // version = 'stable' or 'nightly' or version string
 export async function downloadNeovim(version: string, os: Os, arch: Arch): Promise<Installed> {
-    const file = assetFileName(os, arch, version);
+    const file = assetFileName(version, os, arch);
     const destDir = path.join(homedir(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
     console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);

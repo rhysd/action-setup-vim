@@ -1,7 +1,13 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { downloadNeovim, type downloadStableNeovim, type buildNightlyNeovim, assetDirName } from '../src/neovim';
+import {
+    downloadNeovim,
+    type downloadStableNeovim,
+    type buildNightlyNeovim,
+    assetDirName,
+    assetFileName,
+} from '../src/neovim';
 import { mockFetch, ExecStub, mockExec } from './helper';
 
 function reRequire(): typeof import('../src/neovim') {
@@ -169,6 +175,23 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v0.11.0', 'linux', 'x86_64'), 'nvim-linux-x86_64');
             A.equal(assetDirName('v0.10.4', 'linux', 'arm64'), 'nvim-linux-arm64');
             A.equal(assetDirName('v0.11.0', 'linux', 'arm64'), 'nvim-linux-arm64');
+            A.equal(assetDirName('stable', 'linux', 'x86_64'), 'nvim-linux-x86_64');
+            A.equal(assetDirName('stable', 'linux', 'arm64'), 'nvim-linux-arm64');
+        });
+    });
+
+    describe('assetFileName', function () {
+        it('returns asset file name following the Neovim version and CPU arch on Linux', function () {
+            A.equal(assetFileName('v0.10.3', 'linux', 'x86_64'), 'nvim-linux64.tar.gz');
+            A.equal(assetFileName('v0.10.4', 'linux', 'x86_64'), 'nvim-linux-x86_64.tar.gz');
+            A.equal(assetFileName('v0.10.4', 'linux', 'arm64'), 'nvim-linux-arm64.tar.gz');
+        });
+
+        it('returns asset file name following the Neovim version and CPU arch on macOS', function () {
+            A.equal(assetFileName('v0.7.0', 'macos', 'x86_64'), 'nvim-macos.tar.gz');
+            A.equal(assetFileName('v0.7.1', 'macos', 'x86_64'), 'nvim-macos.tar.gz');
+            A.equal(assetFileName('v0.10.4', 'macos', 'x86_64'), 'nvim-macos-x86_64.tar.gz');
+            A.equal(assetFileName('v0.10.4', 'macos', 'arm64'), 'nvim-macos-arm64.tar.gz');
         });
     });
 });
