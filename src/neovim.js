@@ -15,13 +15,23 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -49,29 +59,44 @@ function parseVersion(v) {
         patch: parseInt(m[2], 10),
     };
 }
-function assetFileName(os, version) {
+function assetFileName(os, arch, version) {
     switch (os) {
         case 'macos': {
             const v = parseVersion(version);
             if (v !== null && v.minor < 10) {
                 return 'nvim-macos.tar.gz';
             }
-            switch (process.arch) {
+            switch (arch) {
                 case 'arm64':
                     return 'nvim-macos-arm64.tar.gz';
-                case 'x64':
+                case 'x86_64':
                     return 'nvim-macos-x86_64.tar.gz';
                 default:
                     throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
             }
         }
-        case 'linux':
-            return 'nvim-linux64.tar.gz';
+        case 'linux': {
+            const v = parseVersion(version);
+            if (v !== null && (v.minor < 10 || (v.minor === 10 && v.patch < 4))) {
+                if (arch === 'arm64') {
+                    throw Error(`Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`);
+                }
+                return 'nvim-linux64.tar.gz';
+            }
+            switch (arch) {
+                case 'arm64':
+                    return 'nvim-linux-arm64.tar.gz';
+                case 'x86_64':
+                    return 'nvim-linux-x86_64.tar.gz';
+                default:
+                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+            }
+        }
         case 'windows':
             return 'nvim-win64.zip';
     }
 }
-function assetDirName(version, os) {
+function assetDirName(version, os, arch) {
     switch (os) {
         case 'macos': {
             const v = parseVersion(version);
@@ -87,17 +112,33 @@ function assetDirName(version, os) {
                     return 'nvim-macos';
                 }
             }
-            switch (process.arch) {
+            switch (arch) {
                 case 'arm64':
                     return 'nvim-macos-arm64';
-                case 'x64':
+                case 'x86_64':
                     return 'nvim-macos-x86_64';
                 default:
                     throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
             }
         }
-        case 'linux':
-            return 'nvim-linux64';
+        case 'linux': {
+            const v = parseVersion(version);
+            console.error(v);
+            if (v !== null && (v.minor < 10 || (v.minor === 10 && v.patch < 4))) {
+                if (arch === 'arm64') {
+                    throw Error(`Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`);
+                }
+                return 'nvim-linux64';
+            }
+            switch (arch) {
+                case 'arm64':
+                    return 'nvim-linux-arm64';
+                case 'x86_64':
+                    return 'nvim-linux-x86_64';
+                default:
+                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+            }
+        }
         case 'windows': {
             // Until v0.6.1 release, 'Neovim' was the asset directory name on Windows. However it was changed to 'nvim-win64'
             // from v0.7.0. (#20)
@@ -123,8 +164,8 @@ async function unarchiveAsset(asset, dirName) {
     throw new Error(`FATAL: Don't know how to unarchive ${asset} to ${dest}`);
 }
 // version = 'stable' or 'nightly' or version string
-async function downloadNeovim(version, os) {
-    const file = assetFileName(os, version);
+async function downloadNeovim(version, os, arch) {
+    const file = assetFileName(os, arch, version);
     const destDir = path.join((0, os_1.homedir)(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
     console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
@@ -139,7 +180,7 @@ async function downloadNeovim(version, os) {
         const buffer = await response.buffer();
         await fs_1.promises.writeFile(asset, buffer, { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
-        const unarchived = await unarchiveAsset(asset, assetDirName(version, os));
+        const unarchived = await unarchiveAsset(asset, assetDirName(version, os, arch));
         core.debug(`Unarchived asset ${unarchived}`);
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
@@ -174,9 +215,9 @@ async function fetchLatestVersion(token) {
 }
 // Download stable asset from 'stable' release. When the asset is not found, get the latest version
 // using GitHub API and retry downloading an asset with the version as fallback (#5).
-async function downloadStableNeovim(os, token = null) {
+async function downloadStableNeovim(os, arch, token = null) {
     try {
-        return await downloadNeovim('stable', os); // `await` is necessary to catch excetipn
+        return await downloadNeovim('stable', os, arch); // `await` is necessary to catch excetipn
     }
     catch (e) {
         const err = (0, utils_1.ensureError)(e);
@@ -184,7 +225,7 @@ async function downloadStableNeovim(os, token = null) {
             core.warning(`Could not download stable asset. Detecting the latest stable release from GitHub API as fallback: ${err.message}`);
             const ver = await fetchLatestVersion(token);
             core.warning(`Fallback to install asset from '${ver}' release`);
-            return downloadNeovim(ver, os);
+            return downloadNeovim(ver, os, arch);
         }
         throw err;
     }
@@ -217,10 +258,20 @@ async function buildNightlyNeovim(os) {
             break;
         case 'macos':
             core.debug('Installing build dependencies via Homebrew');
-            await (0, shell_1.exec)('brew', ['install', 'ninja', 'libtool', 'automake', 'cmake', 'pkg-config', 'gettext', 'curl']);
+            await (0, shell_1.exec)('brew', [
+                'install',
+                'ninja',
+                'libtool',
+                'automake',
+                'cmake',
+                'pkg-config',
+                'gettext',
+                'curl',
+                '--quiet',
+            ]);
             break;
         default:
-            throw new Error(`Building Neovim from soruce is not supported for ${os} platform`);
+            throw new Error(`Building Neovim from source is not supported for ${os} platform`);
     }
     // Add -nightly suffix since building stable Neovim from source may be supported in the future
     const installDir = path.join((0, os_1.homedir)(), 'nvim-nightly');
