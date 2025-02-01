@@ -9,9 +9,9 @@ export function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return downloadStableNeovim('windows', config.token);
+                return downloadStableNeovim('windows', config.arch, config.token);
             default:
-                return downloadNeovim(config.version, 'windows');
+                return downloadNeovim(config.version, 'windows', config.arch);
         }
     } else {
         switch (config.version) {

@@ -11,7 +11,7 @@ function reRequire(): typeof import('../src/neovim') {
 describe('Neovim installation', function () {
     describe('downloadNeovim()', function () {
         it('throws an error when release asset not found', async function () {
-            await A.rejects(() => downloadNeovim('v0.4.999', 'linux'), /Downloading asset failed/);
+            await A.rejects(() => downloadNeovim('v0.4.999', 'linux', 'x86_64'), /Downloading asset failed/);
         });
 
         context('with mocking fetch()', function () {
@@ -31,7 +31,7 @@ describe('Neovim installation', function () {
 
             it('throws an error when receiving unsuccessful response', async function () {
                 try {
-                    const ret = await downloadNeovimMocked('nightly', 'linux');
+                    const ret = await downloadNeovimMocked('nightly', 'linux', 'x86_64');
                     A.ok(false, `Exception was not thrown: ${JSON.stringify(ret)}`);
                 } catch (err) {
                     const msg = (err as Error).message;
@@ -48,7 +48,7 @@ describe('Neovim installation', function () {
                     this.skip(); // GitHub API token is necessary
                 }
                 try {
-                    const ret = await downloadStableNeovimMocked('linux', token);
+                    const ret = await downloadStableNeovimMocked('linux', 'x86_64', token);
                     A.ok(false, `Exception was not thrown: ${JSON.stringify(ret)}`);
                 } catch (e) {
                     const err = e as Error;
@@ -117,40 +117,50 @@ describe('Neovim installation', function () {
 
     describe('assetDirName', function () {
         it('returns "Neovim" when Neovim version is earlier than 0.7 on Windows', function () {
-            A.equal(assetDirName('v0.6.1', 'windows'), 'Neovim');
-            A.equal(assetDirName('v0.4.3', 'windows'), 'Neovim');
+            A.equal(assetDirName('v0.6.1', 'windows', 'x86_64'), 'Neovim');
+            A.equal(assetDirName('v0.4.3', 'windows', 'x86_64'), 'Neovim');
         });
 
         it('returns "nvim-win64" when Neovim version is 0.7 or later on Windows', function () {
-            A.equal(assetDirName('v0.7.0', 'windows'), 'nvim-win64');
-            A.equal(assetDirName('v0.10.0', 'windows'), 'nvim-win64');
-            A.equal(assetDirName('v1.0.0', 'windows'), 'nvim-win64');
-            A.equal(assetDirName('nightly', 'windows'), 'nvim-win64');
-            A.equal(assetDirName('stable', 'windows'), 'nvim-win64');
+            A.equal(assetDirName('v0.7.0', 'windows', 'x86_64'), 'nvim-win64');
+            A.equal(assetDirName('v0.10.0', 'windows', 'x86_64'), 'nvim-win64');
+            A.equal(assetDirName('v1.0.0', 'windows', 'x86_64'), 'nvim-win64');
+            A.equal(assetDirName('nightly', 'windows', 'x86_64'), 'nvim-win64');
+            A.equal(assetDirName('stable', 'windows', 'x86_64'), 'nvim-win64');
         });
 
         it('returns "nvim-osx64" when Neovim version is earlier than 0.7.1 on macOS', function () {
-            A.equal(assetDirName('v0.7.0', 'macos'), 'nvim-osx64');
-            A.equal(assetDirName('v0.6.1', 'macos'), 'nvim-osx64');
+            A.equal(assetDirName('v0.7.0', 'macos', 'x86_64'), 'nvim-osx64');
+            A.equal(assetDirName('v0.6.1', 'macos', 'x86_64'), 'nvim-osx64');
         });
 
         it('returns "nvim-macos" when Neovim version is 0.7.1 or later and 0.9.5 or earlier on macOS', function () {
-            A.equal(assetDirName('v0.7.1', 'macos'), 'nvim-macos');
-            A.equal(assetDirName('v0.8.0', 'macos'), 'nvim-macos');
-            A.equal(assetDirName('v0.9.5', 'macos'), 'nvim-macos');
+            A.equal(assetDirName('v0.7.1', 'macos', 'x86_64'), 'nvim-macos');
+            A.equal(assetDirName('v0.8.0', 'macos', 'x86_64'), 'nvim-macos');
+            A.equal(assetDirName('v0.9.5', 'macos', 'x86_64'), 'nvim-macos');
         });
 
         it('returns "nvim-macos-arm64" or "nvim-macos-x86_64" based on the CPU arch when Neovim version is 0.10.0 later on macOS', function () {
-            const expected =
-                process.arch === 'arm64'
-                    ? 'nvim-macos-arm64'
-                    : process.arch === 'x64'
-                      ? 'nvim-macos-x86_64'
-                      : 'nvim-macos';
-            A.equal(assetDirName('v0.10.0', 'macos'), expected);
-            A.equal(assetDirName('v1.0.0', 'macos'), expected);
-            A.equal(assetDirName('stable', 'macos'), expected);
-            A.equal(assetDirName('nightly', 'macos'), expected);
+            A.equal(assetDirName('v0.10.0', 'macos', 'x86_64'), 'nvim-macos-x86_64');
+            A.equal(assetDirName('v1.0.0', 'macos', 'x86_64'), 'nvim-macos-x86_64');
+            A.equal(assetDirName('stable', 'macos', 'x86_64'), 'nvim-macos-x86_64');
+            A.equal(assetDirName('nightly', 'macos', 'x86_64'), 'nvim-macos-x86_64');
+            A.equal(assetDirName('v0.10.0', 'macos', 'arm64'), 'nvim-macos-arm64');
+            A.equal(assetDirName('v1.0.0', 'macos', 'arm64'), 'nvim-macos-arm64');
+            A.equal(assetDirName('stable', 'macos', 'arm64'), 'nvim-macos-arm64');
+            A.equal(assetDirName('nightly', 'macos', 'arm64'), 'nvim-macos-arm64');
+        });
+
+        it('returns "nvim-linux64" when Neovim version is earlier than 0.10.4 on Linux', function () {
+            A.equal(assetDirName('v0.10.3', 'linux', 'x86_64'), 'nvim-linux64');
+            A.equal(assetDirName('v0.9.5', 'linux', 'x86_64'), 'nvim-linux64');
+        });
+
+        it('returns "nvim-linux-x86_64" or "nvim-linux-arm64" when Neovim version is earlier than 0.10.4 on Linux', function () {
+            A.equal(assetDirName('v0.10.4', 'linux', 'x86_64'), 'nvim-linux-x86_64');
+            A.equal(assetDirName('v0.11.0', 'linux', 'x86_64'), 'nvim-linux-x86_64');
+            A.equal(assetDirName('v0.10.4', 'linux', 'arm64'), 'nvim-linux-arm64');
+            A.equal(assetDirName('v0.11.0', 'linux', 'arm64'), 'nvim-linux-arm64');
         });
     });
 });

@@ -25,6 +25,7 @@ describe('loadConfigFromInputs()', function () {
         A.equal(c.neovim, false);
         A.equal(c.configureArgs, null);
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
+        A.ok(['arm64', 'x86_64'].includes(c.arch), c.arch);
     });
 
     it('returns validated configurations with user inputs', function () {
@@ -39,6 +40,7 @@ describe('loadConfigFromInputs()', function () {
         A.equal(c.neovim, true);
         A.equal(c.configureArgs, '--with-features=huge --disable-nls');
         A.ok(['macos', 'linux', 'windows'].includes(c.os), c.os);
+        A.ok(['arm64', 'x86_64'].includes(c.arch), c.arch);
     });
 
     for (const version of ['STABLE', 'Nightly']) {

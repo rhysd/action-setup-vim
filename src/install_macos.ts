@@ -35,7 +35,7 @@ export async function install(config: Config): Promise<Installed> {
                 return installNeovimStable();
             case 'nightly':
                 try {
-                    return await downloadNeovim(config.version, 'macos'); // await is necessary to catch error
+                    return await downloadNeovim(config.version, 'macos', config.arch); // await is necessary to catch error
                 } catch (e) {
                     const message = e instanceof Error ? e.message : String(e);
                     core.warning(
@@ -44,12 +44,12 @@ export async function install(config: Config): Promise<Installed> {
                     return buildNightlyNeovim('macos');
                 }
             default:
-                return downloadNeovim(config.version, 'macos');
+                return downloadNeovim(config.version, 'macos', config.arch);
         }
         if (config.version === 'stable') {
             return installNeovimStable();
         } else {
-            return downloadNeovim(config.version, 'macos');
+            return downloadNeovim(config.version, 'macos', config.arch);
         }
     } else {
         if (config.version === 'stable') {
