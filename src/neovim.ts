@@ -45,6 +45,11 @@ function assetFileName(os: Os, arch: Arch, version: string): string {
         case 'linux': {
             const v = parseVersion(version);
             if (v !== null && (v.minor < 10 || (v.minor === 10 && v.patch < 4))) {
+                if (arch === 'arm64') {
+                    throw Error(
+                        `Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`,
+                    );
+                }
                 return 'nvim-linux64.tar.gz';
             }
             switch (arch) {
@@ -90,6 +95,11 @@ export function assetDirName(version: string, os: Os, arch: Arch): string {
             const v = parseVersion(version);
             console.error(v);
             if (v !== null && (v.minor < 10 || (v.minor === 10 && v.patch < 4))) {
+                if (arch === 'arm64') {
+                    throw Error(
+                        `Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`,
+                    );
+                }
                 return 'nvim-linux64';
             }
             switch (arch) {

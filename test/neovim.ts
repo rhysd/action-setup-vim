@@ -154,6 +154,14 @@ describe('Neovim installation', function () {
         it('returns "nvim-linux64" when Neovim version is earlier than 0.10.4 on Linux', function () {
             A.equal(assetDirName('v0.10.3', 'linux', 'x86_64'), 'nvim-linux64');
             A.equal(assetDirName('v0.9.5', 'linux', 'x86_64'), 'nvim-linux64');
+            A.throws(
+                () => assetDirName('v0.10.3', 'linux', 'arm64'),
+                /^Error: Linux arm64 has been only supported since Neovim v0\.10\.4/,
+            );
+            A.throws(
+                () => assetDirName('v0.9.5', 'linux', 'arm64'),
+                /^Error: Linux arm64 has been only supported since Neovim v0\.10\.4/,
+            );
         });
 
         it('returns "nvim-linux-x86_64" or "nvim-linux-arm64" when Neovim version is earlier than 0.10.4 on Linux', function () {
