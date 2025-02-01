@@ -45,7 +45,7 @@ Install the latest nightly Vim:
 ```
 
 Install the latest Vim v8.1.123. The version is a tag name in [vim/vim][vim] repository. Please see
-the following 'Choose specific version' section as well:
+the following 'Choosing a specific version' section as well:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -81,7 +81,7 @@ Install the latest nightly Neovim:
     version: nightly
 ```
 
-Install the Neovim v0.4.3. Please see the following 'Choose specific version' section as well:
+Install the Neovim v0.4.3. Please see the following 'Choosing a specific version' section as well:
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
@@ -119,6 +119,21 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
   run: |
     ./vim-themis/bin/themis ./test
 ```
+
+## Supported platforms
+
+|                           | Vim                         | Neovim                  |
+|---------------------------|-----------------------------|-------------------------|
+| Linux x86_64              | :white_check_mark:          | :white_check_mark:      |
+| Linux arm64               | :white_check_mark:          | :warning: since v0.10.4 |
+| Linux arm32 (self-hosted) | :white_check_mark:          | :x:                     |
+| Windows x86_64            | :warning: no stable version | :white_check_mark:      |
+| macOS x86_64              | :white_check_mark:          | :white_check_mark:      |
+| macOS arm64               | :white_check_mark:          | :white_check_mark:      |
+
+- :white_check_mark: : Supported
+- :warning: : Supported with limitation
+- :x: : Unsupported
 
 ## Installation details
 
@@ -178,7 +193,7 @@ cause 'Asset Not Found' error. This is because the Nightly build failed due to s
 [neovim/neovim][neovim] CI workflow. In the case, this action tries to build Neovim from sources on
 Linux and macOS workers. It gives up installation on other platforms.
 
-## Choose specific version
+## Choosing a specific version
 
 ### Vim
 
