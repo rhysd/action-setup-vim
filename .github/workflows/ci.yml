@@ -74,6 +74,25 @@ jobs:
       - name: Validate action result
         run: node ./scripts/post_action_check.js "true" "v0.4.4" "${{ steps.neovim.outputs.executable }}"
 
+  nvim-v0_10_3:
+    name: Neovim v0.10.3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - uses: ./
+        with:
+          neovim: true
+          version: v0.10.3
+        id: neovim
+      - name: Validate action result
+        run: node ./scripts/post_action_check.js "true" "v0.10.3" "${{ steps.neovim.outputs.executable }}"
+
   test-and-lint:
     name: Check unit tests and lints
     strategy:
