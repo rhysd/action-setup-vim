@@ -21,7 +21,6 @@ export default ts.config(
         rules: {
             'prefer-spread': 'off',
             '@typescript-eslint/explicit-member-accessibility': 'off',
-            '@typescript-eslint/switch-exhaustiveness-check': 'off',
             'n/no-missing-import': 'off',
             eqeqeq: 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
@@ -66,6 +65,7 @@ export default ts.config(
             '@typescript-eslint/prefer-as-const': 'error',
             '@typescript-eslint/consistent-indexed-object-style': 'error',
             '@typescript-eslint/no-base-to-string': 'error',
+            '@typescript-eslint/switch-exhaustiveness-check': ['error', { considerDefaultExhaustiveForUnions: true }],
             'n/handle-callback-err': 'error',
             'n/prefer-promises/fs': 'error',
             'n/no-sync': 'error',
