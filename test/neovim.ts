@@ -178,6 +178,11 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('stable', 'linux', 'x86_64'), 'nvim-linux-x86_64');
             A.equal(assetDirName('stable', 'linux', 'arm64'), 'nvim-linux-arm64');
         });
+
+        it('throws an error on arm32 Linux', function () {
+            A.throws(() => assetDirName('v0.10.3', 'linux', 'arm32'), /^Error: Unsupported CPU architecture/);
+            A.throws(() => assetDirName('stable', 'linux', 'arm32'), /^Error: Unsupported CPU architecture/);
+        });
     });
 
     describe('assetFileName', function () {

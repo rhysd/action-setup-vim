@@ -3,7 +3,7 @@ import * as core from '@actions/core';
 import { mkdirP } from '@actions/io';
 
 export type Os = 'macos' | 'linux' | 'windows';
-export type Arch = 'arm64' | 'x86_64';
+export type Arch = 'arm64' | 'x86_64' | 'arm32';
 
 export async function makeTmpdir(): Promise<string> {
     const dir = tmpdir();
@@ -27,6 +27,8 @@ export function getOs(): Os {
 
 export function getArch(): Arch {
     switch (process.arch) {
+        case 'arm':
+            return 'arm32';
         case 'arm64':
             return 'arm64';
         case 'x64':

@@ -43,7 +43,7 @@ export function assetFileName(version: string, os: Os, arch: Arch): string {
                 case 'x86_64':
                     return 'nvim-macos-x86_64.tar.gz';
                 default:
-                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
             }
         }
         case 'linux': {
@@ -76,19 +76,22 @@ export function assetDirName(version: string, os: Os, arch: Arch): string {
                 case 'x86_64':
                     return 'nvim-macos-x86_64';
                 default:
-                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
             }
         }
         case 'linux': {
             const v = parseVersion(version);
-            console.error(v);
             if (v !== null && (v.minor < 10 || (v.minor === 10 && v.patch < 4))) {
-                if (arch === 'arm64') {
-                    throw Error(
-                        `Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`,
-                    );
+                switch (arch) {
+                    case 'arm64':
+                        throw Error(
+                            `Linux arm64 has been only supported since Neovim v0.10.4 but the requested version is ${version}`,
+                        );
+                    case 'x86_64':
+                        return 'nvim-linux64';
+                    default:
+                        break;
                 }
-                return 'nvim-linux64';
             }
             switch (arch) {
                 case 'arm64':
@@ -96,7 +99,7 @@ export function assetDirName(version: string, os: Os, arch: Arch): string {
                 case 'x86_64':
                     return 'nvim-linux-x86_64';
                 default:
-                    throw Error(`Unsupported arch for Neovim ${version} on ${os}: ${process.arch}`); // Should be unreachable
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
             }
         }
         case 'windows': {
