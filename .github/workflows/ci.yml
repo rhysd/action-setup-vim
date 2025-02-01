@@ -6,7 +6,7 @@ jobs:
     name: Stable and nightly
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-13, ubuntu-24.04]
+        os: [ubuntu-latest, macos-latest, windows-latest, macos-13, ubuntu-24.04, ubuntu-24.04-arm]
         version: [stable, nightly]
         neovim: [true, false]
       fail-fast: false
