@@ -1,3 +1,12 @@
+<a id="v1.4.1"></a>
+# [v1.4.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.4.1) - 2025-02-01
+
+- Fix arm32 Linux (self-hosted runner) is rejected on checking the CPU architecture before installation.
+- Add ['Supported platforms' table](https://github.com/rhysd/action-setup-vim?tab=readme-ov-file#supported-platforms) to the readme document to easily know which platforms are supported for Vim/Neovim.
+
+[Changes][v1.4.1]
+
+
 <a id="v1.4.0"></a>
 # [v1.4.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.4.0) - 2025-02-01
 
@@ -285,6 +294,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.4.1]: https://github.com/rhysd/action-setup-vim/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/rhysd/action-setup-vim/compare/v1.3.5...v1.4.0
 [v1.3.5]: https://github.com/rhysd/action-setup-vim/compare/v1.3.4...v1.3.5
 [v1.3.4]: https://github.com/rhysd/action-setup-vim/compare/v1.3.3...v1.3.4
