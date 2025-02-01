@@ -1,7 +1,6 @@
 import { tmpdir } from 'os';
 import * as core from '@actions/core';
 import { mkdirP } from '@actions/io';
-import type { ExeName } from './install';
 
 export type Os = 'macos' | 'linux' | 'windows';
 export type Arch = 'arm64' | 'x86_64';
@@ -34,14 +33,6 @@ export function getArch(): Arch {
             return 'x86_64';
         default:
             throw new Error(`CPU arch '${process.arch}' is not supported`);
-    }
-}
-
-export function exeName(isNeovim: boolean, os: Os): ExeName {
-    if (os === 'windows') {
-        return isNeovim ? 'nvim.exe' : 'vim.exe';
-    } else {
-        return isNeovim ? 'nvim' : 'vim';
     }
 }
 

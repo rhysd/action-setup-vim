@@ -26,7 +26,7 @@
     "src/validate.ts",
     "src/vim.ts",
     "src/neovim.ts",
-    "src/utils.ts",
+    "src/system.ts",
     "src/install.ts",
     "src/install_linux.ts",
     "src/install_macos.ts",

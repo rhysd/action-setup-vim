@@ -7,8 +7,12 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
 import { exec, unzip, Env } from './shell';
-import { makeTmpdir, exeName, Os, ensureError } from './utils';
-import type { Installed } from './install';
+import { makeTmpdir, type Os, ensureError } from './system';
+import type { Installed, ExeName } from './install';
+
+function exeName(os: Os): ExeName {
+    return os === 'windows' ? 'vim.exe' : 'vim';
+}
 
 export function versionIsOlderThan(version: string, vmajor: number, vminor: number, vpatch: number): boolean {
     // Note: Patch version may not exist on v7 or earlier
@@ -101,7 +105,7 @@ export async function buildVim(version: string, os: Os, configureArgs: string | 
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
 
     return {
-        executable: exeName(false, os),
+        executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
     };
 }
@@ -197,7 +201,7 @@ export async function installVimOnWindows(tag: string, version: string): Promise
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
     const file = `gvim_${ver}_x64.zip`;
     const destDir = await installVimAssetOnWindows(file, url, version);
-    const executable = exeName(false, 'windows');
+    const executable = exeName('windows');
 
     // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
     // This command registers the vim64.dll as a type library. Without the command, vim.exe will

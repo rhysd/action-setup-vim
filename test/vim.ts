@@ -3,7 +3,7 @@ import * as path from 'path';
 import mock = require('mock-require');
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan } from '../src/vim';
 import type { Installed } from '../src/install';
-import type { Os } from '../src/utils';
+import type { Os } from '../src/system';
 import type { Config } from '../src/config';
 import { mockFetch, ExecStub, mockExec } from './helper';
 

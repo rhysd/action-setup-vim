@@ -5,9 +5,13 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
-import { makeTmpdir, type Os, type Arch, exeName, ensureError } from './utils';
+import { makeTmpdir, type Os, type Arch, ensureError } from './system';
 import { exec, unzip } from './shell';
-import type { Installed } from './install';
+import type { Installed, ExeName } from './install';
+
+function exeName(os: Os): ExeName {
+    return os === 'windows' ? 'nvim.exe' : 'nvim';
+}
 
 interface Version {
     minor: number;
@@ -26,7 +30,7 @@ function parseVersion(v: string): Version | null {
     };
 }
 
-function assetFileName(version: string, os: Os, arch: Arch): string {
+export function assetFileName(version: string, os: Os, arch: Arch): string {
     switch (os) {
         case 'macos': {
             const v = parseVersion(version);
@@ -148,7 +152,7 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
 
         return {
-            executable: exeName(true, os),
+            executable: exeName(os),
             binDir: path.join(destDir, 'bin'),
         };
     } catch (e) {
@@ -256,7 +260,7 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
     core.debug(`Installed Neovim to ${installDir}`);
 
     return {
-        executable: exeName(true, os),
+        executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
     };
 }

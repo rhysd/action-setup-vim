@@ -1,5 +1,5 @@
 import { getInput } from '@actions/core';
-import { type Os, getOs, type Arch, getArch } from './utils';
+import { type Os, getOs, type Arch, getArch } from './system';
 
 export interface Config {
     readonly version: string;
