@@ -213,6 +213,7 @@ describe('installVimStable()', function () {
             version: 'stable',
             neovim: false,
             os: 'linux',
+            arch: 'x86_64',
             configureArgs: null,
             token: null,
         });

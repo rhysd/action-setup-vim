@@ -4,6 +4,7 @@ import { mkdirP } from '@actions/io';
 import type { ExeName } from './install';
 
 export type Os = 'macos' | 'linux' | 'windows';
+export type Arch = 'arm64' | 'x86_64';
 
 export async function makeTmpdir(): Promise<string> {
     const dir = tmpdir();
@@ -22,6 +23,17 @@ export function getOs(): Os {
             return 'windows';
         default:
             throw new Error(`Platform '${process.platform}' is not supported`);
+    }
+}
+
+export function getArch(): Arch {
+    switch (process.arch) {
+        case 'arm64':
+            return 'arm64';
+        case 'x64':
+            return 'x86_64';
+        default:
+            throw new Error(`CPU arch '${process.arch}' is not supported`);
     }
 }
 

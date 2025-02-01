@@ -20,10 +20,10 @@ export async function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return downloadStableNeovim('linux', config.token);
+                return downloadStableNeovim('linux', config.arch, config.token);
             case 'nightly':
                 try {
-                    return await downloadNeovim(config.version, 'linux'); // await is necessary to catch error
+                    return await downloadNeovim(config.version, 'linux', config.arch); // await is necessary to catch error
                 } catch (e) {
                     const message = e instanceof Error ? e.message : String(e);
                     core.warning(
@@ -32,7 +32,7 @@ export async function install(config: Config): Promise<Installed> {
                     return buildNightlyNeovim('linux');
                 }
             default:
-                return downloadNeovim(config.version, 'linux');
+                return downloadNeovim(config.version, 'linux', config.arch);
         }
     } else {
         if (config.version === 'stable') {
