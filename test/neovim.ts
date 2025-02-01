@@ -85,7 +85,7 @@ describe('Neovim installation', function () {
 
             // apt-get -> git -> make
             const apt = stub.called[0];
-            A.ok(apt[0] === 'sudo' && apt[1][0] === 'apt-get', `${apt}`);
+            A.ok(apt[0] === 'sudo' && apt[1][0] === 'apt-get', JSON.stringify(apt));
             const make = stub.called[2];
             A.equal(make[0], 'make');
             const makeArgs = make[1];
@@ -100,7 +100,7 @@ describe('Neovim installation', function () {
 
             // brew -> git -> make
             const brew = stub.called[0];
-            A.ok(brew[0] === 'brew', `${brew}`);
+            A.ok(brew[0] === 'brew', JSON.stringify(brew));
             const make = stub.called[2];
             A.equal(make[0], 'make');
             const makeArgs = make[1];

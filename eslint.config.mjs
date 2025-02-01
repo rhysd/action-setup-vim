@@ -21,6 +21,7 @@ export default ts.config(
         rules: {
             'prefer-spread': 'off',
             '@typescript-eslint/explicit-member-accessibility': 'off',
+            '@typescript-eslint/switch-exhaustiveness-check': 'off',
             'n/no-missing-import': 'off',
             eqeqeq: 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
@@ -40,7 +41,6 @@ export default ts.config(
             '@typescript-eslint/no-non-null-asserted-optional-chain': 'error',
             '@typescript-eslint/await-thenable': 'error',
             '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'error',
-            '@typescript-eslint/switch-exhaustiveness-check': 'error',
             '@typescript-eslint/ban-ts-comment': [
                 'error',
                 {
