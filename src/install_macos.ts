@@ -1,29 +1,37 @@
 import * as core from '@actions/core';
 import type { Installed } from './install';
 import type { Config } from './config';
+import type { Arch } from './system';
 import { exec } from './shell';
 import { buildVim } from './vim';
 import { buildNightlyNeovim, downloadNeovim } from './neovim';
 
-function homebrewBinDir(): string {
-    return process.arch === 'arm64' ? '/opt/homebrew/bin' : '/usr/local/bin';
+function homebrewBinDir(arch: Arch): string {
+    switch (arch) {
+        case 'arm64':
+            return '/opt/homebrew/bin';
+        case 'x86_64':
+            return '/usr/local/bin';
+        default:
+            throw new Error(`CPU arch ${arch} is not supported by Homebrew`);
+    }
 }
 
-async function installVimStable(): Promise<Installed> {
+async function installVimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Vim on macOS using Homebrew');
     await exec('brew', ['install', 'macvim', '--quiet']);
     return {
         executable: 'vim',
-        binDir: homebrewBinDir(),
+        binDir: homebrewBinDir(arch),
     };
 }
 
-async function installNeovimStable(): Promise<Installed> {
+async function installNeovimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS using Homebrew');
     await exec('brew', ['install', 'neovim', '--quiet']);
     return {
         executable: 'nvim',
-        binDir: homebrewBinDir(),
+        binDir: homebrewBinDir(arch),
     };
 }
 
@@ -32,7 +40,7 @@ export async function install(config: Config): Promise<Installed> {
     if (config.neovim) {
         switch (config.version) {
             case 'stable':
-                return installNeovimStable();
+                return installNeovimStable(config.arch);
             case 'nightly':
                 try {
                     return await downloadNeovim(config.version, 'macos', config.arch); // await is necessary to catch error
@@ -47,13 +55,13 @@ export async function install(config: Config): Promise<Installed> {
                 return downloadNeovim(config.version, 'macos', config.arch);
         }
         if (config.version === 'stable') {
-            return installNeovimStable();
+            return installNeovimStable(config.arch);
         } else {
             return downloadNeovim(config.version, 'macos', config.arch);
         }
     } else {
         if (config.version === 'stable') {
-            return installVimStable();
+            return installVimStable(config.arch);
         } else {
             return buildVim(config.version, config.os, config.configureArgs);
         }
