@@ -54,11 +54,6 @@ export async function install(config: Config): Promise<Installed> {
             default:
                 return downloadNeovim(config.version, 'macos', config.arch);
         }
-        if (config.version === 'stable') {
-            return installNeovimStable(config.arch);
-        } else {
-            return downloadNeovim(config.version, 'macos', config.arch);
-        }
     } else {
         if (config.version === 'stable') {
             return installVimStable(config.arch);
