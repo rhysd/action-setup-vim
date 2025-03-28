@@ -35,11 +35,12 @@ Node.js version must be aligned with Node.js runtime in GitHub Actions. Check th
 
 When releasing v1.2.3:
 
-1. Run `$ bash scripts/prepare-release.sh v1.2.3`. It builds everything and prunes `node_modules`
+1. Make sure that `node --version` shows Node.js v20.
+2. Run `$ bash scripts/prepare-release.sh v1.2.3`. It builds everything and prunes `node_modules`
    for removing all dev-dependencies. Then it copies built artifacts to `dev/v1` branch and makes
    a new commit and tag `v1.2.3`. Finally it rearrange `v1` and `v1.2` tags to point the new commit.
-2. Check changes in the created commit with `git show`.
-3. If ok, run `$ bash ./prepare-release.sh v1.2.3 --done` to apply the release to the remote. The
+3. Check changes in the created commit with `git show`.
+4. If ok, run `$ bash ./prepare-release.sh v1.2.3 --done` to apply the release to the remote. The
    script will push the branch and the new tag, then force-push the existing tags.
 
 ## Post release check
