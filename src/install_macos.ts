@@ -17,9 +17,14 @@ function homebrewBinDir(arch: Arch): string {
     }
 }
 
+async function brewInstall(pkg: string): Promise<void> {
+    await exec('brew', ['update', '--quiet']);
+    await exec('brew', ['install', pkg, '--quiet']);
+}
+
 async function installVimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Vim on macOS using Homebrew');
-    await exec('brew', ['install', 'macvim', '--quiet']);
+    await brewInstall('macvim');
     return {
         executable: 'vim',
         binDir: homebrewBinDir(arch),
@@ -28,7 +33,7 @@ async function installVimStable(arch: Arch): Promise<Installed> {
 
 async function installNeovimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS using Homebrew');
-    await exec('brew', ['install', 'neovim', '--quiet']);
+    await brewInstall('neovim');
     return {
         executable: 'nvim',
         binDir: homebrewBinDir(arch),
