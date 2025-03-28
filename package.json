@@ -56,18 +56,18 @@
     "@types/eslint-plugin-mocha": "^10.4.0",
     "@types/mocha": "^10.0.10",
     "@types/mock-require": "^3.0.0",
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.13.14",
     "@types/node-fetch": "^2.6.12",
     "concurrently": "^9.1.2",
-    "eslint": "^9.22.0",
+    "eslint": "^9.23.0",
     "eslint-plugin-mocha": "^10.5.0",
-    "eslint-plugin-n": "^17.16.2",
+    "eslint-plugin-n": "^17.17.0",
     "husky": "^9.1.7",
     "mocha": "^11.1.0",
     "mock-require": "^3.0.3",
     "nyc": "^17.1.0",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.28.0"
   }
 }
