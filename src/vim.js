@@ -130,7 +130,15 @@ async function buildVim(version, os, configureArgs) {
         else {
             args.push(...(0, shlex_1.split)(configureArgs));
         }
-        await (0, shell_1.exec)('./configure', args, opts);
+        try {
+            await (0, shell_1.exec)('./configure', args, opts);
+        }
+        catch (err) {
+            if (os === 'macos' && versionIsOlderThan(version, 8, 2, 5135)) {
+                core.warning('This version of Vim has a bug where ./configure cannot find a terminal library correctly. See the following issue for more details: https://github.com/rhysd/action-setup-vim/issues/38');
+            }
+            throw err;
+        }
     }
     await (0, shell_1.exec)('make', ['-j'], opts);
     await (0, shell_1.exec)('make', ['install'], opts);
