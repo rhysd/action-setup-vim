@@ -8,7 +8,7 @@ import {
     assetDirName,
     assetFileName,
 } from '../src/neovim';
-import { mockFetch, ExecStub, mockExec } from './helper';
+import { mockFetch, type ExecStub, mockExec } from './helper';
 
 function reRequire(): typeof import('../src/neovim') {
     return mock.reRequire('../src/neovim');

@@ -37,6 +37,7 @@
     "test/vim.ts",
     "test/neovim.ts",
     "test/shell.ts",
+    "test/install_macos.ts",
     "test/helper.ts",
     "scripts/post_action_check.ts"
   ]
