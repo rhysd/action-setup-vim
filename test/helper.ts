@@ -19,6 +19,10 @@ export class ExecStub {
     reset(): void {
         this.called = [];
     }
+
+    stop(): void {
+        mock.stop('../src/shell');
+    }
 }
 
 export function mockExec(): ExecStub {

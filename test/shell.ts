@@ -53,6 +53,10 @@ describe('shell', function () {
             exec = reRequire().exec;
         });
 
+        after(function () {
+            mock.stop('../src/shell');
+        });
+
         afterEach(function () {
             delete process.env['INPUT_THIS_IS_TEST'];
             delete process.env['WOOOO_THIS_IS_TEST'];
@@ -95,7 +99,6 @@ describe('shell', function () {
         });
 
         it('filters input env vars', async function () {
-            const { exec } = reRequire();
             process.env['INPUT_THIS_IS_TEST'] = 'hello';
             await exec('test', []);
             const [, , opts] = spy.called;

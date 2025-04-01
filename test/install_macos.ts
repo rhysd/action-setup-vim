@@ -18,7 +18,7 @@ describe('Installation on macOS', function () {
     });
 
     after(function () {
-        mock.stop('../src/shell');
+        stub.stop();
     });
 
     afterEach(function () {
@@ -41,5 +41,23 @@ describe('Installation on macOS', function () {
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['install', 'neovim', '--quiet']]);
+    });
+
+    it('installs stable Vim from Homebrew', async function () {
+        const config: Config = {
+            version: 'stable',
+            neovim: false,
+            os: 'macos',
+            arch: 'arm64',
+            configureArgs: null,
+            token: null,
+        };
+
+        const installed = await installMocked(config);
+        A.equal(installed.executable, 'vim');
+        A.equal(installed.binDir, '/opt/homebrew/bin');
+
+        A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
+        A.deepEqual(stub.called[1], ['brew', ['install', 'macvim', '--quiet']]);
     });
 });

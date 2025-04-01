@@ -81,7 +81,7 @@ describe('buildVim()', function () {
     });
 
     after(function () {
-        mock.stop('../src/shell');
+        stub.stop();
         mock.stop('../src/vim');
         process.env['XCODE_11_DEVELOPER_DIR'] = savedXcode11Env;
     });
@@ -205,7 +205,7 @@ describe('installVimStable()', function () {
     });
 
     after(function () {
-        mock.stop('../src/shell');
+        stub.stop();
     });
 
     it('installs vim-gtk3 package', async function () {
