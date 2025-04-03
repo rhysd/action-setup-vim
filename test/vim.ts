@@ -1,15 +1,8 @@
-import { strict as A } from 'assert';
-import * as path from 'path';
-import mock = require('mock-require');
-import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan } from '../src/vim';
-import type { Installed } from '../src/install';
-import type { Os } from '../src/system';
-import type { Config } from '../src/config';
-import { mockFetch, ExecStub, mockExec } from './helper';
-
-function reRequire(): typeof import('../src/vim') {
-    return mock.reRequire('../src/vim');
-}
+import { strict as A } from 'node:assert';
+import * as path from 'node:path';
+import process from 'node:process';
+import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan, type buildVim } from '../src/vim.js';
+import { importFetchMocked, ExecStub } from './helper.js';
 
 describe('detectLatestWindowsReleaseTag()', function () {
     it('detects the latest release from redirect URL', async function () {
@@ -21,13 +14,9 @@ describe('detectLatestWindowsReleaseTag()', function () {
     context('with mocking fetch()', function () {
         let detectLatestWindowsReleaseTagMocked: typeof detectLatestWindowsReleaseTag;
 
-        before(function () {
-            mockFetch();
-            detectLatestWindowsReleaseTagMocked = reRequire().detectLatestWindowsReleaseTag;
-        });
-
-        after(function () {
-            mock.stop('../src/vim');
+        before(async function () {
+            const { detectLatestWindowsReleaseTag } = await importFetchMocked('../src/vim.js');
+            detectLatestWindowsReleaseTagMocked = detectLatestWindowsReleaseTag;
         });
 
         it('throws an error when response is other than 302', async function () {
@@ -50,13 +39,9 @@ describe('installVimOnWindows()', function () {
     context('with mocking fetch()', function () {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
 
-        before(function () {
-            mockFetch();
-            installVimOnWindowsMocked = reRequire().installVimOnWindows;
-        });
-
-        after(function () {
-            mock.stop('../src/vim');
+        before(async function () {
+            const { installVimOnWindows } = await importFetchMocked('../src/vim.js');
+            installVimOnWindowsMocked = installVimOnWindows;
         });
 
         it('throws an error when receiving unsuccessful response', async function () {
@@ -69,20 +54,17 @@ describe('installVimOnWindows()', function () {
 });
 
 describe('buildVim()', function () {
-    let stub: ExecStub;
-    let buildVim: (v: string, os: Os, configureArgs: string | null) => Promise<Installed>;
+    const stub = new ExecStub();
+    let buildVimMocked: typeof buildVim;
     const savedXcode11Env = process.env['XCODE_11_DEVELOPER_DIR'];
 
-    before(function () {
-        stub = mockExec();
-        // Re-requiring ../src/vim is necessary because it depends on ../src/shell
-        buildVim = reRequire().buildVim;
+    before(async function () {
+        const { buildVim } = await stub.importWithMock('../src/vim.js');
+        buildVimMocked = buildVim;
         process.env['XCODE_11_DEVELOPER_DIR'] = './';
     });
 
     after(function () {
-        stub.stop();
-        mock.stop('../src/vim');
         process.env['XCODE_11_DEVELOPER_DIR'] = savedXcode11Env;
     });
 
@@ -91,7 +73,7 @@ describe('buildVim()', function () {
     });
 
     it('builds nightly Vim from source', async function () {
-        const installed = await buildVim('nightly', 'linux', null);
+        const installed = await buildVimMocked('nightly', 'linux', null);
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith('bin'), installed.binDir);
         A.ok(stub.called.length > 0);
@@ -110,7 +92,7 @@ describe('buildVim()', function () {
 
     it('builds recent Vim from source', async function () {
         const version = 'v8.2.2424';
-        const installed = await buildVim(version, 'linux', null);
+        const installed = await buildVimMocked(version, 'linux', null);
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith('bin'), installed.binDir);
         A.ok(stub.called.length > 0);
@@ -130,7 +112,7 @@ describe('buildVim()', function () {
 
     it('builds older Vim from source on macOS', async function () {
         const version = 'v8.2.0000';
-        await buildVim(version, 'macos', null);
+        await buildVimMocked(version, 'macos', null);
 
         // For older Vim (before 8.2.1119), Xcode11 is necessary to build
         // Check `./configure`, `make` and `make install` are run with Xcode11
@@ -145,7 +127,7 @@ describe('buildVim()', function () {
 
     it('builds Vim from source with specified configure arguments', async function () {
         const version = 'v8.2.2424';
-        const installed = await buildVim(
+        const installed = await buildVimMocked(
             version,
             'linux',
             '--with-features=huge --enable-fail-if-missing --disable-nls',
@@ -193,34 +175,4 @@ describe('versionIsOlderThan()', function () {
             A.equal(versionIsOlderThan(v, 8, 2, 1119), expected);
         });
     }
-});
-
-describe('installVimStable()', function () {
-    let stub: ExecStub;
-    let installVimOnLinux: (config: Config) => Promise<Installed>;
-
-    before(function () {
-        stub = mockExec();
-        installVimOnLinux = mock.reRequire('../src/install_linux').install;
-    });
-
-    after(function () {
-        stub.stop();
-    });
-
-    it('installs vim-gtk3 package', async function () {
-        const installed = await installVimOnLinux({
-            version: 'stable',
-            neovim: false,
-            os: 'linux',
-            arch: 'x86_64',
-            configureArgs: null,
-            token: null,
-        });
-
-        A.equal(installed.executable, 'vim');
-        A.equal(installed.binDir, '/usr/bin');
-        const aptArgs = stub.called[stub.called.length - 1][1];
-        A.equal(aptArgs[aptArgs.length - 1], 'vim-gtk3', aptArgs.join(' '));
-    });
 });

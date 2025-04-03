@@ -1,18 +1,14 @@
-import { strict as A } from 'assert';
-import * as path from 'path';
-import mock = require('mock-require');
+import { strict as A } from 'node:assert';
+import * as path from 'node:path';
+import process from 'node:process';
 import {
     downloadNeovim,
     type downloadStableNeovim,
     type buildNightlyNeovim,
     assetDirName,
     assetFileName,
-} from '../src/neovim';
-import { mockFetch, type ExecStub, mockExec } from './helper';
-
-function reRequire(): typeof import('../src/neovim') {
-    return mock.reRequire('../src/neovim');
-}
+} from '../src/neovim.js';
+import { importFetchMocked, ExecStub } from './helper.js';
 
 describe('Neovim installation', function () {
     describe('downloadNeovim()', function () {
@@ -24,15 +20,10 @@ describe('Neovim installation', function () {
             let downloadNeovimMocked: typeof downloadNeovim;
             let downloadStableNeovimMocked: typeof downloadStableNeovim;
 
-            before(function () {
-                mockFetch();
-                const mod = reRequire();
-                downloadNeovimMocked = mod.downloadNeovim;
-                downloadStableNeovimMocked = mod.downloadStableNeovim;
-            });
-
-            after(function () {
-                mock.stop('../src/neovim');
+            before(async function () {
+                const { downloadNeovim, downloadStableNeovim } = await importFetchMocked('../src/neovim.js');
+                downloadNeovimMocked = downloadNeovim;
+                downloadStableNeovimMocked = downloadStableNeovim;
             });
 
             it('throws an error when receiving unsuccessful response', async function () {
@@ -67,16 +58,12 @@ describe('Neovim installation', function () {
     });
 
     describe('buildNightlyNeovim()', function () {
-        let stub: ExecStub;
+        const stub = new ExecStub();
         let buildNightlyNeovimMocked: typeof buildNightlyNeovim;
 
-        before(function () {
-            stub = mockExec();
-            buildNightlyNeovimMocked = reRequire().buildNightlyNeovim;
-        });
-
-        after(function () {
-            mock.stop('../src/shell');
+        before(async function () {
+            const { buildNightlyNeovim } = await stub.importWithMock('../src/neovim.js');
+            buildNightlyNeovimMocked = buildNightlyNeovim;
         });
 
         afterEach(function () {

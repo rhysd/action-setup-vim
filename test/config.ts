@@ -1,5 +1,6 @@
-import { strict as A } from 'assert';
-import { loadConfigFromInputs } from '../src/config';
+import { strict as A } from 'node:assert';
+import process from 'node:process';
+import { loadConfigFromInputs } from '../src/config.js';
 
 function setInputs(inputs: Record<string, string>): void {
     for (const key of Object.keys(inputs)) {
@@ -32,7 +33,6 @@ describe('loadConfigFromInputs()', function () {
         setInputs({
             version: 'nightly',
             neovim: 'true',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             'configure-args': '--with-features=huge --disable-nls',
         });
         const c = loadConfigFromInputs();

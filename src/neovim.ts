@@ -1,13 +1,14 @@
-import { homedir } from 'os';
-import * as path from 'path';
-import { promises as fs } from 'fs';
+import { homedir } from 'node:os';
+import * as path from 'node:path';
+import { promises as fs } from 'node:fs';
+import { Buffer } from 'node:buffer';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
-import { makeTmpdir, type Os, type Arch, ensureError } from './system';
-import { exec, unzip } from './shell';
-import type { Installed, ExeName } from './install';
+import { makeTmpdir, type Os, type Arch, ensureError } from './system.js';
+import { exec, unzip } from './shell.js';
+import type { Installed, ExeName } from './install.js';
 
 function exeName(os: Os): ExeName {
     return os === 'windows' ? 'nvim.exe' : 'nvim';
@@ -144,8 +145,8 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
-        const buffer = await response.buffer();
-        await fs.writeFile(asset, buffer, { encoding: null });
+        const buffer = await response.arrayBuffer();
+        await fs.writeFile(asset, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
 
         const unarchived = await unarchiveAsset(asset, assetDirName(version, os, arch));

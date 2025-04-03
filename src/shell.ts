@@ -1,3 +1,5 @@
+import { type Buffer } from 'node:buffer';
+import process from 'node:process';
 import { exec as origExec } from '@actions/exec';
 
 export type Env = Record<string, string>;

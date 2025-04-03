@@ -3,7 +3,7 @@
     "module": "node16",
     "moduleResolution": "node16",
     "lib": [
-      "esnext"
+      "es2022"
     ],
     "preserveConstEnums": true,
     "noImplicitAny": true,
@@ -17,8 +17,7 @@
     "strict": true,
     "target": "es2022",
     "sourceMap": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "esModuleInterop": true
   },
   "files": [
     "src/config.ts",
