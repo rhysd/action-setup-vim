@@ -2,6 +2,7 @@ import { homedir } from 'os';
 import * as path from 'path';
 import { promises as fs } from 'fs';
 import { strict as assert } from 'assert';
+import { Buffer } from 'buffer';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
@@ -183,7 +184,7 @@ async function installVimAssetOnWindows(file: string, url: string, dirSuffix: st
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
         const buffer = await response.buffer();
-        await fs.writeFile(assetFile, buffer, { encoding: null });
+        await fs.writeFile(assetFile, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
 
         await unzip(assetFile, dlDir);

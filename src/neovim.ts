@@ -1,6 +1,7 @@
 import { homedir } from 'os';
 import * as path from 'path';
 import { promises as fs } from 'fs';
+import { Buffer } from 'buffer';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
@@ -144,8 +145,8 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
-        const buffer = await response.buffer();
-        await fs.writeFile(asset, buffer, { encoding: null });
+        const buffer = await response.arrayBuffer();
+        await fs.writeFile(asset, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
 
         const unarchived = await unarchiveAsset(asset, assetDirName(version, os, arch));
