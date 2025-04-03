@@ -1,10 +1,10 @@
 import { strict as A } from 'assert';
-import { type install } from '../src/install_macos';
-import { type Config } from '../src/config';
-import { type ExecStub, mockExec } from './helper';
+import { type install } from '../src/install_macos.js';
+import { type Config } from '../src/config.js';
+import { type ExecStub, mockExec } from './helper.js';
 import mock = require('mock-require');
 
-function reRequire(): typeof import('../src/install_macos') {
+function reRequire(): typeof import('../src/install_macos.js') {
     return mock.reRequire('../src/install_macos');
 }
 

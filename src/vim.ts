@@ -6,9 +6,9 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
-import { exec, unzip, Env } from './shell';
-import { makeTmpdir, type Os, ensureError } from './system';
-import type { Installed, ExeName } from './install';
+import { exec, unzip, Env } from './shell.js';
+import { makeTmpdir, type Os, ensureError } from './system.js';
+import type { Installed, ExeName } from './install.js';
 
 function exeName(os: Os): ExeName {
     return os === 'windows' ? 'vim.exe' : 'vim';

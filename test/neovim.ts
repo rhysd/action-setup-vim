@@ -7,10 +7,10 @@ import {
     type buildNightlyNeovim,
     assetDirName,
     assetFileName,
-} from '../src/neovim';
-import { mockFetch, type ExecStub, mockExec } from './helper';
+} from '../src/neovim.js';
+import { mockFetch, type ExecStub, mockExec } from './helper.js';
 
-function reRequire(): typeof import('../src/neovim') {
+function reRequire(): typeof import('../src/neovim.js') {
     return mock.reRequire('../src/neovim');
 }
 

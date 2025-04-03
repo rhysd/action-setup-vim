@@ -1,10 +1,10 @@
 import * as core from '@actions/core';
-import type { Installed } from './install';
-import type { Config } from './config';
-import type { Arch } from './system';
-import { exec } from './shell';
-import { buildVim } from './vim';
-import { buildNightlyNeovim, downloadNeovim } from './neovim';
+import type { Installed } from './install.js';
+import type { Config } from './config.js';
+import type { Arch } from './system.js';
+import { exec } from './shell.js';
+import { buildVim } from './vim.js';
+import { buildNightlyNeovim, downloadNeovim } from './neovim.js';
 
 function homebrewBinDir(arch: Arch): string {
     switch (arch) {

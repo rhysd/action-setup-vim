@@ -1,9 +1,9 @@
 import { promises as fs, constants as fsconsts } from 'fs';
 import { join } from 'path';
 import * as core from '@actions/core';
-import type { Installed } from './install';
-import { exec } from './shell';
-import { ensureError } from './system';
+import type { Installed } from './install.js';
+import { exec } from './shell.js';
+import { ensureError } from './system.js';
 
 export async function validateInstallation(installed: Installed): Promise<void> {
     try {

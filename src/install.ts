@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import type { Config } from './config';
-import { install as installOnLinux } from './install_linux';
-import { install as installOnMacOs } from './install_macos';
-import { install as installOnWindows } from './install_windows';
+import type { Config } from './config.js';
+import { install as installOnLinux } from './install_linux.js';
+import { install as installOnMacOs } from './install_macos.js';
+import { install as installOnWindows } from './install_windows.js';
 
 export type ExeName = 'vim' | 'nvim' | 'vim.exe' | 'nvim.exe';
 

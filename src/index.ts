@@ -1,8 +1,8 @@
 import { join } from 'path';
 import * as core from '@actions/core';
-import { loadConfigFromInputs } from './config';
-import { install } from './install';
-import { validateInstallation } from './validate';
+import { loadConfigFromInputs } from './config.js';
+import { install } from './install.js';
+import { validateInstallation } from './validate.js';
 
 async function main(): Promise<void> {
     const config = loadConfigFromInputs();

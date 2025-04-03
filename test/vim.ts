@@ -1,13 +1,13 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
 import mock = require('mock-require');
-import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan } from '../src/vim';
-import type { Installed } from '../src/install';
-import type { Os } from '../src/system';
-import type { Config } from '../src/config';
-import { mockFetch, ExecStub, mockExec } from './helper';
+import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan } from '../src/vim.js';
+import type { Installed } from '../src/install.js';
+import type { Os } from '../src/system.js';
+import type { Config } from '../src/config.js';
+import { mockFetch, ExecStub, mockExec } from './helper.js';
 
-function reRequire(): typeof import('../src/vim') {
+function reRequire(): typeof import('../src/vim.js') {
     return mock.reRequire('../src/vim');
 }
 

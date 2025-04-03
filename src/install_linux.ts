@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
-import type { Installed } from './install';
-import type { Config } from './config';
-import { exec } from './shell';
-import { buildVim } from './vim';
-import { buildNightlyNeovim, downloadNeovim, downloadStableNeovim } from './neovim';
+import type { Installed } from './install.js';
+import type { Config } from './config.js';
+import { exec } from './shell.js';
+import { buildVim } from './vim.js';
+import { buildNightlyNeovim, downloadNeovim, downloadStableNeovim } from './neovim.js';
 
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux using apt');

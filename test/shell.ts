@@ -24,7 +24,7 @@ function mockExec(): ExecSpy {
     return spy;
 }
 
-function reRequire(): typeof import('../src/shell') {
+function reRequire(): typeof import('../src/shell.js') {
     return mock.reRequire('../src/shell');
 }
 

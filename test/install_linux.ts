@@ -1,10 +1,10 @@
 import { strict as A } from 'assert';
-import { type install } from '../src/install_linux';
-import { type Config } from '../src/config';
-import { type ExecStub, mockExec } from './helper';
+import { type install } from '../src/install_linux.js';
+import { type Config } from '../src/config.js';
+import { type ExecStub, mockExec } from './helper.js';
 import mock = require('mock-require');
 
-function reRequire(): typeof import('../src/install_linux') {
+function reRequire(): typeof import('../src/install_linux.js') {
     return mock.reRequire('../src/install_linux');
 }
 

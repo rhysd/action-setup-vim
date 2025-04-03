@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { strict as A } from 'assert';
-import { validateInstallation } from '../src/validate';
-import type { Installed, ExeName } from '../src/install';
+import { validateInstallation } from '../src/validate.js';
+import type { Installed, ExeName } from '../src/install.js';
 
 function getFakedInstallation(): Installed {
     // Use node executable instead of Vim or Neovim binaries

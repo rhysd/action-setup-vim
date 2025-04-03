@@ -1,5 +1,5 @@
 import { strict as A } from 'assert';
-import { loadConfigFromInputs } from '../src/config';
+import { loadConfigFromInputs } from '../src/config.js';
 
 function setInputs(inputs: Record<string, string>): void {
     for (const key of Object.keys(inputs)) {

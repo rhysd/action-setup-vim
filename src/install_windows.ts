@@ -1,8 +1,8 @@
 import * as core from '@actions/core';
-import type { Installed } from './install';
-import type { Config } from './config';
-import { installNightlyVimOnWindows, installVimOnWindows } from './vim';
-import { downloadNeovim, downloadStableNeovim } from './neovim';
+import type { Installed } from './install.js';
+import type { Config } from './config.js';
+import { installNightlyVimOnWindows, installVimOnWindows } from './vim.js';
+import { downloadNeovim, downloadStableNeovim } from './neovim.js';
 
 export function install(config: Config): Promise<Installed> {
     core.debug(`Installing ${config.neovim ? 'Neovim' : 'Vim'} ${config.version} version on Windows`);
