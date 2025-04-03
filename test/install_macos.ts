@@ -2,22 +2,13 @@ import { strict as A } from 'node:assert';
 import { type install } from '../src/install_macos.js';
 import { type Config } from '../src/config.js';
 import { ExecStub } from './helper.js';
-import esmock from 'esmock';
 
 describe('Installation on macOS', function () {
     const stub = new ExecStub();
     let installMocked: typeof install;
 
     before(async function () {
-        const { install } = await esmock(
-            '../src/install_macos.js',
-            {},
-            {
-                '../src/shell.js': {
-                    exec: stub.mockedExec(),
-                },
-            },
-        );
+        const { install } = await stub.importWithMock('../src/install_macos.js');
         installMocked = install;
     });
 

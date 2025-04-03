@@ -1,9 +1,8 @@
 import { strict as A } from 'node:assert';
 import * as path from 'node:path';
 import process from 'node:process';
-import esmock from 'esmock';
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan, type buildVim } from '../src/vim.js';
-import { mockedFetch, ExecStub } from './helper.js';
+import { importFetchMocked, ExecStub } from './helper.js';
 
 describe('detectLatestWindowsReleaseTag()', function () {
     it('detects the latest release from redirect URL', async function () {
@@ -16,15 +15,7 @@ describe('detectLatestWindowsReleaseTag()', function () {
         let detectLatestWindowsReleaseTagMocked: typeof detectLatestWindowsReleaseTag;
 
         before(async function () {
-            const { detectLatestWindowsReleaseTag } = await esmock(
-                '../src/vim.js',
-                {},
-                {
-                    'node-fetch': {
-                        default: mockedFetch,
-                    },
-                },
-            );
+            const { detectLatestWindowsReleaseTag } = await importFetchMocked('../src/vim.js');
             detectLatestWindowsReleaseTagMocked = detectLatestWindowsReleaseTag;
         });
 
@@ -49,15 +40,7 @@ describe('installVimOnWindows()', function () {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
 
         before(async function () {
-            const { installVimOnWindows } = await esmock(
-                '../src/vim.js',
-                {},
-                {
-                    'node-fetch': {
-                        default: mockedFetch,
-                    },
-                },
-            );
+            const { installVimOnWindows } = await importFetchMocked('../src/vim.js');
             installVimOnWindowsMocked = installVimOnWindows;
         });
 
@@ -76,15 +59,7 @@ describe('buildVim()', function () {
     const savedXcode11Env = process.env['XCODE_11_DEVELOPER_DIR'];
 
     before(async function () {
-        const { buildVim } = await esmock(
-            '../src/vim.js',
-            {},
-            {
-                '../src/shell.js': {
-                    exec: stub.mockedExec(),
-                },
-            },
-        );
+        const { buildVim } = await stub.importWithMock('../src/vim.js');
         buildVimMocked = buildVim;
         process.env['XCODE_11_DEVELOPER_DIR'] = './';
     });

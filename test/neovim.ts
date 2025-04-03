@@ -1,7 +1,6 @@
 import { strict as A } from 'node:assert';
 import * as path from 'node:path';
 import process from 'node:process';
-import esmock from 'esmock';
 import {
     downloadNeovim,
     type downloadStableNeovim,
@@ -9,7 +8,7 @@ import {
     assetDirName,
     assetFileName,
 } from '../src/neovim.js';
-import { mockedFetch, ExecStub } from './helper.js';
+import { importFetchMocked, ExecStub } from './helper.js';
 
 describe('Neovim installation', function () {
     describe('downloadNeovim()', function () {
@@ -22,15 +21,7 @@ describe('Neovim installation', function () {
             let downloadStableNeovimMocked: typeof downloadStableNeovim;
 
             before(async function () {
-                const { downloadNeovim, downloadStableNeovim } = await esmock(
-                    '../src/neovim.js',
-                    {},
-                    {
-                        'node-fetch': {
-                            default: mockedFetch,
-                        },
-                    },
-                );
+                const { downloadNeovim, downloadStableNeovim } = await importFetchMocked('../src/neovim.js');
                 downloadNeovimMocked = downloadNeovim;
                 downloadStableNeovimMocked = downloadStableNeovim;
             });
@@ -71,15 +62,7 @@ describe('Neovim installation', function () {
         let buildNightlyNeovimMocked: typeof buildNightlyNeovim;
 
         before(async function () {
-            const { buildNightlyNeovim } = await esmock(
-                '../src/neovim.js',
-                {},
-                {
-                    '../src/shell.js': {
-                        exec: stub.mockedExec(),
-                    },
-                },
-            );
+            const { buildNightlyNeovim } = await stub.importWithMock('../src/neovim.js');
             buildNightlyNeovimMocked = buildNightlyNeovim;
         });
 

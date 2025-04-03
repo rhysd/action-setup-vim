@@ -19,6 +19,18 @@ class ExecSpy {
         this.called = [];
         this.exitCode = 0;
     }
+
+    mockedImport(): Promise<typeof import('../src/shell.js')> {
+        return esmock(
+            '../src/shell.js',
+            {},
+            {
+                '@actions/exec': {
+                    exec: this.mockedExec.bind(this),
+                },
+            },
+        );
+    }
 }
 
 describe('shell', function () {
@@ -38,15 +50,7 @@ describe('shell', function () {
         let execMocked: typeof exec;
 
         before(async function () {
-            const { exec } = await esmock(
-                '../src/shell.js',
-                {},
-                {
-                    '@actions/exec': {
-                        exec: spy.mockedExec.bind(spy),
-                    },
-                },
-            );
+            const { exec } = await spy.mockedImport();
             execMocked = exec;
         });
 
@@ -102,15 +106,7 @@ describe('shell', function () {
     describe('unzip()', function () {
         it('runs `unzip` command with given working directory', async function () {
             delete process.env['RUNNER_DEBUG'];
-            const { unzip } = await esmock(
-                '../src/shell.js',
-                {},
-                {
-                    '@actions/exec': {
-                        exec: spy.mockedExec.bind(spy),
-                    },
-                },
-            );
+            const { unzip } = await spy.mockedImport();
 
             const file = '/path/to/file.zip';
             const cwd = '/path/to/cwd';
@@ -123,15 +119,7 @@ describe('shell', function () {
 
         it('removes `-q` option when RUNNER_DEBUG environment variable is set', async function () {
             process.env['RUNNER_DEBUG'] = 'true';
-            const { unzip } = await esmock(
-                '../src/shell.js',
-                {},
-                {
-                    '@actions/exec': {
-                        exec: spy.mockedExec.bind(spy),
-                    },
-                },
-            );
+            const { unzip } = await spy.mockedImport();
 
             const file = '/path/to/file.zip';
             const cwd = '/path/to/cwd';
