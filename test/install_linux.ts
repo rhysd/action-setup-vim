@@ -1,24 +1,24 @@
 import { strict as A } from 'assert';
 import { type install } from '../src/install_linux.js';
 import { type Config } from '../src/config.js';
-import { type ExecStub, mockExec } from './helper.js';
-import mock = require('mock-require');
-
-function reRequire(): typeof import('../src/install_linux.js') {
-    return mock.reRequire('../src/install_linux');
-}
+import { ExecStub } from './helper.js';
+import esmock from 'esmock';
 
 describe('Installation on Linux', function () {
-    let stub: ExecStub;
+    const stub = new ExecStub();
     let installMocked: typeof install;
 
-    before(function () {
-        stub = mockExec();
-        installMocked = reRequire().install;
-    });
-
-    after(function () {
-        stub.stop();
+    before(async function () {
+        const { install } = await esmock(
+            '../src/install_linux.js',
+            {},
+            {
+                '../src/shell.js': {
+                    exec: stub.mockedExec(),
+                },
+            },
+        );
+        installMocked = install;
     });
 
     afterEach(function () {

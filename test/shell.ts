@@ -1,11 +1,12 @@
 import { strict as A } from 'assert';
-import mock = require('mock-require');
+import esmock from 'esmock';
+import { type exec } from '../src/shell.js';
 
 class ExecSpy {
     public called: any[] = [];
     public exitCode = 0;
 
-    async mocked(cmd: string, args: string[], opts?: any): Promise<number> {
+    async mockedExec(cmd: string, args: string[], opts?: any): Promise<number> {
         this.called = [cmd, args, opts];
         opts.listeners.stdout(Buffer.from('this is stdout'));
         opts.listeners.stderr(Buffer.from('this is stderr'));
@@ -18,28 +19,13 @@ class ExecSpy {
     }
 }
 
-function mockExec(): ExecSpy {
-    const spy = new ExecSpy();
-    mock('@actions/exec', { exec: spy.mocked.bind(spy) });
-    return spy;
-}
-
-function reRequire(): typeof import('../src/shell.js') {
-    return mock.reRequire('../src/shell');
-}
-
 describe('shell', function () {
     // let unzip: (file: string, cwd: string) => Promise<void>;
-    let spy: ExecSpy;
+    const spy = new ExecSpy();
     const savedDebugEnv = process.env['RUNNER_DEBUG'];
-
-    before(function () {
-        spy = mockExec();
-    });
 
     after(function () {
         process.env['RUNNER_DEBUG'] = savedDebugEnv;
-        mock.stop('@actions/exec');
     });
 
     afterEach(function () {
@@ -47,14 +33,19 @@ describe('shell', function () {
     });
 
     describe('exec()', function () {
-        let exec: (cmd: string, args: string[], opts?: any) => Promise<string>;
+        let execMocked: typeof exec;
 
-        before(function () {
-            exec = reRequire().exec;
-        });
-
-        after(function () {
-            mock.stop('../src/shell');
+        before(async function () {
+            const { exec } = await esmock(
+                '../src/shell.js',
+                {},
+                {
+                    '@actions/exec': {
+                        exec: spy.mockedExec.bind(spy),
+                    },
+                },
+            );
+            execMocked = exec;
         });
 
         afterEach(function () {
@@ -63,7 +54,7 @@ describe('shell', function () {
         });
 
         it('returns stdout of given command execution', async function () {
-            const out = await exec('test', ['--foo', '-b', 'piyo']);
+            const out = await execMocked('test', ['--foo', '-b', 'piyo']);
             A.equal(out, 'this is stdout');
             const [cmd, args] = spy.called;
             A.equal(cmd, 'test');
@@ -72,35 +63,35 @@ describe('shell', function () {
 
         it('throws an error when command fails', async function () {
             spy.exitCode = 1;
-            await A.rejects(() => exec('test', []), {
+            await A.rejects(() => execMocked('test', []), {
                 message: /exited non-zero status 1: this is stderr/,
             });
         });
 
         it('sets cwd', async function () {
             const cwd = '/path/to/cwd';
-            await exec('test', [], { cwd });
+            await execMocked('test', [], { cwd });
             const [, , opts] = spy.called;
             A.equal(opts.cwd, cwd);
         });
 
         it('sets env', async function () {
             const v = 'this is env var';
-            await exec('test', [], { env: { THIS_IS_TEST: v } });
+            await execMocked('test', [], { env: { THIS_IS_TEST: v } });
             const [, , opts] = spy.called;
             A.equal(opts.env['THIS_IS_TEST'], v);
         });
 
         it('propagates outer env', async function () {
             process.env['WOOOO_THIS_IS_TEST'] = 'hello';
-            await exec('test', []);
+            await execMocked('test', []);
             const [, , opts] = spy.called;
             A.equal(opts.env['WOOOO_THIS_IS_TEST'], 'hello');
         });
 
         it('filters input env vars', async function () {
             process.env['INPUT_THIS_IS_TEST'] = 'hello';
-            await exec('test', []);
+            await execMocked('test', []);
             const [, , opts] = spy.called;
             A.equal(opts.env['INPUT_THIS_IS_TEST'], undefined);
         });
@@ -109,7 +100,15 @@ describe('shell', function () {
     describe('unzip()', function () {
         it('runs `unzip` command with given working directory', async function () {
             delete process.env['RUNNER_DEBUG'];
-            const { unzip } = reRequire();
+            const { unzip } = await esmock(
+                '../src/shell.js',
+                {},
+                {
+                    '@actions/exec': {
+                        exec: spy.mockedExec.bind(spy),
+                    },
+                },
+            );
 
             const file = '/path/to/file.zip';
             const cwd = '/path/to/cwd';
@@ -122,7 +121,15 @@ describe('shell', function () {
 
         it('removes `-q` option when RUNNER_DEBUG environment variable is set', async function () {
             process.env['RUNNER_DEBUG'] = 'true';
-            const { unzip } = reRequire();
+            const { unzip } = await esmock(
+                '../src/shell.js',
+                {},
+                {
+                    '@actions/exec': {
+                        exec: spy.mockedExec.bind(spy),
+                    },
+                },
+            );
 
             const file = '/path/to/file.zip';
             const cwd = '/path/to/cwd';

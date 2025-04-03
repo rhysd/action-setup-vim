@@ -1,6 +1,6 @@
 import { strict as A } from 'assert';
 import * as path from 'path';
-import mock = require('mock-require');
+import esmock from 'esmock';
 import {
     downloadNeovim,
     type downloadStableNeovim,
@@ -8,11 +8,7 @@ import {
     assetDirName,
     assetFileName,
 } from '../src/neovim.js';
-import { mockFetch, type ExecStub, mockExec } from './helper.js';
-
-function reRequire(): typeof import('../src/neovim.js') {
-    return mock.reRequire('../src/neovim');
-}
+import { mockedFetch, ExecStub } from './helper.js';
 
 describe('Neovim installation', function () {
     describe('downloadNeovim()', function () {
@@ -24,15 +20,18 @@ describe('Neovim installation', function () {
             let downloadNeovimMocked: typeof downloadNeovim;
             let downloadStableNeovimMocked: typeof downloadStableNeovim;
 
-            before(function () {
-                mockFetch();
-                const mod = reRequire();
-                downloadNeovimMocked = mod.downloadNeovim;
-                downloadStableNeovimMocked = mod.downloadStableNeovim;
-            });
-
-            after(function () {
-                mock.stop('../src/neovim');
+            before(async function () {
+                const { downloadNeovim, downloadStableNeovim } = await esmock(
+                    '../src/neovim.js',
+                    {},
+                    {
+                        'node-fetch': {
+                            default: mockedFetch,
+                        },
+                    },
+                );
+                downloadNeovimMocked = downloadNeovim;
+                downloadStableNeovimMocked = downloadStableNeovim;
             });
 
             it('throws an error when receiving unsuccessful response', async function () {
@@ -67,16 +66,20 @@ describe('Neovim installation', function () {
     });
 
     describe('buildNightlyNeovim()', function () {
-        let stub: ExecStub;
+        const stub = new ExecStub();
         let buildNightlyNeovimMocked: typeof buildNightlyNeovim;
 
-        before(function () {
-            stub = mockExec();
-            buildNightlyNeovimMocked = reRequire().buildNightlyNeovim;
-        });
-
-        after(function () {
-            mock.stop('../src/shell');
+        before(async function () {
+            const { buildNightlyNeovim } = await esmock(
+                '../src/neovim.js',
+                {},
+                {
+                    '../src/shell.js': {
+                        exec: stub.mockedExec(),
+                    },
+                },
+            );
+            buildNightlyNeovimMocked = buildNightlyNeovim;
         });
 
         afterEach(function () {

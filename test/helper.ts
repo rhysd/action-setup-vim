@@ -1,10 +1,8 @@
-import mock = require('mock-require');
 import { Response } from 'node-fetch';
 
-export function mockFetch(): void {
-    mock('node-fetch', async (url: string) =>
-        Promise.resolve(new Response(`dummy response for ${url}`, { status: 404, statusText: 'Not found for dummy' })),
-    );
+export function mockedFetch(url: string): Promise<Response> {
+    const notFound = { status: 404, statusText: 'Not found for dummy' };
+    return Promise.resolve(new Response(`dummy response for ${url}`, notFound));
 }
 
 // Arguments of exec(): cmd: string, args: string[], options?: Options
@@ -20,19 +18,10 @@ export class ExecStub {
         this.called = [];
     }
 
-    stop(): void {
-        mock.stop('../src/shell');
+    mockedExec(): (...args: ExecArgs) => Promise<string> {
+        return (...args) => {
+            this.onCalled(args);
+            return Promise.resolve('');
+        };
     }
-}
-
-export function mockExec(): ExecStub {
-    const stub = new ExecStub();
-    // eslint-disable-next-line @typescript-eslint/require-await
-    const exec = async (...args: ExecArgs): Promise<string> => {
-        stub.onCalled(args);
-        return '';
-    };
-    mock('../src/shell', { exec });
-    mock.reRequire('../src/shell');
-    return stub;
 }

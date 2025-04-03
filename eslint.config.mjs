@@ -91,6 +91,7 @@ export default ts.config(
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-unsafe-call': 'off',
             '@typescript-eslint/no-require-imports': 'off',
+            '@typescript-eslint/naming-convention': 'off',
             'mocha/no-setup-in-describe': 'off',
             'mocha/no-hooks-for-single-case': 'off',
             'mocha/max-top-level-suites': 'off',

@@ -32,7 +32,6 @@ describe('loadConfigFromInputs()', function () {
         setInputs({
             version: 'nightly',
             neovim: 'true',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             'configure-args': '--with-features=huge --disable-nls',
         });
         const c = loadConfigFromInputs();
