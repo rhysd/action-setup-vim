@@ -1,7 +1,7 @@
-import { homedir } from 'os';
-import * as path from 'path';
-import { promises as fs } from 'fs';
-import { Buffer } from 'buffer';
+import { homedir } from 'node:os';
+import * as path from 'node:path';
+import { promises as fs } from 'node:fs';
+import { Buffer } from 'node:buffer';
 import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';

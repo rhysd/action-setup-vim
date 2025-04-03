@@ -1,4 +1,5 @@
-import { tmpdir } from 'os';
+import { tmpdir } from 'node:os';
+import process from 'node:process';
 import * as core from '@actions/core';
 import { mkdirP } from '@actions/io';
 

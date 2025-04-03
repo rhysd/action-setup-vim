@@ -1,4 +1,6 @@
-import { strict as A } from 'assert';
+import { strict as A } from 'node:assert';
+import { Buffer } from 'node:buffer';
+import process from 'node:process';
 import esmock from 'esmock';
 import { type exec } from '../src/shell.js';
 

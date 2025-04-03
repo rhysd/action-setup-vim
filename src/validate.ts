@@ -1,5 +1,5 @@
-import { promises as fs, constants as fsconsts } from 'fs';
-import { join } from 'path';
+import { promises as fs, constants as fsconsts } from 'node:fs';
+import { join } from 'node:path';
 import * as core from '@actions/core';
 import type { Installed } from './install.js';
 import { exec } from './shell.js';

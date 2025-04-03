@@ -1,5 +1,6 @@
-import { strict as A } from 'assert';
-import * as path from 'path';
+import { strict as A } from 'node:assert';
+import * as path from 'node:path';
+import process from 'node:process';
 import esmock from 'esmock';
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan, type buildVim } from '../src/vim.js';
 import { mockedFetch, ExecStub } from './helper.js';

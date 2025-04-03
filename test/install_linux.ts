@@ -1,4 +1,4 @@
-import { strict as A } from 'assert';
+import { strict as A } from 'node:assert';
 import { type install } from '../src/install_linux.js';
 import { type Config } from '../src/config.js';
 import { ExecStub } from './helper.js';

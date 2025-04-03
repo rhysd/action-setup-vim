@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import * as core from '@actions/core';
 import { loadConfigFromInputs } from './config.js';
 import { install } from './install.js';

@@ -1,8 +1,9 @@
-import { homedir } from 'os';
-import * as path from 'path';
-import { strict as assert } from 'assert';
-import { spawnSync } from 'child_process';
-import { existsSync } from 'fs';
+import { homedir } from 'node:os';
+import * as path from 'node:path';
+import { strict as assert } from 'node:assert';
+import { spawnSync } from 'node:child_process';
+import { existsSync } from 'node:fs';
+import process from 'node:process';
 
 function log(...args: unknown[]): void {
     console.log('[post_action_check]:', ...args);

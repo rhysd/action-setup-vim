@@ -1,4 +1,5 @@
-import { strict as A } from 'assert';
+import { strict as A } from 'node:assert';
+import process from 'node:process';
 import { loadConfigFromInputs } from '../src/config.js';
 
 function setInputs(inputs: Record<string, string>): void {

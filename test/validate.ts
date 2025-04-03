@@ -1,6 +1,7 @@
-import * as path from 'path';
-import { strict as A } from 'assert';
-import { fileURLToPath } from 'url';
+import * as path from 'node:path';
+import { strict as A } from 'node:assert';
+import { fileURLToPath } from 'node:url';
+import process from 'node:process';
 import { validateInstallation } from '../src/validate.js';
 import type { Installed, ExeName } from '../src/install.js';
 
