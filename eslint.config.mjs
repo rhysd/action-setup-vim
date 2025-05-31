@@ -80,9 +80,10 @@ export default ts.config(
             'n/no-sync': 'off',
         },
     },
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- https://github.com/lo1tuma/eslint-plugin-mocha/issues/392
     {
         files: ['test/*.ts'],
-        ...mocha.configs.flat.recommended,
+        .../** @type {any} */ (mocha.configs).recommended,
     },
     {
         files: ['test/*.ts'],
@@ -98,10 +99,11 @@ export default ts.config(
             'mocha/no-setup-in-describe': 'off',
             'mocha/no-hooks-for-single-case': 'off',
             'mocha/max-top-level-suites': 'off',
+            'mocha/consistent-spacing-between-blocks': 'off', // Conflict with prettier
             'mocha/no-exclusive-tests': 'error',
             'mocha/no-pending-tests': 'error',
-            'mocha/no-skipped-tests': 'error',
             'mocha/no-top-level-hooks': 'error',
+            'mocha/consistent-interface': ['error', { interface: 'BDD' }],
         },
     },
     {

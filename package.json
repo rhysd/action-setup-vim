@@ -53,7 +53,6 @@
   },
   "devDependencies": {
     "@types/eslint": "^9.6.1",
-    "@types/eslint-plugin-mocha": "^10.4.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.15.29",
     "concurrently": "^9.1.2",

@@ -171,6 +171,7 @@ describe('versionIsOlderThan()', function () {
 
     for (const tc of testCases) {
         const [v, expected] = tc;
+
         it(`${v} is ${expected ? 'older than' : 'equal or newer than'} 8.2.1119`, function () {
             A.equal(versionIsOlderThan(v, 8, 2, 1119), expected);
         });

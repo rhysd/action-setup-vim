@@ -100,6 +100,7 @@ describe('loadConfigFromInputs()', function () {
 
     for (const t of specificVersions) {
         const editor = t.neovim ? 'Neovim' : 'Vim';
+
         it(`verifies correct ${editor} version ${t.version}`, function () {
             setInputs({
                 version: t.version,
