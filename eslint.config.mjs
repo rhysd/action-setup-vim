@@ -80,10 +80,10 @@ export default ts.config(
             'n/no-sync': 'off',
         },
     },
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- https://github.com/lo1tuma/eslint-plugin-mocha/issues/392
     {
         files: ['test/*.ts'],
-        .../** @type {any} */ (mocha.configs).recommended,
+        // The cast is workaround for https://github.com/lo1tuma/eslint-plugin-mocha/issues/392
+        .../** @type {{recommended: import('eslint').Linter.Config}} */ (mocha.configs).recommended,
     },
     {
         files: ['test/*.ts'],
