@@ -54,17 +54,17 @@
   "devDependencies": {
     "@types/eslint": "^9.6.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.15.29",
-    "concurrently": "^9.1.2",
-    "eslint": "^9.28.0",
+    "@types/node": "^20.19.1",
+    "concurrently": "^9.2.0",
+    "eslint": "^9.29.0",
     "eslint-plugin-mocha": "^11.1.0",
-    "eslint-plugin-n": "^17.18.0",
+    "eslint-plugin-n": "^17.20.0",
     "esmock": "^2.7.0",
     "husky": "^9.1.7",
-    "mocha": "^11.5.0",
+    "mocha": "^11.7.0",
     "nyc": "^17.1.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.0"
+    "typescript-eslint": "^8.34.1"
   }
 }
