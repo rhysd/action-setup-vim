@@ -49,7 +49,7 @@
     "@actions/github": "^6.0.1",
     "@actions/io": "^1.1.3",
     "node-fetch": "^3.3.2",
-    "shlex": "^2.1.2"
+    "shlex": "^3.0.0"
   },
   "devDependencies": {
     "@types/eslint": "^9.6.1",
