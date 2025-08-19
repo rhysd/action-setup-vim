@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
-import { exec, unzip, Env } from './shell.js';
+import { exec, unzip, Env, getProxyAgent } from './shell.js';
 import { makeTmpdir, type Os, ensureError } from './system.js';
 import type { Installed, ExeName } from './install.js';
 
@@ -147,6 +147,7 @@ export async function detectLatestWindowsReleaseTag(): Promise<string> {
         const res = await fetch(url, {
             method: 'HEAD',
             redirect: 'manual',
+            agent: getProxyAgent(url),
         });
 
         if (res.status !== 302) {
@@ -180,7 +181,7 @@ async function installVimAssetOnWindows(file: string, url: string, dirSuffix: st
 
     try {
         core.debug(`Downloading asset at ${url} to ${dlDir}`);
-        const response = await fetch(url);
+        const response = await fetch(url, { agent: getProxyAgent(url) });
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
