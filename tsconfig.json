@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "node16",
+    "module": "node20",
     "moduleResolution": "node16",
     "lib": [
-      "es2022"
+      "es2023"
     ],
     "preserveConstEnums": true,
     "noImplicitAny": true,
@@ -15,7 +15,7 @@
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
     "strict": true,
-    "target": "es2022",
+    "target": "es2023",
     "sourceMap": true,
     "esModuleInterop": true
   },
