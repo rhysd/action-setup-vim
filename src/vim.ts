@@ -8,7 +8,8 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
-import { exec, unzip, Env, getProxyAgent } from './shell.js';
+import { exec, unzip, Env } from './shell.js';
+import { getProxyAgent } from './net.js';
 import { makeTmpdir, type Os, ensureError } from './system.js';
 import type { Installed, ExeName } from './install.js';
 

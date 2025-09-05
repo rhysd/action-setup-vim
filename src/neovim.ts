@@ -7,7 +7,8 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
 import { makeTmpdir, type Os, type Arch, ensureError } from './system.js';
-import { exec, unzip, getProxyAgent } from './shell.js';
+import { exec, unzip } from './shell.js';
+import { getProxyAgent } from './net.js';
 import type { Installed, ExeName } from './install.js';
 
 function exeName(os: Os): ExeName {

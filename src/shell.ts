@@ -1,8 +1,6 @@
 import { type Buffer } from 'node:buffer';
 import process from 'node:process';
 import { exec as origExec } from '@actions/exec';
-import { HttpsProxyAgent } from 'https-proxy-agent';
-import * as core from '@actions/core';
 
 export type Env = Record<string, string>;
 
@@ -62,37 +60,4 @@ export async function unzip(file: string, cwd: string): Promise<void> {
     // Suppress large output on unarchiving assets when RUNNER_DEBUG is not set (#25)
     const args = IS_DEBUG ? [file] : ['-q', file];
     await exec('unzip', args, { cwd });
-}
-
-export function getProxyAgent(url: string): HttpsProxyAgent<string> | undefined {
-    const proxy = process.env['HTTPS_PROXY'] ?? process.env['https_proxy'];
-    if (!proxy) {
-        return undefined;
-    }
-
-    try {
-        const parsedUrl = new URL(url);
-        const targetHost = parsedUrl.hostname;
-
-        const noProxy = process.env['NO_PROXY'] ?? process.env['no_proxy'];
-        const shouldBypassProxy = noProxy
-            ? noProxy.split(',').some(domain => {
-                  const trimmedDomain = domain.trim();
-                  return (
-                      targetHost === trimmedDomain ||
-                      (trimmedDomain.startsWith('.') &&
-                          (targetHost.endsWith(trimmedDomain) || targetHost === trimmedDomain.slice(1)))
-                  );
-              })
-            : false;
-        if (shouldBypassProxy) {
-            return undefined;
-        }
-
-        return new HttpsProxyAgent(proxy);
-    } catch (err) {
-        const msg = (err as Error).message;
-        core.warning(`Trying to use an invalid proxy url: ${proxy}, err: ${msg}`);
-        return undefined;
-    }
 }
