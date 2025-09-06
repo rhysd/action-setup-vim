@@ -16,6 +16,17 @@ describe('Neovim installation', function () {
             await A.rejects(() => downloadNeovim('v0.4.999', 'linux', 'x86_64'), /Downloading asset failed/);
         });
 
+        it('respects https_proxy environment variable', async function () {
+            const saved = process.env;
+            try {
+                process.env = { https_proxy: 'https://localhost:5678' };
+                // This promise is rejected because localhost:5678 doesn't serve a https proxy
+                await A.rejects(() => downloadNeovim('stable', 'linux', 'x86_64'), /Could not download Neovim release/);
+            } finally {
+                process.env = saved;
+            }
+        });
+
         context('with mocking fetch()', function () {
             let downloadNeovimMocked: typeof downloadNeovim;
             let downloadStableNeovimMocked: typeof downloadStableNeovim;

@@ -22,7 +22,6 @@
   "files": [
     "src/config.ts",
     "src/shell.ts",
-    "src/net.ts",
     "src/validate.ts",
     "src/vim.ts",
     "src/neovim.ts",
@@ -37,7 +36,6 @@
     "test/vim.ts",
     "test/neovim.ts",
     "test/shell.ts",
-    "test/net.ts",
     "test/install_macos.ts",
     "test/install_linux.ts",
     "test/helper.ts",
