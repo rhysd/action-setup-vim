@@ -3,11 +3,10 @@ import * as path from 'node:path';
 import { promises as fs } from 'node:fs';
 import { Buffer } from 'node:buffer';
 import fetch from 'node-fetch';
-import { ProxyAgent } from 'proxy-agent';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
-import { makeTmpdir, type Os, type Arch, ensureError } from './system.js';
+import { makeTmpdir, type Os, type Arch, ensureError, getSystemHttpsProxyAgent } from './system.js';
 import { exec, unzip } from './shell.js';
 import type { Installed, ExeName } from './install.js';
 
@@ -142,8 +141,7 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
 
     try {
         core.debug(`Downloading asset ${asset}`);
-        const agent = new ProxyAgent();
-        const response = await fetch(url, { agent });
+        const response = await fetch(url, { agent: getSystemHttpsProxyAgent(url) });
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }

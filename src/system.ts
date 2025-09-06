@@ -2,6 +2,8 @@ import { tmpdir } from 'node:os';
 import process from 'node:process';
 import * as core from '@actions/core';
 import { mkdirP } from '@actions/io';
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import { getProxyForUrl } from 'proxy-from-env';
 
 export type Os = 'macos' | 'linux' | 'windows';
 export type Arch = 'arm64' | 'x86_64' | 'arm32';
@@ -45,4 +47,9 @@ export function ensureError(err: unknown): Error {
     }
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return new Error(`Unknown fatal error: ${err}`);
+}
+
+export function getSystemHttpsProxyAgent(url: string): HttpsProxyAgent<string> | undefined {
+    const u = getProxyForUrl(url);
+    return u ? new HttpsProxyAgent(u) : undefined;
 }
