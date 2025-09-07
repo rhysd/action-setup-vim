@@ -1,3 +1,14 @@
+<a id="v1.4.3"></a>
+# [v1.4.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.4.3) - 2025-09-07
+
+- Use HTTPS proxy looking at environment variables such as `https_proxy`, `no_proxy`, `all_proxy` when fetching assets. ([#50](https://github.com/rhysd/action-setup-vim/issues/50), thanks [@xieyonn](https://github.com/xieyonn))
+- Implementation migrated from CommonJS to ES Modules. This should not affect the behavior of this action.
+- Reduce amount of log output when installing stable Vim on Linux.
+- Update dependencies including `@actions/github`.
+
+[Changes][v1.4.3]
+
+
 <a id="v1.4.2"></a>
 # [v1.4.2](https://github.com/rhysd/action-setup-vim/releases/tag/v1.4.2) - 2025-03-28
 
@@ -305,6 +316,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.4.3]: https://github.com/rhysd/action-setup-vim/compare/v1.4.2...v1.4.3
 [v1.4.2]: https://github.com/rhysd/action-setup-vim/compare/v1.4.1...v1.4.2
 [v1.4.1]: https://github.com/rhysd/action-setup-vim/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/rhysd/action-setup-vim/compare/v1.3.5...v1.4.0
