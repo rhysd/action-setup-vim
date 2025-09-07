@@ -1,4 +1,4 @@
-import * as shlex from '../'
+import * as shlex from '../shlex.js'
 
 shlex.quote('test text')
 shlex.split('test text "multi word thing"')

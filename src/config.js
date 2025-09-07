@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadConfigFromInputs = loadConfigFromInputs;
-const core_1 = require("@actions/core");
-const system_1 = require("./system");
+import { getInput } from '@actions/core';
+import { getOs, getArch } from './system.js';
 function getBoolean(input, def) {
-    const i = (0, core_1.getInput)(input).toLowerCase();
+    const i = getInput(input).toLowerCase();
     switch (i) {
         case '':
             return def;
@@ -17,7 +14,7 @@ function getBoolean(input, def) {
     }
 }
 function getVersion(neovim) {
-    const v = (0, core_1.getInput)('version');
+    const v = getInput('version');
     if (v === '') {
         return 'stable';
     }
@@ -39,15 +36,15 @@ function getVersion(neovim) {
 function getNeovim() {
     return getBoolean('neovim', false);
 }
-function loadConfigFromInputs() {
+export function loadConfigFromInputs() {
     const neovim = getNeovim();
     return {
         version: getVersion(neovim),
         neovim,
-        os: (0, system_1.getOs)(),
-        arch: (0, system_1.getArch)(),
-        configureArgs: (0, core_1.getInput)('configure-args') || null,
-        token: (0, core_1.getInput)('token') || null,
+        os: getOs(),
+        arch: getArch(),
+        configureArgs: getInput('configure-args') || null,
+        token: getInput('token') || null,
     };
 }
 //# sourceMappingURL=config.js.map

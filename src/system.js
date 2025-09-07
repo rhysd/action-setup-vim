@@ -1,52 +1,16 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeTmpdir = makeTmpdir;
-exports.getOs = getOs;
-exports.getArch = getArch;
-exports.ensureError = ensureError;
-const os_1 = require("os");
-const core = __importStar(require("@actions/core"));
-const io_1 = require("@actions/io");
-async function makeTmpdir() {
-    const dir = (0, os_1.tmpdir)();
-    await (0, io_1.mkdirP)(dir);
+import { tmpdir } from 'node:os';
+import process from 'node:process';
+import * as core from '@actions/core';
+import { mkdirP } from '@actions/io';
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import { getProxyForUrl } from 'proxy-from-env';
+export async function makeTmpdir() {
+    const dir = tmpdir();
+    await mkdirP(dir);
     core.debug(`Created temporary directory ${dir}`);
     return dir;
 }
-function getOs() {
+export function getOs() {
     switch (process.platform) {
         case 'darwin':
             return 'macos';
@@ -58,7 +22,7 @@ function getOs() {
             throw new Error(`Platform '${process.platform}' is not supported`);
     }
 }
-function getArch() {
+export function getArch() {
     switch (process.arch) {
         case 'arm':
             return 'arm32';
@@ -70,11 +34,15 @@ function getArch() {
             throw new Error(`CPU arch '${process.arch}' is not supported`);
     }
 }
-function ensureError(err) {
+export function ensureError(err) {
     if (err instanceof Error) {
         return err;
     }
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
     return new Error(`Unknown fatal error: ${err}`);
+}
+export function getSystemHttpsProxyAgent(url) {
+    const u = getProxyForUrl(url);
+    return u ? new HttpsProxyAgent(u) : undefined;
 }
 //# sourceMappingURL=system.js.map

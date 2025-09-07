@@ -1,60 +1,19 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.versionIsOlderThan = versionIsOlderThan;
-exports.buildVim = buildVim;
-exports.detectLatestWindowsReleaseTag = detectLatestWindowsReleaseTag;
-exports.installVimOnWindows = installVimOnWindows;
-exports.installNightlyVimOnWindows = installNightlyVimOnWindows;
-const os_1 = require("os");
-const path = __importStar(require("path"));
-const fs_1 = require("fs");
-const assert_1 = require("assert");
-const node_fetch_1 = __importDefault(require("node-fetch"));
-const core = __importStar(require("@actions/core"));
-const io = __importStar(require("@actions/io"));
-const shlex_1 = require("shlex");
-const shell_1 = require("./shell");
-const system_1 = require("./system");
+import { homedir } from 'node:os';
+import * as path from 'node:path';
+import { promises as fs } from 'node:fs';
+import { strict as assert } from 'node:assert';
+import { Buffer } from 'node:buffer';
+import process from 'node:process';
+import fetch from 'node-fetch';
+import * as core from '@actions/core';
+import * as io from '@actions/io';
+import { split as shlexSplit } from 'shlex';
+import { exec, unzip } from './shell.js';
+import { makeTmpdir, ensureError, getSystemHttpsProxyAgent } from './system.js';
 function exeName(os) {
     return os === 'windows' ? 'vim.exe' : 'vim';
 }
-function versionIsOlderThan(version, vmajor, vminor, vpatch) {
+export function versionIsOlderThan(version, vmajor, vminor, vpatch) {
     // Note: Patch version may not exist on v7 or earlier
     const majorStr = version.match(/^v(\d+)\./)?.[1];
     if (!majorStr) {
@@ -81,7 +40,7 @@ async function getXcode11DevDir() {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const dir = process.env['XCODE_11_DEVELOPER_DIR'] || '/Applications/Xcode_11.7.app/Contents/Developer';
     try {
-        await fs_1.promises.access(dir);
+        await fs.access(dir);
         return dir;
     }
     catch ( /* eslint-disable-line @typescript-eslint/no-unused-vars */e) {
@@ -89,11 +48,11 @@ async function getXcode11DevDir() {
     }
 }
 // Only available on macOS or Linux. Passing null to `version` means install HEAD
-async function buildVim(version, os, configureArgs) {
-    assert_1.strict.notEqual(version, 'stable');
-    const installDir = path.join((0, os_1.homedir)(), `vim-${version}`);
+export async function buildVim(version, os, configureArgs) {
+    assert.notEqual(version, 'stable');
+    const installDir = path.join(homedir(), `vim-${version}`);
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
-    const dir = path.join(await (0, system_1.makeTmpdir)(), 'vim');
+    const dir = path.join(await makeTmpdir(), 'vim');
     {
         const args = ['clone', '--depth=1', '--single-branch'];
         if (version === 'nightly') {
@@ -103,7 +62,7 @@ async function buildVim(version, os, configureArgs) {
             args.push('--branch', version);
         }
         args.push('https://github.com/vim/vim', dir);
-        await (0, shell_1.exec)('git', args);
+        await exec('git', args);
     }
     const env = {};
     if (os === 'macos' && versionIsOlderThan(version, 8, 2, 1119)) {
@@ -128,10 +87,10 @@ async function buildVim(version, os, configureArgs) {
             args.push('--with-features=huge', '--enable-fail-if-missing');
         }
         else {
-            args.push(...(0, shlex_1.split)(configureArgs));
+            args.push(...shlexSplit(configureArgs));
         }
         try {
-            await (0, shell_1.exec)('./configure', args, opts);
+            await exec('./configure', args, opts);
         }
         catch (err) {
             if (os === 'macos' && versionIsOlderThan(version, 8, 2, 5135)) {
@@ -140,8 +99,8 @@ async function buildVim(version, os, configureArgs) {
             throw err;
         }
     }
-    await (0, shell_1.exec)('make', ['-j'], opts);
-    await (0, shell_1.exec)('make', ['install'], opts);
+    await exec('make', ['-j'], opts);
+    await exec('make', ['install'], opts);
     core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
     return {
         executable: exeName(os),
@@ -150,14 +109,14 @@ async function buildVim(version, os, configureArgs) {
 }
 async function getVimRootDirAt(dir) {
     // Search root Vim directory such as 'vim82' in unarchived directory
-    const entries = await fs_1.promises.readdir(dir);
+    const entries = await fs.readdir(dir);
     const re = /^vim\d+$/;
     for (const entry of entries) {
         if (!re.test(entry)) {
             continue;
         }
         const p = path.join(dir, entry);
-        const s = await fs_1.promises.stat(p);
+        const s = await fs.stat(p);
         if (!s.isDirectory()) {
             continue;
         }
@@ -165,12 +124,13 @@ async function getVimRootDirAt(dir) {
     }
     throw new Error(`Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
 }
-async function detectLatestWindowsReleaseTag() {
+export async function detectLatestWindowsReleaseTag() {
     const url = 'https://github.com/vim/vim-win32-installer/releases/latest';
     try {
-        const res = await (0, node_fetch_1.default)(url, {
+        const res = await fetch(url, {
             method: 'HEAD',
             redirect: 'manual',
+            agent: getSystemHttpsProxyAgent(url),
         });
         if (res.status !== 302) {
             throw new Error(`Expected status 302 (Redirect) but got ${res.status} (${res.statusText})`);
@@ -187,41 +147,41 @@ async function detectLatestWindowsReleaseTag() {
         return m[1];
     }
     catch (e) {
-        const err = (0, system_1.ensureError)(e);
+        const err = ensureError(e);
         core.debug(err.stack ?? err.message);
         throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
     }
 }
 async function installVimAssetOnWindows(file, url, dirSuffix) {
-    const tmpdir = await (0, system_1.makeTmpdir)();
+    const tmpdir = await makeTmpdir();
     const dlDir = path.join(tmpdir, 'vim-installer');
     await io.mkdirP(dlDir);
     const assetFile = path.join(dlDir, file);
     try {
         core.debug(`Downloading asset at ${url} to ${dlDir}`);
-        const response = await (0, node_fetch_1.default)(url);
+        const response = await fetch(url, { agent: getSystemHttpsProxyAgent(url) });
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
         const buffer = await response.buffer();
-        await fs_1.promises.writeFile(assetFile, buffer, { encoding: null });
+        await fs.writeFile(assetFile, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
-        await (0, shell_1.unzip)(assetFile, dlDir);
+        await unzip(assetFile, dlDir);
     }
     catch (e) {
-        const err = (0, system_1.ensureError)(e);
+        const err = ensureError(e);
         core.debug(err.stack ?? err.message);
         throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
     }
     const unzippedDir = path.join(dlDir, 'vim'); // Unarchived to 'vim' directory
     const vimDir = await getVimRootDirAt(unzippedDir);
     core.debug(`Unzipped installer from ${url} and found Vim directory ${vimDir}`);
-    const destDir = path.join((0, os_1.homedir)(), `vim-${dirSuffix}`);
+    const destDir = path.join(homedir(), `vim-${dirSuffix}`);
     await io.mv(vimDir, destDir);
     core.debug(`Vim was installed to ${destDir}`);
     return destDir;
 }
-async function installVimOnWindows(tag, version) {
+export async function installVimOnWindows(tag, version) {
     const ver = tag.slice(1); // Strip 'v' prefix
     // e.g. https://github.com/vim/vim-win32-installer/releases/download/v8.2.0158/gvim_8.2.0158_x64.zip
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_x64.zip`;
@@ -235,12 +195,12 @@ async function installVimOnWindows(tag, version) {
     // See: https://github.com/vim/vim/issues/15372
     if (version === 'stable' || version === 'nightly' || !versionIsOlderThan(version, 9, 1, 631)) {
         const bin = path.join(destDir, executable);
-        await (0, shell_1.exec)(bin, ['-silent', '-register']);
+        await exec(bin, ['-silent', '-register']);
         core.debug('Registered vim.exe as a type library');
     }
     return { executable, binDir: destDir };
 }
-async function installNightlyVimOnWindows(version) {
+export async function installNightlyVimOnWindows(version) {
     const latestTag = await detectLatestWindowsReleaseTag();
     return installVimOnWindows(latestTag, version);
 }
