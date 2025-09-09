@@ -29,19 +29,22 @@ minor_version="${version%.*}"
 major_version="${minor_version%.*}"
 target_branch="dev/${major_version}"
 
-# Pre-flight check
+# Pre-flight checks
 if [ ! -d .git ]; then
     echo 'This script must be run at root directory of this repository' >&2
     exit 1
 fi
-
 if ! git diff --quiet; then
     echo 'Working tree is dirty! Please ensure all changes are committed and working tree is clean' >&2
     exit 1
 fi
-
 if ! git diff --cached --quiet; then
     echo 'Git index is dirty! Please ensure all changes are committed and Git index is clean' >&2
+    exit 1
+fi
+node_version="$(node --version)"
+if [[ ! "$node_version" =~ ^v20\.[0-9]+\.[0-9]+$ ]]; then
+    echo "This script requires Node.js v20 but got '${node_version}'"
     exit 1
 fi
 
