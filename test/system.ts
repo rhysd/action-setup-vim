@@ -1,6 +1,6 @@
 import { strict as A } from 'node:assert';
 import process from 'node:process';
-import { getSystemHttpsProxyAgent } from '../src/system.js';
+import { getSystemHttpsProxyAgent, ensureError } from '../src/system.js';
 
 describe('getSystemHttpsProxyAgent()', function () {
     let savedEnv: Record<string, string | undefined>;
@@ -26,5 +26,26 @@ describe('getSystemHttpsProxyAgent()', function () {
     it('looks at $no_proxy configuration', function () {
         process.env = { no_proxy: '*' };
         A.equal(getSystemHttpsProxyAgent('https://example.com'), undefined);
+    });
+});
+
+describe('ensureError()', function () {
+    it('passes through Error object', function () {
+        const want = new Error('test');
+        const have = ensureError(want);
+        A.equal(want, have);
+    });
+
+    it('passes through custom error object', function () {
+        class MyError extends Error {}
+        const want = new MyError('test');
+        const have = ensureError(want);
+        A.equal(want, have);
+    });
+
+    it('wraps non-Error object as Error object', function () {
+        const err = ensureError('this is test');
+        A.ok(err instanceof Error);
+        A.equal(err.message, 'Unknown fatal error: this is test');
     });
 });
