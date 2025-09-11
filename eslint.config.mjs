@@ -66,6 +66,7 @@ export default ts.config(
             '@typescript-eslint/consistent-indexed-object-style': 'error',
             '@typescript-eslint/no-base-to-string': 'error',
             '@typescript-eslint/switch-exhaustiveness-check': ['error', { considerDefaultExhaustiveForUnions: true }],
+            '@typescript-eslint/no-deprecated': 'error',
             'n/handle-callback-err': 'error',
             'n/prefer-promises/fs': 'error',
             'n/prefer-global/buffer': ['error', 'never'],
