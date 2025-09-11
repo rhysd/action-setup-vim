@@ -1,13 +1,14 @@
 // @ts-check
 
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import ts from 'typescript-eslint';
 import mocha from 'eslint-plugin-mocha';
 import n from 'eslint-plugin-n';
 
-export default ts.config(
+export default defineConfig(
     eslint.configs.recommended,
-    ...ts.configs.recommendedTypeChecked,
+    ts.configs.recommendedTypeChecked,
     n.configs['flat/recommended'],
     {
         languageOptions: {
