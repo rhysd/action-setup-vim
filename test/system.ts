@@ -1,6 +1,6 @@
 import { strict as A } from 'node:assert';
 import process from 'node:process';
-import { getSystemHttpsProxyAgent, ensureError } from '../src/system.js';
+import { getSystemHttpsProxyAgent, ensureError, getOs, getArch } from '../src/system.js';
 
 describe('getSystemHttpsProxyAgent()', function () {
     let savedEnv: Record<string, string | undefined>;
@@ -47,5 +47,19 @@ describe('ensureError()', function () {
         const err = ensureError('this is test');
         A.ok(err instanceof Error);
         A.equal(err.message, 'Unknown fatal error: this is test');
+    });
+});
+
+describe('getOs()', function () {
+    it('returns OS name', function () {
+        const o = getOs();
+        A.ok(o === 'macos' || o === 'linux' || o === 'windows', `${o}`);
+    });
+});
+
+describe('getArch()', function () {
+    it('returns architecture name', function () {
+        const a = getArch();
+        A.ok(a === 'x86_64' || a === 'arm64' || a === 'arm32', `${a}`);
     });
 });
