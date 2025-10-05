@@ -13,7 +13,7 @@ jobs:
     name: Validate release
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-13, ubuntu-24.04-arm]
+        os: [ubuntu-latest, macos-latest, windows-latest, macos-15-intel, ubuntu-24.04-arm]
         neovim: [true, false]
     runs-on: ${{ matrix.os }}
     steps:
@@ -22,8 +22,8 @@ jobs:
         with:
           neovim: ${{ matrix.neovim }}
           version: stable
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '20'
       - run: npm ci
