@@ -4,7 +4,7 @@
   "private": true,
   "description": "GitHub Actions action for installing Vim/Neovim",
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=24.0.0"
   },
   "type": "module",
   "main": "src/index.js",
