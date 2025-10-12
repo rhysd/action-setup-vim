@@ -28,8 +28,8 @@ export class ExecStub {
         return Promise.resolve('');
     }
 
-    importWithMock(path: string): Promise<any> {
+    importWithMock(path: string, otherMocks: object = {}): Promise<any> {
         const exec = this.mockedExec.bind(this);
-        return esmock(path, {}, { '../src/shell.js': { exec } });
+        return esmock(path, {}, { ...otherMocks, '../src/shell.js': { exec } });
     }
 }
