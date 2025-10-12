@@ -57,7 +57,7 @@ export default defineConfig(
                 },
             ],
             'no-unused-vars': 'off',
-            '@typescript-eslint/no-unused-vars': 'error',
+            '@typescript-eslint/no-unused-vars': ['error', { caughtErrorsIgnorePattern: '^_' }],
             '@typescript-eslint/no-confusing-void-expression': 'error',
             '@typescript-eslint/non-nullable-type-assertion-style': 'error',
             'no-return-await': 'off',
