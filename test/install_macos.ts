@@ -49,6 +49,6 @@ describe('Installation on macOS', function () {
         A.equal(installed.binDir, '/opt/homebrew/bin');
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
-        A.deepEqual(stub.called[1], ['brew', ['install', 'macvim', '--quiet']]);
+        A.deepEqual(stub.called[stub.called.length - 1], ['brew', ['install', 'macvim', '--quiet']]);
     });
 });

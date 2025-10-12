@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises';
 import * as core from '@actions/core';
 import type { Installed } from './install.js';
 import type { Config } from './config.js';
@@ -6,25 +7,56 @@ import { exec } from './shell.js';
 import { buildVim } from './vim.js';
 import { buildNightlyNeovim, downloadNeovim } from './neovim.js';
 
-function homebrewBinDir(arch: Arch): string {
+function homebrewRootDir(arch: Arch): string {
     switch (arch) {
         case 'arm64':
-            return '/opt/homebrew/bin';
+            return '/opt/homebrew';
         case 'x86_64':
-            return '/usr/local/bin';
+            return '/usr/local';
         default:
             throw new Error(`CPU arch ${arch} is not supported by Homebrew`);
     }
 }
 
-async function brewInstall(pkg: string): Promise<void> {
+function homebrewBinDir(arch: Arch): string {
+    return homebrewRootDir(arch) + '/bin';
+}
+
+// `macvim` now depends on `python@3.14` however `python@3.13` is already installed and linked on macos-15-intel
+// runner. This causes conflicts on `brew link`. Overwriting the package in advance can avoid this issue. (#52)
+async function shouldOverwritePythonForIssue52(arch: Arch): Promise<boolean> {
+    if (arch !== 'x86_64') {
+        return false;
+    }
+    try {
+        return (
+            // Check python@3.13 is installed
+            (await fs.stat(homebrewRootDir(arch) + '/Cellar/python@3.13')).isDirectory() &&
+            // Check python@3.13 is linked
+            (await fs.lstat(homebrewBinDir(arch) + '/python3')).isSymbolicLink()
+        );
+    } catch (_err) {
+        return false;
+    }
+}
+
+async function brewInstall(pkg: string, overwrites: string[] = []): Promise<void> {
     await exec('brew', ['update', '--quiet']);
+    if (overwrites.length > 0) {
+        core.debug(`Overwriting the following packages before installing ${pkg}: ${overwrites.join(' ')}`);
+        await exec('brew', ['install', ...overwrites, '--quiet', '--overwrite']);
+    }
     await exec('brew', ['install', pkg, '--quiet']);
 }
 
 async function installVimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Vim on macOS using Homebrew');
-    await brewInstall('macvim');
+    const overwrites = [];
+    if (await shouldOverwritePythonForIssue52(arch)) {
+        core.info('Overwriting `python` package before installing `macvim` package not to cause conflicts (#52)');
+        overwrites.push('python');
+    }
+    await brewInstall('macvim', overwrites);
     return {
         executable: 'vim',
         binDir: homebrewBinDir(arch),
