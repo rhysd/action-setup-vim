@@ -1,3 +1,13 @@
+<a id="v1.4.4"></a>
+# [v1.4.4](https://github.com/rhysd/action-setup-vim/releases/tag/v1.4.4) - 2025-10-12
+
+- Fix stable Vim installation fails on `macos-15-intel` runner due to the version conflict in `python` Homebrew package. ([#52](https://github.com/rhysd/action-setup-vim/issues/52))
+- Fix HTTPS proxy is not used when accessing GitHub API via Octokit client even if `https_proxy` environment variable is set.
+- Fix using a deprecated API in `node-fetch` package.
+
+[Changes][v1.4.4]
+
+
 <a id="v1.4.3"></a>
 # [v1.4.3](https://github.com/rhysd/action-setup-vim/releases/tag/v1.4.3) - 2025-09-07
 
@@ -316,6 +326,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.4.4]: https://github.com/rhysd/action-setup-vim/compare/v1.4.3...v1.4.4
 [v1.4.3]: https://github.com/rhysd/action-setup-vim/compare/v1.4.2...v1.4.3
 [v1.4.2]: https://github.com/rhysd/action-setup-vim/compare/v1.4.1...v1.4.2
 [v1.4.1]: https://github.com/rhysd/action-setup-vim/compare/v1.4.0...v1.4.1
