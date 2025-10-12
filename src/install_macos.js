@@ -16,39 +16,44 @@ function homebrewRootDir(arch) {
 function homebrewBinDir(arch) {
     return homebrewRootDir(arch) + '/bin';
 }
-// `macvim` now depends on `python@3.14` however `python@3.13` is already installed and linked on macos-15-intel
-// runner. This causes conflicts on `brew link`. Overwriting the package in advance can avoid this issue. (#52)
-async function shouldOverwritePythonForIssue52(arch) {
+// `macvim` now depends on `python@3.14`. Now installing `macvim` fails due to link error on `python@3.14` installation
+// on macos-15-intel runner (#52). The link error is caused by executable conflicts in /usr/local/bin. GitHub installs
+// Python using the official Python installer. The installer puts symlinks in /usr/local/bin. Since symlinks not managed
+// by Homebrew are already there, Homebrew cannot create its symlinks.
+// We avoid this issue by forcing to overwrite the installer's symlinks by `brew link python@3.13` before installing the
+// `python@3.14` dependency installation so that Homebrew can overwrite the python@3.13's symlinks.
+//
+// - https://github.com/rhysd/action-setup-vim/issues/52
+// - https://github.com/Homebrew/homebrew-core/pull/248952
+// - https://github.com/actions/runner-images/issues/9966
+async function ensureHomebrewPythonIsLinked(arch) {
     if (arch !== 'x86_64') {
-        return false;
+        return;
     }
     try {
-        return (
-        // Check python@3.13 is installed
-        (await fs.stat(homebrewRootDir(arch) + '/Cellar/python@3.13')).isDirectory() &&
-            // Check python@3.13 is linked
-            (await fs.lstat(homebrewBinDir(arch) + '/python3')).isSymbolicLink());
+        if (
+        // Check python@3.13 installation
+        !(await fs.stat(homebrewRootDir(arch) + '/Cellar/python@3.13')).isDirectory() ||
+            // Check /usr/local/bin/python executable which is one of conflicts with python@3.13 package
+            !(await fs.lstat(homebrewBinDir(arch) + '/python3')).isSymbolicLink()) {
+            return;
+        }
     }
     catch (_err) {
-        return false;
+        return;
     }
+    core.info("Ensure linking Homebrew's python@3.13 package to avoid conflicts in /usr/local/bin (#52)");
+    await exec('brew', ['unlink', 'python@3.13', '--quiet']);
+    await exec('brew', ['link', 'python@3.13', '--quiet', '--overwrite']);
 }
-async function brewInstall(pkg, overwrites = []) {
+async function brewInstall(pkg) {
     await exec('brew', ['update', '--quiet']);
-    if (overwrites.length > 0) {
-        core.debug(`Overwriting the following packages before installing ${pkg}: ${overwrites.join(' ')}`);
-        await exec('brew', ['install', ...overwrites, '--quiet', '--overwrite']);
-    }
     await exec('brew', ['install', pkg, '--quiet']);
 }
 async function installVimStable(arch) {
     core.debug('Installing stable Vim on macOS using Homebrew');
-    const overwrites = [];
-    if (await shouldOverwritePythonForIssue52(arch)) {
-        core.info('Overwriting `python` package before installing `macvim` package not to cause conflicts (#52)');
-        overwrites.push('python');
-    }
-    await brewInstall('macvim', overwrites);
+    await ensureHomebrewPythonIsLinked(arch);
+    await brewInstall('macvim');
     return {
         executable: 'vim',
         binDir: homebrewBinDir(arch),
