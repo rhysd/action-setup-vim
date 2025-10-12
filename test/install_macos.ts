@@ -73,9 +73,10 @@ describe('Installation on macOS', function () {
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/usr/local/bin');
 
-        A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
-        A.deepEqual(stub.called[1], ['brew', ['install', 'python', '--quiet', '--overwrite']]);
-        A.deepEqual(stub.called[2], ['brew', ['install', 'macvim', '--quiet']]);
-        A.equal(stub.called.length, 3);
+        A.deepEqual(stub.called[0], ['brew', ['unlink', 'python@3.13', '--quiet']]);
+        A.deepEqual(stub.called[1], ['brew', ['link', 'python@3.13', '--quiet', '--overwrite']]);
+        A.deepEqual(stub.called[2], ['brew', ['update', '--quiet']]);
+        A.deepEqual(stub.called[3], ['brew', ['install', 'macvim', '--quiet']]);
+        A.equal(stub.called.length, 4);
     });
 });
