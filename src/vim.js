@@ -163,7 +163,7 @@ async function installVimAssetOnWindows(file, url, dirSuffix) {
         if (!response.ok) {
             throw new Error(`Downloading asset failed: ${response.statusText}`);
         }
-        const buffer = await response.buffer();
+        const buffer = await response.arrayBuffer();
         await fs.writeFile(assetFile, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
         await unzip(assetFile, dlDir);

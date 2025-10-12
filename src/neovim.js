@@ -151,7 +151,9 @@ export async function downloadNeovim(version, os, arch) {
     }
 }
 async function fetchLatestVersion(token) {
-    const octokit = github.getOctokit(token);
+    const octokit = github.getOctokit(token, {
+        request: { agent: getSystemHttpsProxyAgent('https://api.github.com') },
+    });
     const { data } = await octokit.rest.repos.listReleases({ owner: 'neovim', repo: 'neovim' });
     const re = /^v\d+\.\d+\.\d+$/;
     for (const release of data) {
