@@ -1,9 +1,25 @@
 import { promises as fs, constants as fsconsts } from 'node:fs';
 import { join } from 'node:path';
+import process from 'node:process';
 import * as core from '@actions/core';
 import type { Installed } from './install.js';
 import { exec } from './shell.js';
 import { ensureError } from './system.js';
+
+async function validateExecutable(path: string): Promise<void> {
+    if (process.platform === 'win32') {
+        if (!path.endsWith('.exe') && !path.endsWith('.EXE')) {
+            throw new Error(`Validation failed! Installed binary is not an executable file: ${path}`);
+        }
+    } else {
+        try {
+            await fs.access(path, fsconsts.X_OK);
+        } catch (e) {
+            const err = ensureError(e);
+            throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`);
+        }
+    }
+}
 
 export async function validateInstallation(installed: Installed): Promise<void> {
     try {
@@ -19,12 +35,7 @@ export async function validateInstallation(installed: Installed): Promise<void> 
 
     const fullPath = join(installed.binDir, installed.executable);
 
-    try {
-        await fs.access(fullPath, fsconsts.X_OK);
-    } catch (e) {
-        const err = ensureError(e);
-        throw new Error(`Validation failed! Could not access the installed executable '${fullPath}': ${err.message}`);
-    }
+    await validateExecutable(fullPath);
 
     try {
         const ver = await exec(fullPath, ['--version']);

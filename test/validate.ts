@@ -35,17 +35,28 @@ describe('validateInstallation()', function () {
     it("throws an error when 'executable' file does not exist in 'bin' directory", async function () {
         const executable = 'this-file-does-not-exist-probably' as ExeName;
         const installed = { binDir: DIRNAME, executable };
-        await A.rejects(() => validateInstallation(installed), /Could not access the installed executable/);
+        await A.rejects(
+            () => validateInstallation(installed),
+            /Could not access the installed executable|Installed binary is not an executable file/,
+        );
     });
 
     it("throws an error when file specified with 'executable' is actually not executable", async function () {
         // This file exists but not executable
         const executable = path.basename(FILENAME) as ExeName;
         const installed = { binDir: DIRNAME, executable };
-        await A.rejects(() => validateInstallation(installed), /Could not access the installed executable/);
+        await A.rejects(
+            () => validateInstallation(installed),
+            /Could not access the installed executable|Installed binary is not an executable file/,
+        );
     });
 
     it('throws an error when getting version from executable failed', async function () {
+        // Bash is not available on Windows
+        if (process.platform === 'win32') {
+            this.skip();
+        }
+
         // prepare-release.sh exists and executable but does not support --version option
         const binDir = path.join(path.dirname(DIRNAME), 'scripts');
         const executable = 'prepare-release.sh' as ExeName;
