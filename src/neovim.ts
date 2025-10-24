@@ -51,7 +51,19 @@ export function assetFileName(version: string, os: Os, arch: Arch): string {
             return assetDirName(version, os, arch) + '.tar.gz';
         }
         case 'windows':
-            return 'nvim-win64.zip';
+            switch (arch) {
+                case 'x86_64':
+                    return 'nvim-win64.zip';
+                case 'arm64':
+                    // At point of v0.11.4, arm64 build is not available. It may be released at the next version.
+                    if (version === 'nightly') {
+                        return 'nvim-win-arm64.zip';
+                    } else {
+                        return 'nvim-win64.zip';
+                    }
+                default:
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
+            }
     }
 }
 
@@ -110,7 +122,19 @@ export function assetDirName(version: string, os: Os, arch: Arch): string {
             if (v !== null && v.minor < 7) {
                 return 'Neovim';
             }
-            return 'nvim-win64';
+            switch (arch) {
+                case 'x86_64':
+                    return 'nvim-win64';
+                case 'arm64':
+                    // At point of v0.11.4, arm64 build is not available. It may be released at the next version.
+                    if (version === 'nightly') {
+                        return 'nvim-win-arm64';
+                    } else {
+                        return 'nvim-win64';
+                    }
+                default:
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
+            }
         }
     }
 }
