@@ -123,6 +123,7 @@ describe('Neovim installation', function () {
         it('returns "Neovim" when Neovim version is earlier than 0.7 on Windows', function () {
             A.equal(assetDirName('v0.6.1', 'windows', 'x86_64'), 'Neovim');
             A.equal(assetDirName('v0.4.3', 'windows', 'x86_64'), 'Neovim');
+            A.equal(assetDirName('v0.6.1', 'windows', 'arm64'), 'Neovim');
         });
 
         it('returns "nvim-win64" when Neovim version is 0.7 or later on Windows', function () {
@@ -131,6 +132,11 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v1.0.0', 'windows', 'x86_64'), 'nvim-win64');
             A.equal(assetDirName('nightly', 'windows', 'x86_64'), 'nvim-win64');
             A.equal(assetDirName('stable', 'windows', 'x86_64'), 'nvim-win64');
+        });
+
+        it('returns "nvim-win-arm64" at Neovim after v0.11.4 on Windows', function () {
+            A.equal(assetDirName('v0.11.4', 'windows', 'arm64'), 'nvim-win64');
+            A.equal(assetDirName('nightly', 'windows', 'arm64'), 'nvim-win-arm64');
         });
 
         it('returns "nvim-osx64" when Neovim version is earlier than 0.7.1 on macOS', function () {
@@ -195,6 +201,13 @@ describe('Neovim installation', function () {
             A.equal(assetFileName('v0.7.1', 'macos', 'x86_64'), 'nvim-macos.tar.gz');
             A.equal(assetFileName('v0.10.4', 'macos', 'x86_64'), 'nvim-macos-x86_64.tar.gz');
             A.equal(assetFileName('v0.10.4', 'macos', 'arm64'), 'nvim-macos-arm64.tar.gz');
+        });
+
+        it('returns asset file name following the Neovim version and CPU arch on Windows', function () {
+            A.equal(assetFileName('v0.11.4', 'windows', 'x86_64'), 'nvim-win64.zip');
+            A.equal(assetFileName('nightly', 'windows', 'x86_64'), 'nvim-win64.zip');
+            A.equal(assetFileName('v0.11.4', 'windows', 'arm64'), 'nvim-win64.zip'); // arm64 build is not released yet
+            A.equal(assetFileName('nightly', 'windows', 'arm64'), 'nvim-win-arm64.zip');
         });
     });
 });
