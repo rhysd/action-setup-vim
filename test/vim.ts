@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import process from 'node:process';
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan, type buildVim } from '../src/vim.js';
 import { importFetchMocked, ExecStub } from './helper.js';
+import { type Arch } from '../src/system.js';
 
 describe('detectLatestWindowsReleaseTag()', function () {
     it('detects the latest release from redirect URL', async function () {
@@ -30,10 +31,12 @@ describe('detectLatestWindowsReleaseTag()', function () {
 
 describe('installVimOnWindows()', function () {
     it('throws an error when the specified version does not exist', async function () {
-        await A.rejects(
-            () => installVimOnWindows('v0.1.2', 'v0.1.2', 'x86_64'),
-            /^Error: Could not download and unarchive asset/,
-        );
+        for (const arch of ['x86_64', 'arm64'] as Arch[]) {
+            await A.rejects(
+                () => installVimOnWindows('v0.1.2', 'v0.1.2', arch),
+                /^Error: Could not download and unarchive asset/,
+            );
+        }
     });
 
     context('with mocking fetch()', function () {
@@ -45,14 +48,14 @@ describe('installVimOnWindows()', function () {
         });
 
         it('throws an error when receiving unsuccessful response', async function () {
-            await A.rejects(
-                () => installVimOnWindowsMocked('nightly', 'nightly', 'x86_64'),
-                /Downloading asset failed: Not found for dummy/,
-            );
+            for (const arch of ['x86_64', 'arm64'] as Arch[]) {
+                await A.rejects(
+                    () => installVimOnWindowsMocked('nightly', 'nightly', arch),
+                    /Downloading asset failed: Not found for dummy/,
+                );
+            }
         });
     });
-
-    // TODO: Add tests for arm64
 });
 
 describe('buildVim()', function () {
