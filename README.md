@@ -162,6 +162,9 @@ When installing without system's package manager, Vim is installed at `$HOME/vim
 lack of [this patch][vim_8_2_1119]. Please try `macos-11` runner instead of the latest macOS runner
 in the case.
 
+**Note:** When a Windows arm64 binary is not included in the release due to some reason (e.g. build
+error), it falls back to x86_64 binary. It will be executed via x86 emulation on Arm Windows.
+
 ### Neovim
 
 `vX.Y.Z` represents a specific version such as `v0.4.3`.
@@ -196,8 +199,9 @@ Linux and macOS workers. It gives up installation on other platforms.
 
 **Note:** Linux arm64 binaries for `ubuntu-24.04-arm` runner are supported since v0.11.4.
 
-**Note:** Windows arm64 binaries are currently support only on `nightly`. When an arm64 binary is not
-included in the release due to some reason (e.g. build error), it falls back to x86 emulation.
+**Note:** Windows arm64 binaries are currently support only on `nightly`. When an arm64 binary is
+not included in the release due to some reason (e.g. build error), it falls back to x86_64 binary.
+It will be executed via x86 emulation on Arm Windows.
 
 ## Choosing a specific version
 

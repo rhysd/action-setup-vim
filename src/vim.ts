@@ -215,7 +215,17 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
     const a = arch === 'x86_64' ? 'x64' : 'arm64';
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_${a}.zip`;
     const file = `gvim_${ver}_${a}.zip`;
-    const destDir = await installVimAssetOnWindows(file, url, version);
+    let binDir;
+    try {
+        binDir = await installVimAssetOnWindows(file, url, version);
+    } catch (e) {
+        if (arch !== 'arm64') {
+            throw e;
+        }
+        const err = ensureError(e);
+        core.warning(`Fall back to x86_64 build because downloading Vim for arm64 windows from ${url} failed: ${err}`);
+        return installVimOnWindows(tag, version, 'x86_64');
+    }
     const executable = exeName('windows');
 
     // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
@@ -224,12 +234,12 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
     //
     // See: https://github.com/vim/vim/issues/15372
     if (version === 'stable' || version === 'nightly' || !versionIsOlderThan(version, 9, 1, 631)) {
-        const bin = path.join(destDir, executable);
+        const bin = path.join(binDir, executable);
         await exec(bin, ['-silent', '-register']);
         core.debug('Registered vim.exe as a type library');
     }
 
-    return { executable, binDir: destDir };
+    return { executable, binDir };
 }
 
 export async function installNightlyVimOnWindows(version: string, arch: Arch): Promise<Installed> {
