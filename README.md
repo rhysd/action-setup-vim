@@ -196,8 +196,8 @@ Linux and macOS workers. It gives up installation on other platforms.
 
 **Note:** Linux arm64 binaries for `ubuntu-24.04-arm` runner are supported since v0.11.4.
 
-**Note:** Windows arm64 binaries are currently support only on `nightly`. Otherwise x86_64 binaries
-are used via x86 emulation on Arm Windows.
+**Note:** Windows arm64 binaries are currently support only on `nightly`. When an arm64 binary is not
+included in the release due to some reason (e.g. build error), it falls back to x86 emulation.
 
 ## Choosing a specific version
 

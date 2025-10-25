@@ -186,6 +186,14 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
     } catch (e) {
         const err = ensureError(e);
         core.debug(err.stack ?? err.message);
+
+        if (os === 'windows' && arch === 'arm64') {
+            core.warning(
+                `Fall back to x86_64 build because downloading Neovim for arm64 windows from ${url} failed: ${err}`,
+            );
+            return downloadNeovim(version, os, 'x86_64');
+        }
+
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
