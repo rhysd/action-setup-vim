@@ -8,7 +8,7 @@ import {
     assetDirName,
     assetFileName,
 } from '../src/neovim.js';
-import { importFetchMocked, ExecStub } from './helper.js';
+import { ExecStub, FetchStub } from './helper.js';
 
 describe('Neovim installation', function () {
     describe('downloadNeovim()', function () {
@@ -30,11 +30,16 @@ describe('Neovim installation', function () {
         context('with mocking fetch()', function () {
             let downloadNeovimMocked: typeof downloadNeovim;
             let downloadStableNeovimMocked: typeof downloadStableNeovim;
+            const fetchStub = new FetchStub();
 
             before(async function () {
-                const { downloadNeovim, downloadStableNeovim } = await importFetchMocked('../src/neovim.js');
+                const { downloadNeovim, downloadStableNeovim } = await fetchStub.importFetchMocked('../src/neovim.js');
                 downloadNeovimMocked = downloadNeovim;
                 downloadStableNeovimMocked = downloadStableNeovim;
+            });
+
+            beforeEach(function () {
+                fetchStub.reset();
             });
 
             it('throws an error when receiving unsuccessful response', async function () {
@@ -64,6 +69,18 @@ describe('Neovim installation', function () {
                     // Note: assert.match is not available in Node v12
                     A.ok(/\/v\d+\.\d+\.\d+\//.test(err.message), err.message);
                 }
+            });
+
+            it('falls back to x86_64 on error on arm64 Windows', async function () {
+                await A.rejects(
+                    downloadNeovimMocked('nightly', 'windows', 'arm64'),
+                    /Could not download Neovim release from/,
+                );
+                const expected = [
+                    'https://github.com/neovim/neovim/releases/download/nightly/nvim-win-arm64.zip',
+                    'https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip',
+                ];
+                A.deepStrictEqual(fetchStub.fetchedUrls, expected, `${fetchStub.fetchedUrls}`);
             });
         });
     });
