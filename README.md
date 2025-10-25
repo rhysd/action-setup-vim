@@ -122,14 +122,15 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 ## Supported platforms
 
-|                           | Vim                         | Neovim                  |
-|---------------------------|-----------------------------|-------------------------|
-| Linux x86_64              | :white_check_mark:          | :white_check_mark:      |
-| Linux arm64               | :white_check_mark:          | :warning: since v0.10.4 |
-| Linux arm32 (self-hosted) | :white_check_mark:          | :x:                     |
-| Windows x86_64            | :warning: no stable version | :white_check_mark:      |
-| macOS x86_64              | :white_check_mark:          | :white_check_mark:      |
-| macOS arm64               | :white_check_mark:          | :white_check_mark:      |
+|                           | Vim                         | Neovim                                |
+|---------------------------|-----------------------------|---------------------------------------|
+| Linux x86_64              | :white_check_mark:          | :white_check_mark:                    |
+| Linux arm64               | :white_check_mark:          | :warning: since v0.10.4               |
+| Linux arm32 (self-hosted) | :white_check_mark:          | :x:                                   |
+| Windows x86_64            | :warning: no stable version | :white_check_mark:                    |
+| Windows arm64             | :warning: no stable version | :warning: x86 emulation until v0.11.4 |
+| macOS x86_64              | :white_check_mark:          | :white_check_mark:                    |
+| macOS arm64               | :white_check_mark:          | :white_check_mark:                    |
 
 - :white_check_mark: : Supported
 - :warning: : Supported with limitation
@@ -160,6 +161,9 @@ When installing without system's package manager, Vim is installed at `$HOME/vim
 **Note:** When you build Vim older than 8.2.1119 on macOS, Xcode 11 or earlier is necessary due to
 lack of [this patch][vim_8_2_1119]. Please try `macos-11` runner instead of the latest macOS runner
 in the case.
+
+**Note:** When a Windows arm64 binary is not included in the release due to some reason (e.g. build
+error), it falls back to x86_64 binary. It will be executed via x86 emulation on Arm Windows.
 
 ### Neovim
 
@@ -192,6 +196,12 @@ GitHub API and use it instead of `stable` tag (see [#5][issue-5] for more detail
 cause 'Asset Not Found' error. This is because the Nightly build failed due to some reason in
 [neovim/neovim][neovim] CI workflow. In the case, this action tries to build Neovim from sources on
 Linux and macOS workers. It gives up installation on other platforms.
+
+**Note:** Linux arm64 binaries for `ubuntu-24.04-arm` runner are supported since v0.11.4.
+
+**Note:** Windows arm64 binaries are currently support only on `nightly`. When an arm64 binary is
+not included in the release due to some reason (e.g. build error), it falls back to x86_64 binary.
+It will be executed via x86 emulation on Arm Windows.
 
 ## Choosing a specific version
 

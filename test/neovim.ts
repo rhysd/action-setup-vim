@@ -8,7 +8,7 @@ import {
     assetDirName,
     assetFileName,
 } from '../src/neovim.js';
-import { importFetchMocked, ExecStub } from './helper.js';
+import { ExecStub, FetchStub } from './helper.js';
 
 describe('Neovim installation', function () {
     describe('downloadNeovim()', function () {
@@ -30,11 +30,16 @@ describe('Neovim installation', function () {
         context('with mocking fetch()', function () {
             let downloadNeovimMocked: typeof downloadNeovim;
             let downloadStableNeovimMocked: typeof downloadStableNeovim;
+            const fetchStub = new FetchStub();
 
             before(async function () {
-                const { downloadNeovim, downloadStableNeovim } = await importFetchMocked('../src/neovim.js');
+                const { downloadNeovim, downloadStableNeovim } = await fetchStub.importFetchMocked('../src/neovim.js');
                 downloadNeovimMocked = downloadNeovim;
                 downloadStableNeovimMocked = downloadStableNeovim;
+            });
+
+            beforeEach(function () {
+                fetchStub.reset();
             });
 
             it('throws an error when receiving unsuccessful response', async function () {
@@ -64,6 +69,18 @@ describe('Neovim installation', function () {
                     // Note: assert.match is not available in Node v12
                     A.ok(/\/v\d+\.\d+\.\d+\//.test(err.message), err.message);
                 }
+            });
+
+            it('falls back to x86_64 on error on arm64 Windows', async function () {
+                await A.rejects(
+                    downloadNeovimMocked('nightly', 'windows', 'arm64'),
+                    /Could not download Neovim release from/,
+                );
+                const expected = [
+                    'https://github.com/neovim/neovim/releases/download/nightly/nvim-win-arm64.zip',
+                    'https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip',
+                ];
+                A.deepStrictEqual(fetchStub.fetchedUrls, expected, `${fetchStub.fetchedUrls}`);
             });
         });
     });
@@ -123,6 +140,7 @@ describe('Neovim installation', function () {
         it('returns "Neovim" when Neovim version is earlier than 0.7 on Windows', function () {
             A.equal(assetDirName('v0.6.1', 'windows', 'x86_64'), 'Neovim');
             A.equal(assetDirName('v0.4.3', 'windows', 'x86_64'), 'Neovim');
+            A.equal(assetDirName('v0.6.1', 'windows', 'arm64'), 'Neovim');
         });
 
         it('returns "nvim-win64" when Neovim version is 0.7 or later on Windows', function () {
@@ -131,6 +149,11 @@ describe('Neovim installation', function () {
             A.equal(assetDirName('v1.0.0', 'windows', 'x86_64'), 'nvim-win64');
             A.equal(assetDirName('nightly', 'windows', 'x86_64'), 'nvim-win64');
             A.equal(assetDirName('stable', 'windows', 'x86_64'), 'nvim-win64');
+        });
+
+        it('returns "nvim-win-arm64" at Neovim after v0.11.4 on Windows', function () {
+            A.equal(assetDirName('v0.11.4', 'windows', 'arm64'), 'nvim-win64');
+            A.equal(assetDirName('nightly', 'windows', 'arm64'), 'nvim-win-arm64');
         });
 
         it('returns "nvim-osx64" when Neovim version is earlier than 0.7.1 on macOS', function () {
@@ -195,6 +218,13 @@ describe('Neovim installation', function () {
             A.equal(assetFileName('v0.7.1', 'macos', 'x86_64'), 'nvim-macos.tar.gz');
             A.equal(assetFileName('v0.10.4', 'macos', 'x86_64'), 'nvim-macos-x86_64.tar.gz');
             A.equal(assetFileName('v0.10.4', 'macos', 'arm64'), 'nvim-macos-arm64.tar.gz');
+        });
+
+        it('returns asset file name following the Neovim version and CPU arch on Windows', function () {
+            A.equal(assetFileName('v0.11.4', 'windows', 'x86_64'), 'nvim-win64.zip');
+            A.equal(assetFileName('nightly', 'windows', 'x86_64'), 'nvim-win64.zip');
+            A.equal(assetFileName('v0.11.4', 'windows', 'arm64'), 'nvim-win64.zip'); // arm64 build is not released yet
+            A.equal(assetFileName('nightly', 'windows', 'arm64'), 'nvim-win-arm64.zip');
         });
     });
 });

@@ -51,7 +51,19 @@ export function assetFileName(version: string, os: Os, arch: Arch): string {
             return assetDirName(version, os, arch) + '.tar.gz';
         }
         case 'windows':
-            return 'nvim-win64.zip';
+            switch (arch) {
+                case 'x86_64':
+                    return 'nvim-win64.zip';
+                case 'arm64':
+                    // At point of v0.11.4, arm64 build is not available. It may be released at the next version.
+                    if (version === 'nightly') {
+                        return 'nvim-win-arm64.zip';
+                    } else {
+                        return 'nvim-win64.zip';
+                    }
+                default:
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
+            }
     }
 }
 
@@ -110,7 +122,19 @@ export function assetDirName(version: string, os: Os, arch: Arch): string {
             if (v !== null && v.minor < 7) {
                 return 'Neovim';
             }
-            return 'nvim-win64';
+            switch (arch) {
+                case 'x86_64':
+                    return 'nvim-win64';
+                case 'arm64':
+                    // At point of v0.11.4, arm64 build is not available. It may be released at the next version.
+                    if (version === 'nightly') {
+                        return 'nvim-win-arm64';
+                    } else {
+                        return 'nvim-win64';
+                    }
+                default:
+                    throw Error(`Unsupported CPU architecture for Neovim ${version} on ${os}: ${arch}`); // Should be unreachable
+            }
         }
     }
 }
@@ -162,6 +186,14 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
     } catch (e) {
         const err = ensureError(e);
         core.debug(err.stack ?? err.message);
+
+        if (os === 'windows' && arch === 'arm64') {
+            core.warning(
+                `Fall back to x86_64 build because downloading Neovim for arm64 windows from ${url} failed: ${err}`,
+            );
+            return downloadNeovim(version, os, 'x86_64');
+        }
+
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";

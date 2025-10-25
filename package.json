@@ -9,7 +9,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p . --pretty",
     "watch:tsc": "tsc -p . --watch --preserveWatchOutput --pretty",
     "watch:mocha": "mocha --watch-files \"./test/*.js\"",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:mocha",

@@ -2,7 +2,8 @@ import { strict as A } from 'node:assert';
 import * as path from 'node:path';
 import process from 'node:process';
 import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan, type buildVim } from '../src/vim.js';
-import { importFetchMocked, ExecStub } from './helper.js';
+import { ExecStub, FetchStub } from './helper.js';
+import { type Arch } from '../src/system.js';
 
 describe('detectLatestWindowsReleaseTag()', function () {
     it('detects the latest release from redirect URL', async function () {
@@ -15,7 +16,8 @@ describe('detectLatestWindowsReleaseTag()', function () {
         let detectLatestWindowsReleaseTagMocked: typeof detectLatestWindowsReleaseTag;
 
         before(async function () {
-            const { detectLatestWindowsReleaseTag } = await importFetchMocked('../src/vim.js');
+            const stub = new FetchStub();
+            const { detectLatestWindowsReleaseTag } = await stub.importFetchMocked('../src/vim.js');
             detectLatestWindowsReleaseTagMocked = detectLatestWindowsReleaseTag;
         });
 
@@ -30,25 +32,44 @@ describe('detectLatestWindowsReleaseTag()', function () {
 
 describe('installVimOnWindows()', function () {
     it('throws an error when the specified version does not exist', async function () {
-        await A.rejects(
-            () => installVimOnWindows('v0.1.2', 'v0.1.2'),
-            /^Error: Could not download and unarchive asset/,
-        );
+        for (const arch of ['x86_64', 'arm64'] as Arch[]) {
+            await A.rejects(
+                () => installVimOnWindows('v0.1.2', 'v0.1.2', arch),
+                /^Error: Could not download and unarchive asset/,
+            );
+        }
     });
 
     context('with mocking fetch()', function () {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
+        const fetchStub = new FetchStub();
 
         before(async function () {
-            const { installVimOnWindows } = await importFetchMocked('../src/vim.js');
+            const { installVimOnWindows } = await fetchStub.importFetchMocked('../src/vim.js');
             installVimOnWindowsMocked = installVimOnWindows;
+        });
+
+        beforeEach(function () {
+            fetchStub.reset();
         });
 
         it('throws an error when receiving unsuccessful response', async function () {
             await A.rejects(
-                () => installVimOnWindowsMocked('nightly', 'nightly'),
+                () => installVimOnWindowsMocked('v9.0.0', 'nightly', 'x86_64'),
                 /Downloading asset failed: Not found for dummy/,
             );
+        });
+
+        it('falls back to x86_64 on error on arm64', async function () {
+            await A.rejects(
+                () => installVimOnWindowsMocked('v9.0.0', 'nightly', 'arm64'),
+                /Downloading asset failed: Not found for dummy/,
+            );
+            const expected = [
+                'https://github.com/vim/vim-win32-installer/releases/download/v9.0.0/gvim_9.0.0_arm64.zip',
+                'https://github.com/vim/vim-win32-installer/releases/download/v9.0.0/gvim_9.0.0_x64.zip',
+            ];
+            A.deepStrictEqual(fetchStub.fetchedUrls, expected, `${fetchStub.fetchedUrls}`);
         });
     });
 });

@@ -18,11 +18,11 @@ export function install(config: Config): Promise<Installed> {
             case 'stable':
                 core.debug('Installing stable Vim on Windows');
                 core.warning('No stable Vim release is officially provided for Windows. Installing nightly instead');
-                return installNightlyVimOnWindows('stable');
+                return installNightlyVimOnWindows('stable', config.arch);
             case 'nightly':
-                return installNightlyVimOnWindows('nightly');
+                return installNightlyVimOnWindows('nightly', config.arch);
             default:
-                return installVimOnWindows(config.version, config.version);
+                return installVimOnWindows(config.version, config.version, config.arch);
         }
     }
 }
