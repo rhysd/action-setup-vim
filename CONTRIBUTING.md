@@ -35,7 +35,7 @@ Node.js version must be aligned with Node.js runtime in GitHub Actions. Check th
 
 When releasing v1.2.3:
 
-1. Make sure that `node --version` shows Node.js v20.
+1. Make sure that `node --version` shows Node.js v24.
 2. Run `$ bash scripts/prepare-release.sh v1.2.3`. It builds everything and prunes `node_modules`
    for removing all dev-dependencies. Then it copies built artifacts to `dev/v1` branch and makes
    a new commit and tag `v1.2.3`. Finally it rearrange `v1` and `v1.2` tags to point the new commit.

@@ -43,8 +43,8 @@ if ! git diff --cached --quiet; then
     exit 1
 fi
 node_version="$(node --version)"
-if [[ ! "$node_version" =~ ^v20\.[0-9]+\.[0-9]+$ ]]; then
-    echo "This script requires Node.js v20 but got '${node_version}'"
+if [[ ! "$node_version" =~ ^v24\.[0-9]+\.[0-9]+$ ]]; then
+    echo "This script requires Node.js v24 but got '${node_version}'"
     exit 1
 fi
 
