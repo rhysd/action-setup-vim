@@ -9,7 +9,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p . --pretty",
     "watch:tsc": "tsc -p . --watch --preserveWatchOutput --pretty",
     "watch:mocha": "mocha --watch-files \"./test/*.js\"",
     "watch": "concurrently -c auto npm:watch:tsc npm:watch:mocha",
@@ -56,11 +56,11 @@
   "devDependencies": {
     "@types/eslint": "^9.6.1",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^20",
+    "@types/node": "^24",
     "@types/proxy-from-env": "^1.0.4",
     "c8": "^10.1.3",
     "concurrently": "^9.2.1",
-    "eslint": "^9.37.0",
+    "eslint": "^9.38.0",
     "eslint-plugin-mocha": "^11.2.0",
     "eslint-plugin-n": "^17.23.1",
     "esmock": "^2.7.3",
@@ -68,6 +68,6 @@
     "mocha": "^11.7.4",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.45.0"
+    "typescript-eslint": "^8.46.2"
   }
 }
