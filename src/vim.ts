@@ -121,20 +121,27 @@ export async function buildVim(version: string, os: Os, configureArgs: string | 
     };
 }
 
-async function getVimRootDirAt(dir: string): Promise<string> {
+// See `:help $VIMRUNTIME` for the detail of rules of Vim runtime directory
+async function getRuntimeDirInVimDir(dir: string): Promise<string> {
     // Search root Vim directory such as 'vim82' in unarchived directory
-    const entries = await fs.readdir(dir);
+    let entries;
+    try {
+        entries = await fs.readdir(dir);
+    } catch (e) {
+        const err = ensureError(e);
+        throw new Error(`Could not read $VIMDIR directory to detect vim executable: ${err}`);
+    }
     const re = /^vim\d+$/;
     for (const entry of entries) {
-        if (!re.test(entry)) {
-            continue;
+        if (re.test(entry)) {
+            const p = path.join(dir, entry);
+            const s = await fs.stat(p);
+            if (s.isDirectory()) {
+                return p;
+            }
+        } else if (entry === 'runtime') {
+            return path.join(dir, entry);
         }
-        const p = path.join(dir, entry);
-        const s = await fs.stat(p);
-        if (!s.isDirectory()) {
-            continue;
-        }
-        return p;
     }
     throw new Error(
         `Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`,
@@ -196,9 +203,8 @@ async function installVimAssetOnWindows(file: string, url: string, dirSuffix: st
         throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
     }
 
-    const unzippedDir = path.join(dlDir, 'vim'); // Unarchived to 'vim' directory
-    const vimDir = await getVimRootDirAt(unzippedDir);
-    core.debug(`Unzipped installer from ${url} and found Vim directory ${vimDir}`);
+    const vimDir = path.join(dlDir, 'vim'); // Unarchived to 'vim' directory
+    core.debug(`Unzipped installer from ${url} to ${vimDir}`);
 
     const destDir = path.join(homedir(), `vim-${dirSuffix}`);
     await io.mv(vimDir, destDir);
@@ -215,9 +221,9 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
     const a = arch === 'x86_64' ? 'x64' : 'arm64';
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_${a}.zip`;
     const file = `gvim_${ver}_${a}.zip`;
-    let binDir;
+    let vimDir;
     try {
-        binDir = await installVimAssetOnWindows(file, url, version);
+        vimDir = await installVimAssetOnWindows(file, url, version);
     } catch (e) {
         if (arch !== 'arm64') {
             throw e;
@@ -227,6 +233,7 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
         return installVimOnWindows(tag, version, 'x86_64');
     }
     const executable = exeName('windows');
+    const runtimeDir = await getRuntimeDirInVimDir(vimDir);
 
     // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
     // This command registers the vim64.dll as a type library. Without the command, vim.exe will
@@ -234,12 +241,13 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
     //
     // See: https://github.com/vim/vim/issues/15372
     if (version === 'stable' || version === 'nightly' || !versionIsOlderThan(version, 9, 1, 631)) {
-        const bin = path.join(binDir, executable);
+        const bin = path.join(runtimeDir, executable);
         await exec(bin, ['-silent', '-register']);
         core.debug('Registered vim.exe as a type library');
     }
 
-    return { executable, binDir };
+    // vim.exe and gvim.exe are put in the runtime directory (e.g. `vim/vim91/vim.exe`)
+    return { executable, binDir: runtimeDir };
 }
 
 export async function installNightlyVimOnWindows(version: string, arch: Arch): Promise<Installed> {
