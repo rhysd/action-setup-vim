@@ -14,6 +14,11 @@ describe('Installation on macOS', function () {
         };
         const { install } = await stub.importWithMock('../src/install_macos.js', {
             'fs/promises': fsMock,
+            '@actions/io': {
+                rmRF(): Promise<void> {
+                    return Promise.resolve();
+                },
+            },
         });
         installMocked = install;
     });
