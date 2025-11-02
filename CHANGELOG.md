@@ -1,3 +1,12 @@
+<a id="v1.5.1"></a>
+# [v1.5.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.5.1) - 2025-11-02
+
+- Fix installing stable Vim on `macos-15-intel` runner. It was broken again due to the change in the upstream runner. ([#52](https://github.com/rhysd/action-setup-vim/issues/52))
+- Update `@actions/io` to v2.0.0 for better Node.js v24 support.
+
+[Changes][v1.5.1]
+
+
 <a id="v1.5.0"></a>
 # [v1.5.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.5.0) - 2025-10-26
 
@@ -346,6 +355,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.5.1]: https://github.com/rhysd/action-setup-vim/compare/v1.5.0...v1.5.1
 [v1.5.0]: https://github.com/rhysd/action-setup-vim/compare/v1.4.5...v1.5.0
 [v1.4.5]: https://github.com/rhysd/action-setup-vim/compare/v1.4.4...v1.4.5
 [v1.4.4]: https://github.com/rhysd/action-setup-vim/compare/v1.4.3...v1.4.4
