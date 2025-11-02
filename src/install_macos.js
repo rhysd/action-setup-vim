@@ -1,5 +1,7 @@
 import fs from 'node:fs/promises';
 import * as core from '@actions/core';
+import { rmRF } from '@actions/io';
+import { ensureError } from './system.js';
 import { exec } from './shell.js';
 import { buildVim } from './vim.js';
 import { buildNightlyNeovim, downloadNeovim } from './neovim.js';
@@ -16,12 +18,30 @@ function homebrewRootDir(arch) {
 function homebrewBinDir(arch) {
     return homebrewRootDir(arch) + '/bin';
 }
+async function removePreinstalledPythonSymlink(bin) {
+    const path = `/usr/local/bin/${bin}`;
+    let realpath;
+    try {
+        realpath = await fs.realpath(path);
+    }
+    catch (err) {
+        core.debug(`Cancel removing ${path} symlink: ${ensureError(err)}`);
+        return false;
+    }
+    if (!realpath.startsWith('/Library/Frameworks/Python.framework/Versions')) {
+        core.debug(`Symlink ${path} is not linked to Python.Framework: ${realpath}`);
+        return false;
+    }
+    core.debug(`Removing ${path} symlinked to ${realpath} for workaround of #52`);
+    await rmRF(path);
+    return true;
+}
 // `macvim` now depends on `python@3.14`. Now installing `macvim` fails due to link error on `python@3.14` installation
 // on macos-15-intel runner (#52). The link error is caused by executable conflicts in /usr/local/bin. GitHub installs
 // Python using the official Python installer. The installer puts symlinks in /usr/local/bin. Since symlinks not managed
 // by Homebrew are already there, Homebrew cannot create its symlinks.
-// We avoid this issue by forcing to overwrite the installer's symlinks by `brew link python@3.13` before installing the
-// `python@3.14` dependency installation so that Homebrew can overwrite the python@3.13's symlinks.
+// We avoid this issue by forcing to overwrite the installer's symlinks by `brew link python@3` before installing the
+// MacVim's `python@3.14` dependency so that Homebrew can make the python@3.13's symlinks without confusion.
 //
 // - https://github.com/rhysd/action-setup-vim/issues/52
 // - https://github.com/Homebrew/homebrew-core/pull/248952
@@ -30,21 +50,18 @@ async function ensureHomebrewPythonIsLinked(arch) {
     if (arch !== 'x86_64') {
         return;
     }
-    try {
-        if (
-        // Check python@3.13 installation
-        !(await fs.stat(homebrewRootDir(arch) + '/Cellar/python@3.13')).isDirectory() ||
-            // Check /usr/local/bin/python executable which is one of conflicts with python@3.13 package
-            !(await fs.lstat(homebrewBinDir(arch) + '/python3')).isSymbolicLink()) {
-            return;
-        }
+    let anyRemoved = false;
+    for (const bin of ['idle3', 'pip3', 'pydoc3', 'python3', 'python3-config']) {
+        const removed = await removePreinstalledPythonSymlink(bin);
+        anyRemoved ||= removed;
     }
-    catch (_err) {
+    if (!anyRemoved) {
         return;
     }
-    core.info("Ensure linking Homebrew's python@3.13 package to avoid conflicts in /usr/local/bin (#52)");
-    await exec('brew', ['unlink', 'python@3.13', '--quiet']);
-    await exec('brew', ['link', 'python@3.13', '--quiet', '--overwrite']);
+    // Create the removed symlinks again by Homebrew so that Homebrew is no longer confused by them
+    core.info("Ensure linking Homebrew's python@3 package to avoid conflicts in /usr/local/bin (#52)");
+    await exec('brew', ['unlink', 'python@3', '--quiet']);
+    await exec('brew', ['link', 'python@3', '--quiet', '--overwrite']);
 }
 async function brewInstall(pkg) {
     await exec('brew', ['update', '--quiet']);
