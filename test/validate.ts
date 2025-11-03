@@ -1,19 +1,22 @@
 import * as path from 'node:path';
 import { strict as A } from 'node:assert';
-import { fileURLToPath } from 'node:url';
 import process from 'node:process';
 import { validateInstallation } from '../src/validate.js';
 import type { Installed, ExeName } from '../src/install.js';
+import { TESTDATA_PATH } from './helper.js';
 
-const FILENAME = fileURLToPath(import.meta.url);
-const DIRNAME = path.dirname(FILENAME);
+const TEST_DIR = path.join(TESTDATA_PATH, 'validate');
 
 function getFakedInstallation(): Installed {
-    // Use node executable instead of Vim or Neovim binaries
-    const fullPath = process.argv[0];
-    const executable = path.basename(fullPath) as ExeName;
-    const binDir = path.dirname(fullPath);
-    return { executable, binDir };
+    if (process.platform === 'win32') {
+        // TODO: Temporary (.BAT file is not available because the validation only expects .exe
+        const p = process.argv[0];
+        return {
+            executable: path.basename(p) as ExeName,
+            binDir: path.dirname(p),
+        };
+    }
+    return { executable: 'dummy.bash' as ExeName, binDir: TEST_DIR };
 }
 
 describe('validateInstallation()', function () {
@@ -28,13 +31,13 @@ describe('validateInstallation()', function () {
     });
 
     it("throws an error when 'bin' directory is actually a file", async function () {
-        const installed = { ...getFakedInstallation(), binDir: FILENAME };
+        const installed = { ...getFakedInstallation(), binDir: path.join(TEST_DIR, 'dummy_file') };
         await A.rejects(() => validateInstallation(installed), /is not a directory for executable/);
     });
 
     it("throws an error when 'executable' file does not exist in 'bin' directory", async function () {
         const executable = 'this-file-does-not-exist-probably' as ExeName;
-        const installed = { binDir: DIRNAME, executable };
+        const installed = { binDir: TEST_DIR, executable };
         await A.rejects(
             () => validateInstallation(installed),
             /Could not access the installed executable|Installed binary is not an executable file/,
@@ -43,8 +46,7 @@ describe('validateInstallation()', function () {
 
     it("throws an error when file specified with 'executable' is actually not executable", async function () {
         // This file exists but not executable
-        const executable = path.basename(FILENAME) as ExeName;
-        const installed = { binDir: DIRNAME, executable };
+        const installed = { binDir: TEST_DIR, executable: 'dummy_file' as ExeName };
         await A.rejects(
             () => validateInstallation(installed),
             /Could not access the installed executable|Installed binary is not an executable file/,
@@ -52,15 +54,11 @@ describe('validateInstallation()', function () {
     });
 
     it('throws an error when getting version from executable failed', async function () {
-        // Bash is not available on Windows
+        // TODO: Remove this skip
         if (process.platform === 'win32') {
             this.skip();
         }
-
-        // prepare-release.sh exists and executable but does not support --version option
-        const binDir = path.join(path.dirname(DIRNAME), 'scripts');
-        const executable = 'prepare-release.sh' as ExeName;
-        const installed = { executable, binDir };
+        const installed = { executable: 'dummy_non_version.bash' as ExeName, binDir: TEST_DIR };
         await A.rejects(() => validateInstallation(installed), /Could not get version from executable/);
     });
 });
