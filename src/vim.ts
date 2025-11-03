@@ -122,7 +122,7 @@ export async function buildVim(version: string, os: Os, configureArgs: string | 
 }
 
 // See `:help $VIMRUNTIME` for the detail of rules of Vim runtime directory
-async function getRuntimeDirInVimDir(dir: string): Promise<string> {
+export async function getRuntimeDirInVimDir(dir: string): Promise<string> {
     // Search root Vim directory such as 'vim82' in unarchived directory
     let entries;
     try {
