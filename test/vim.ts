@@ -1,8 +1,14 @@
 import { strict as A } from 'node:assert';
 import * as path from 'node:path';
 import process from 'node:process';
-import { installVimOnWindows, detectLatestWindowsReleaseTag, versionIsOlderThan, type buildVim } from '../src/vim.js';
-import { ExecStub, FetchStub } from './helper.js';
+import {
+    installVimOnWindows,
+    detectLatestWindowsReleaseTag,
+    versionIsOlderThan,
+    getRuntimeDirInVimDir,
+    type buildVim,
+} from '../src/vim.js';
+import { ExecStub, FetchStub, TESTDATA_PATH } from './helper.js';
 import { type Arch } from '../src/system.js';
 
 describe('detectLatestWindowsReleaseTag()', function () {
@@ -197,4 +203,31 @@ describe('versionIsOlderThan()', function () {
             A.equal(versionIsOlderThan(v, 8, 2, 1119), expected);
         });
     }
+});
+
+describe('getRuntimeDirInVimDir', function () {
+    it('detects vim{ver} directory', async function () {
+        const vimdir = path.join(TESTDATA_PATH, 'vimdir', 'vim_ver');
+        const runtime = await getRuntimeDirInVimDir(vimdir);
+        A.ok(runtime, path.join(vimdir, 'vim91'));
+    });
+
+    it('detects runtime directory', async function () {
+        const vimdir = path.join(TESTDATA_PATH, 'vimdir', 'vim_runtime');
+        const runtime = await getRuntimeDirInVimDir(vimdir);
+        A.ok(runtime, path.join(vimdir, 'runtime'));
+    });
+
+    it('throws an error when the vimdir is not found', async function () {
+        const vimdir = path.join(TESTDATA_PATH, 'vimdir', 'this-directory-does-not-exist');
+        await A.rejects(() => getRuntimeDirInVimDir(vimdir), /Could not read \$VIMDIR directory/);
+    });
+
+    it('throws an error when no runtime directory is found', async function () {
+        const vimdir = path.join(TESTDATA_PATH, 'vimdir', 'empty');
+        await A.rejects(
+            () => getRuntimeDirInVimDir(vimdir),
+            /Vim directory such as 'vim82' or 'runtime' was not found/,
+        );
+    });
 });

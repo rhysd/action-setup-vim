@@ -2,7 +2,7 @@ import { homedir } from 'node:os';
 import * as path from 'node:path';
 import { strict as assert } from 'node:assert';
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import process from 'node:process';
 
 function log(...args: unknown[]): void {
@@ -27,6 +27,23 @@ function parseArgs(args: string[]): Args {
     const neovim = args[2].toLowerCase() === 'true';
 
     return { neovim, version: args[3], output: args[4] };
+}
+
+// e.g. ~/vim-stable/vim91
+function getRuntimeDirOnWindows(version: string): string {
+    const vimdir = path.join(homedir(), `vim-${version}`);
+    for (const entry of readdirSync(vimdir)) {
+        if (/^vim\d+$/.test(entry)) {
+            return path.join(vimdir, entry);
+        }
+    }
+    // The $VIMDIR change on Windows is not released on CI. Not to break the weekly post-release check,
+    // this script allows the old directory structure.
+    // TODO: Remove this `if` statement after the next release.
+    if (process.env['GITHUB_WORKFLOW'] === 'Post-release check' && existsSync(path.join(vimdir, 'vim.exe'))) {
+        return vimdir;
+    }
+    throw new Error(`vim{ver} directory for version ${version} is not found in $VIMDIR ${vimdir}`);
 }
 
 function expectedExecutable(neovim: boolean, ver: string): string {
@@ -72,7 +89,7 @@ function expectedExecutable(neovim: boolean, ver: string): string {
                     return path.join(homedir(), `vim-${ver}/bin/vim`);
                 }
             case 'win32':
-                return path.join(homedir(), `vim-${ver}/vim.exe`);
+                return path.join(getRuntimeDirOnWindows(ver), 'vim.exe');
             default:
                 break;
         }

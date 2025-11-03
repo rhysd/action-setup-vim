@@ -1,5 +1,9 @@
+import * as path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Response } from 'node-fetch';
 import esmock from 'esmock';
+
+export const TESTDATA_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), 'testdata');
 
 // Arguments of exec(): cmd: string, args: string[], options?: Options
 export type ExecArgs = [string, string[], { env: Record<string, string> } | undefined];

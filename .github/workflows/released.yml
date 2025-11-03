@@ -6,6 +6,7 @@ on:
     paths:
       - 'CHANGELOG.md'
       - '.github/workflows/released.yml'
+      - 'scripts/post_action_check.ts'
   workflow_dispatch:
 
 jobs:
