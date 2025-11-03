@@ -144,7 +144,7 @@ export async function getRuntimeDirInVimDir(dir: string): Promise<string> {
         }
     }
     throw new Error(
-        `Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`,
+        `Vim directory such as 'vim82' or 'runtime' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`,
     );
 }
 
