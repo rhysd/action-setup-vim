@@ -3,6 +3,20 @@ Contributing to action-setup-vim
 
 Thank you for contributing to [action-setup-vim][repo]. This document is for development.
 
+## Building
+
+Sources are written in [TypeScript][]. To compile them into JavaScript,
+
+```sh
+npm run build
+```
+
+To clean the built files,
+
+```sh
+npm run clean
+```
+
 ## Testing
 
 For testing validation for inputs and outputs, run unit tests:
@@ -45,10 +59,11 @@ When releasing v1.2.3:
 
 ## Post release check
 
-[Post-release check workflow][post-release] runs to check released `rhysd/action-setup-vim@v1` action.
+[Post-release check workflow][post-release] runs checks against released `rhysd/action-setup-vim@v1` action.
 The workflow runs when modifying `CHANGELOG.md` and also runs on every Sunday 00:00 UTC.
 
 [repo]: https://github.com/rhysd/action-setup-vim
+[ts]: https://www.typescriptlang.org/
 [ci]: https://github.com/rhysd/action-setup-vim/actions/workflows/ci.yml
 [eslint]: https://eslint.org/
 [prettier]: https://prettier.io/
