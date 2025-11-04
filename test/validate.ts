@@ -8,15 +8,8 @@ import { TESTDATA_PATH } from './helper.js';
 const TEST_DIR = path.join(TESTDATA_PATH, 'validate');
 
 function getFakedInstallation(): Installed {
-    if (process.platform === 'win32') {
-        // TODO: Temporary (.BAT file is not available because the validation only expects .exe
-        const p = process.argv[0];
-        return {
-            executable: path.basename(p) as ExeName,
-            binDir: path.dirname(p),
-        };
-    }
-    return { executable: 'dummy.bash' as ExeName, binDir: TEST_DIR };
+    const executable = (process.platform === 'win32' ? 'dummy.exe' : 'dummy.bash') as ExeName;
+    return { executable, binDir: TEST_DIR };
 }
 
 describe('validateInstallation()', function () {
@@ -54,11 +47,10 @@ describe('validateInstallation()', function () {
     });
 
     it('throws an error when getting version from executable failed', async function () {
-        // TODO: Remove this skip
-        if (process.platform === 'win32') {
-            this.skip();
-        }
-        const installed = { executable: 'dummy_non_version.bash' as ExeName, binDir: TEST_DIR };
+        const executable = (
+            process.platform === 'win32' ? 'dummy_non_version.exe' : 'dummy_non_version.bash'
+        ) as ExeName;
+        const installed = { executable, binDir: TEST_DIR };
         await A.rejects(() => validateInstallation(installed), /Could not get version from executable/);
     });
 });
