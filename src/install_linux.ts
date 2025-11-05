@@ -12,6 +12,7 @@ async function installVimStable(): Promise<Installed> {
     return {
         executable: 'vim',
         binDir: '/usr/bin',
+        vimDir: '/usr/share/vim',
     };
 }
 

@@ -182,6 +182,7 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         return {
             executable: exeName(os),
             binDir: path.join(destDir, 'bin'),
+            vimDir: path.join(destDir, 'share', 'nvim'),
         };
     } catch (e) {
         const err = ensureError(e);
@@ -311,5 +312,6 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
     return {
         executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
+        vimDir: path.join(installDir, 'share', 'nvim'),
     };
 }

@@ -19,10 +19,6 @@ function homebrewRootDir(arch: Arch): string {
     }
 }
 
-function homebrewBinDir(arch: Arch): string {
-    return homebrewRootDir(arch) + '/bin';
-}
-
 async function removePreinstalledPythonSymlink(bin: string): Promise<boolean> {
     const path = `/usr/local/bin/${bin}`;
 
@@ -83,18 +79,22 @@ async function installVimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Vim on macOS using Homebrew');
     await ensureHomebrewPythonIsLinked(arch);
     await brewInstall('macvim');
+    const root = homebrewRootDir(arch);
     return {
         executable: 'vim',
-        binDir: homebrewBinDir(arch),
+        binDir: root + '/bin',
+        vimDir: root + '/opt/macvim/MacVim.app/Contents/vim',
     };
 }
 
 async function installNeovimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS using Homebrew');
     await brewInstall('neovim');
+    const root = homebrewRootDir(arch);
     return {
         executable: 'nvim',
-        binDir: homebrewBinDir(arch),
+        binDir: root + '/bin',
+        vimDir: root + '/opt/neovim/share/nvim',
     };
 }
 

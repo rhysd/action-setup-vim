@@ -17,6 +17,10 @@ async function main(): Promise<void> {
     const fullPath = join(installed.binDir, installed.executable);
     core.setOutput('executable', fullPath);
     console.log('Installed executable:', fullPath);
+
+    core.setOutput('vim-dir', installed.vimDir);
+    console.log('Installed $VIM directory:', installed.vimDir);
+
     console.log('Installation successfully done:', installed);
 }
 

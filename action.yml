@@ -33,6 +33,10 @@ outputs:
   executable:
     description: >
       Absolute file path to the installed executable.
+  vim-dir:
+    description: >
+      Absolute file path to the $VIM directory of the installation. Please see `:help $VIM` for
+      more details.
 
 runs:
   using: 'node24'

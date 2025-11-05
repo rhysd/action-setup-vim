@@ -9,6 +9,7 @@ export type ExeName = 'vim' | 'nvim' | 'vim.exe' | 'nvim.exe';
 export interface Installed {
     readonly executable: ExeName;
     readonly binDir: string;
+    readonly vimDir: string;
 }
 
 export function install(config: Config): Promise<Installed> {
