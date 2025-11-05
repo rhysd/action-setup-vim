@@ -1,6 +1,8 @@
 import { strict as A } from 'node:assert';
 import process from 'node:process';
-import { getSystemHttpsProxyAgent, ensureError, getOs, getArch } from '../src/system.js';
+import fs from 'node:fs/promises';
+import * as path from 'node:path';
+import { getSystemHttpsProxyAgent, ensureError, getOs, getArch, TmpDir } from '../src/system.js';
 
 describe('getSystemHttpsProxyAgent()', function () {
     let savedEnv: Record<string, string | undefined>;
@@ -61,5 +63,25 @@ describe('getArch()', function () {
     it('returns architecture name', function () {
         const a = getArch();
         A.ok(a === 'x86_64' || a === 'arm64' || a === 'arm32', `${a}`);
+    });
+});
+
+describe('TmpDir', function () {
+    it('creates a temporary directory on create()', async function () {
+        const tmp = await TmpDir.create();
+        try {
+            const stat = await fs.stat(tmp.path);
+            A.ok(stat.isDirectory());
+            const name = path.basename(tmp.path);
+            A.match(name, /^action-setup-vim-\d+$/);
+        } finally {
+            await tmp.cleanup();
+        }
+    });
+
+    it('deletes a temporary directory on cleanup()', async function () {
+        const tmp = await TmpDir.create();
+        await tmp.cleanup();
+        await A.rejects(() => fs.stat(tmp.path));
     });
 });
