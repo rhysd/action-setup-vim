@@ -31,6 +31,8 @@ of inputs are tested on the workflows triggered by `push` and `pull_request` eve
 After building and running `action-setup-vim` action, the workflow verifies the post conditions
 with [post_action_check.ts](./scripts/post_action_check.ts).
 
+To measure the code coverage run `npm run cov`.
+
 ## Linting
 
 In addition to type checking with TypeScript compiler, the following command checks the sources with
