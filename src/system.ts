@@ -10,6 +10,7 @@ export type Os = 'macos' | 'linux' | 'windows';
 export type Arch = 'arm64' | 'x86_64' | 'arm32';
 
 export function ensureError(err: unknown): Error {
+    // TODO: Use `Error.isError` once ES2026 gets stable
     if (err instanceof Error) {
         return err;
     }
