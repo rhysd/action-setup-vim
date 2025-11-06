@@ -19,6 +19,37 @@ async function validateExecutable(path: string): Promise<void> {
             throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`);
         }
     }
+
+    try {
+        const ver = await exec(path, ['--version']);
+        console.log(`Installed version:\n${ver}`);
+    } catch (e) {
+        const err = ensureError(e);
+        throw new Error(`Validation failed! Could not get version from executable '${path}': ${err.message}`);
+    }
+
+    core.debug(`Installed executable '${path}' was validated`);
+}
+
+async function validateVimDir(path: string): Promise<void> {
+    let entries;
+    try {
+        entries = await fs.readdir(path);
+    } catch (e) {
+        throw new Error(`Validation failed! Could not read the installed $VIM directory ${path}: ${ensureError(e)}`);
+    }
+
+    const reVimRuntime = /^vim\d+$/;
+    for (const entry of entries) {
+        if (reVimRuntime.test(entry) || entry === 'runtime' || entry === 'nvim') {
+            core.debug(`$VIM directory '${path}' was validated`);
+            return; // OK
+        }
+    }
+
+    throw new Error(
+        `Validation failed! $VIM directory ${path} contains no $VIMRUNTIME directory: ${JSON.stringify(entries)}`,
+    );
 }
 
 export async function validateInstallation(installed: Installed): Promise<void> {
@@ -33,16 +64,8 @@ export async function validateInstallation(installed: Installed): Promise<void> 
     }
     core.debug(`Installed directory '${installed.binDir}' was validated`);
 
-    const fullPath = join(installed.binDir, installed.executable);
+    await validateExecutable(join(installed.binDir, installed.executable));
+    await validateVimDir(installed.vimDir);
 
-    await validateExecutable(fullPath);
-
-    try {
-        const ver = await exec(fullPath, ['--version']);
-        console.log(`Installed version:\n${ver}`);
-    } catch (e) {
-        const err = ensureError(e);
-        throw new Error(`Validation failed! Could not get version from executable '${fullPath}': ${err.message}`);
-    }
-    core.debug(`Installed executable '${fullPath}' was validated`);
+    core.debug(`Installation was successfully validated: ${JSON.stringify(installed)}`);
 }

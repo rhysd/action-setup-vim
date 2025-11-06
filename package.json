@@ -22,8 +22,9 @@
     "fix": "npm run fix:eslint && npm run fix:prettier",
     "mocha": "mocha ./test",
     "test": "npm run build && npm run mocha",
-    "c8": "c8 --reporter=lcov --reporter=text-summary npm run mocha && (which open && (open ./coverage/lcov-report/index.html || true))",
-    "cov": "npm run build && npm run c8",
+    "c8": "c8 --reporter=lcov --reporter=text-summary npm run mocha",
+    "open-cov": "open-cli ./coverage/lcov-report/index.html",
+    "cov": "npm run build && npm run c8 && npm run open-cov",
     "clean": "git clean -fX",
     "prepare": "husky"
   },
@@ -67,6 +68,7 @@
     "esmock": "^2.7.3",
     "husky": "^9.1.7",
     "mocha": "^11.7.4",
+    "open-cli": "^8.0.0",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2"

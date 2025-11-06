@@ -101,13 +101,16 @@ For comprehensive lists of inputs and outputs, please refer [action.yml](./actio
 
 ## Outputs
 
-This action sets installed executable path to the action's `executable` output. You can use it for
-running Vim command in the steps later.
+This action sets the following outputs which can be used by later steps.
+
+### `executable`
+
+Installed executable path. You can use it for running Vim command in the following steps.
 
 Here is an example to set Vim executable to run unit tests with [themis.vim][vim-themis].
 
 ```yaml
-- uses: actions/checkout@v2
+- uses: actions/checkout@v5
   with:
     repository: thinca/vim-themis
     path: vim-themis
@@ -118,6 +121,23 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
     THEMIS_VIM: ${{ steps.vim.outputs.executable }}
   run: |
     ./vim-themis/bin/themis ./test
+```
+
+### `vim-dir`
+
+`$VIM` directory path. For more details about the directory, please see `:help $VIM` in your Vim or
+Neovim.
+
+This output is useful when you want to refer the `$VIM` directory in the following steps.
+
+Here is an example to put the configuration specific to Vim installed by this action.
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  id: vim
+- name: Setup vimrc specific to the Vim on Windows
+  run: |
+    cp _vimrc '${{ vim.vim-dir }}/_vimrc'
 ```
 
 ## Supported platforms
@@ -156,7 +176,8 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
 
 For stable releases on all platforms and nightly on Windows, `gvim` executable is also available.
 
-When installing without system's package manager, Vim is installed at `$HOME/vim`.
+When installing without system's package manager, Vim is installed at `$HOME/vim-{version}` (e.g.
+`~/vim-stable`).
 
 **Note:** When you build Vim older than 8.2.1119 on macOS, Xcode 11 or earlier is necessary due to
 lack of [this patch][vim_8_2_1119]. Please try `macos-11` runner instead of the latest macOS runner
@@ -183,7 +204,8 @@ error), it falls back to x86_64 binary. It will be executed via x86 emulation on
 
 Only on Windows, `nvim-qt.exe` executable is available for GUI.
 
-When installing without system's package manager, Neovim is installed at `$HOME/nvim`.
+When installing without system's package manager, Neovim is installed at `$HOME/nvim-{version}`
+(e.g. `~/nvim-stable`).
 
 **Note:** Ubuntu 18.04 supports official [`neovim` package][ubuntu-nvim] but this action does not
 install it. As of now, GitHub Actions also supports Ubuntu 16.04.

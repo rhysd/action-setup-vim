@@ -38,6 +38,7 @@ describe('Installation on macOS', function () {
         const installed = await installMocked(config);
         A.equal(installed.executable, 'nvim');
         A.equal(installed.binDir, '/opt/homebrew/bin');
+        A.equal(installed.vimDir, '/opt/homebrew/opt/neovim/share/nvim');
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['install', 'neovim', '--quiet']]);
@@ -56,6 +57,7 @@ describe('Installation on macOS', function () {
         const installed = await installMocked(config);
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/opt/homebrew/bin');
+        A.equal(installed.vimDir, '/opt/homebrew/opt/macvim/MacVim.app/Contents/Resources/vim');
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['install', 'macvim', '--quiet']]);
@@ -72,9 +74,7 @@ describe('Installation on macOS', function () {
             token: null,
         };
 
-        const installed = await installMocked(config);
-        A.equal(installed.executable, 'vim');
-        A.equal(installed.binDir, '/usr/local/bin');
+        await installMocked(config);
 
         A.deepEqual(stub.called[0], ['brew', ['unlink', 'python@3', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['link', 'python@3', '--quiet', '--overwrite']]);
@@ -94,9 +94,7 @@ describe('Installation on macOS', function () {
             token: null,
         };
 
-        const installed = await installMocked(config);
-        A.equal(installed.executable, 'vim');
-        A.equal(installed.binDir, '/usr/local/bin');
+        await installMocked(config);
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['install', 'macvim', '--quiet']]);

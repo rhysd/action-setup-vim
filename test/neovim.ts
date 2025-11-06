@@ -19,7 +19,7 @@ describe('Neovim installation', function () {
         it('respects https_proxy environment variable', async function () {
             const saved = process.env;
             try {
-                process.env = { https_proxy: 'https://localhost:5678' };
+                process.env = { ...saved, https_proxy: 'https://localhost:5678' };
                 // This promise is rejected because localhost:5678 doesn't serve a https proxy
                 await A.rejects(() => downloadNeovim('stable', 'linux', 'x86_64'), /Could not download Neovim release/);
             } finally {
