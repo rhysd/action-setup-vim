@@ -25,7 +25,7 @@ jobs:
           neovim: ${{ matrix.neovim }}
         id: vim
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "${{ matrix.neovim }}" "${{ matrix.version }}" "${{ steps.vim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js '${{ matrix.neovim }}' '${{ matrix.version }}' '${{ toJSON(steps.vim.outputs) }}'
 
   # Note: separate from stable-and-nightly since jobs.{id}.name.strategy.matrix.exclude seems not working
   # Note: This is the last version which should not run `vim.exe -silent -register` on Windows (#37)
@@ -50,7 +50,7 @@ jobs:
             --with-features=huge --enable-fail-if-missing --disable-nls
         id: vim
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "false" "v9.1.0626" "${{ steps.vim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js 'false' 'v9.1.0626' '${{ toJSON(steps.vim.outputs) }}'
 
   nvim-v0_4_4:
     name: Neovim v0.4.4
@@ -72,7 +72,7 @@ jobs:
           version: v0.4.4
         id: neovim
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "true" "v0.4.4" "${{ steps.neovim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js 'true' 'v0.4.4' '${{ toJSON(steps.neovim.outputs) }}'
 
   nvim-v0_10_3:
     name: Neovim v0.10.3
@@ -91,7 +91,7 @@ jobs:
           version: v0.10.3
         id: neovim
       - name: Validate action result
-        run: node ./scripts/post_action_check.js "true" "v0.10.3" "${{ steps.neovim.outputs.executable }}"
+        run: node ./scripts/post_action_check.js 'true' 'v0.10.3' '${{ toJSON(steps.neovim.outputs) }}'
 
   unit-test:
     name: Check unit tests
