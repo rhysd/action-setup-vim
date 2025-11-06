@@ -29,6 +29,7 @@ describe('Installation on Linux', function () {
         const installed = await installMocked(config);
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/usr/bin');
+        A.equal(installed.vimDir, '/usr/share/vim');
 
         A.deepEqual(stub.called[0], ['sudo', ['apt-get', 'update', '-y', '-q']]);
         A.deepEqual(stub.called[1], [

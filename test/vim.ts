@@ -102,7 +102,8 @@ describe('buildVim()', function () {
     it('builds nightly Vim from source', async function () {
         const installed = await buildVimMocked('nightly', 'linux', null);
         A.equal(installed.executable, 'vim');
-        A.ok(installed.binDir.endsWith('bin'), installed.binDir);
+        A.ok(installed.binDir.endsWith(path.join('vim-nightly', 'bin')), installed.binDir);
+        A.ok(installed.vimDir.endsWith(path.join('vim-nightly', 'share', 'vim')), installed.vimDir);
         A.ok(stub.called.length > 0);
 
         const [cmd, args] = stub.called[0];
@@ -121,7 +122,8 @@ describe('buildVim()', function () {
         const version = 'v8.2.2424';
         const installed = await buildVimMocked(version, 'linux', null);
         A.equal(installed.executable, 'vim');
-        A.ok(installed.binDir.endsWith('bin'), installed.binDir);
+        A.ok(installed.binDir.endsWith(path.join(`vim-${version}`, 'bin')), installed.binDir);
+        A.ok(installed.vimDir.endsWith(path.join(`vim-${version}`, 'share', 'vim')), installed.vimDir);
         A.ok(stub.called.length > 0);
 
         const [cmd, args] = stub.called[0];
