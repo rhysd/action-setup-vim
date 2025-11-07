@@ -41,7 +41,7 @@ async function validateVimDir(path: string): Promise<void> {
 
     const reVimRuntime = /^vim\d+$/;
     for (const entry of entries) {
-        if (reVimRuntime.test(entry) || entry === 'runtime' || entry === 'nvim') {
+        if (reVimRuntime.test(entry) || entry === 'runtime') {
             core.debug(`$VIM directory '${path}' was validated`);
             return; // OK
         }
