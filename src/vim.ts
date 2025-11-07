@@ -123,11 +123,12 @@ export async function buildVim(version: string, os: Os, configureArgs: string | 
     }
 
     const vimDir = path.join(installDir, 'share', 'vim');
+    const runtimeDir = await getRuntimeDirInVimDir(vimDir);
     return {
         executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
         vimDir,
-        runtimeDir: path.join(vimDir, 'runtime'),
+        runtimeDir,
     };
 }
 

@@ -52,6 +52,25 @@ async function validateVimDir(path: string): Promise<void> {
     );
 }
 
+async function validateRuntimeDir(path: string): Promise<void> {
+    let entries;
+    try {
+        entries = await fs.readdir(path);
+    } catch (e) {
+        throw new Error(
+            `Validation failed! Could not read the installed $VIMRUNTIME directory ${path}: ${ensureError(e)}`,
+        );
+    }
+
+    for (const dir of ['autoload', 'syntax', 'plugin', 'indent', 'ftplugin', 'doc']) {
+        if (!entries.includes(dir)) {
+            throw new Error(
+                `Validation failed! $VIMRUNTIME directory is broken: '${dir}' directory does not exist in ${path}`,
+            );
+        }
+    }
+}
+
 export async function validateInstallation(installed: Installed): Promise<void> {
     try {
         const s = await fs.stat(installed.binDir);
@@ -66,6 +85,7 @@ export async function validateInstallation(installed: Installed): Promise<void> 
 
     await validateExecutable(join(installed.binDir, installed.executable));
     await validateVimDir(installed.vimDir);
+    await validateRuntimeDir(installed.runtimeDir);
 
     core.debug(`Installation was successfully validated: ${JSON.stringify(installed)}`);
 }

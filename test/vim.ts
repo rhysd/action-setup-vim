@@ -86,7 +86,14 @@ describe('buildVim()', function () {
     const savedXcode11Env = process.env['XCODE_11_DEVELOPER_DIR'];
 
     before(async function () {
-        const { buildVim } = await stub.importWithMock('../src/vim.js');
+        const { buildVim } = await stub.importWithMock('../src/vim.js', {
+            fs: {
+                promises: {
+                    access: () => Promise.resolve(),
+                    readdir: () => Promise.resolve(['runtime']),
+                },
+            },
+        });
         buildVimMocked = buildVim;
         process.env['XCODE_11_DEVELOPER_DIR'] = './';
     });
