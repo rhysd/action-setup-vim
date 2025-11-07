@@ -24,6 +24,7 @@ export default defineConfig(
             '@typescript-eslint/explicit-member-accessibility': 'off',
             'n/no-missing-import': 'off',
             eqeqeq: 'error',
+            'no-console': 'error',
             '@typescript-eslint/explicit-function-return-type': 'error',
             '@typescript-eslint/no-floating-promises': 'error',
             '@typescript-eslint/no-unnecessary-type-arguments': 'error',
@@ -80,6 +81,7 @@ export default defineConfig(
         files: ['scripts/*.ts'],
         rules: {
             'n/no-sync': 'off',
+            'no-console': 'off',
         },
     },
     {

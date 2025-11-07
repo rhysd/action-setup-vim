@@ -6,7 +6,7 @@ import { validateInstallation } from './validate.js';
 
 async function main(): Promise<void> {
     const config = loadConfigFromInputs();
-    console.log('Extracted configuration:', config);
+    core.info(`Extracted configuration: ${JSON.stringify(config, null, 2)}`);
 
     const installed = await install(config);
     await validateInstallation(installed);
@@ -16,12 +16,12 @@ async function main(): Promise<void> {
 
     const fullPath = join(installed.binDir, installed.executable);
     core.setOutput('executable', fullPath);
-    console.log('Installed executable:', fullPath);
+    core.info(`Installed executable: ${fullPath}`);
 
     core.setOutput('vim-dir', installed.vimDir);
-    console.log('Installed $VIM directory:', installed.vimDir);
+    core.info(`Installed $VIM directory: ${installed.vimDir}`);
 
-    console.log('Installation successfully done:', installed);
+    core.info(`Installation successfully done: ${JSON.stringify(installed, null, 2)}`);
 }
 
 main().catch((e: Error) => {

@@ -158,7 +158,7 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
     const file = assetFileName(version, os, arch);
     const destDir = path.join(homedir(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
-    console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
+    core.info(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
 
     const tmpDir = await TmpDir.create();
     const asset = path.join(tmpDir.path, file);

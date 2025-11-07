@@ -22,7 +22,7 @@ async function validateExecutable(path: string): Promise<void> {
 
     try {
         const ver = await exec(path, ['--version']);
-        console.log(`Installed version:\n${ver}`);
+        core.info(`Installed version:\n${ver}`);
     } catch (e) {
         const err = ensureError(e);
         throw new Error(`Validation failed! Could not get version from executable '${path}': ${err.message}`);
