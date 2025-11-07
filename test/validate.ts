@@ -7,10 +7,11 @@ import { TESTDATA_PATH } from './helper.js';
 
 const TEST_DIR = path.join(TESTDATA_PATH, 'validate');
 const TEST_VIM_DIR = path.join(TEST_DIR, 'vim_dir_vimver');
+const TEST_RUNTIME_DIR = path.join(TEST_VIM_DIR, 'vim91');
 
 function getFakedInstallation(): Installed {
     const executable = (process.platform === 'win32' ? 'dummy.exe' : 'dummy.bash') as ExeName;
-    return { executable, binDir: TEST_DIR, vimDir: TEST_VIM_DIR };
+    return { executable, binDir: TEST_DIR, vimDir: TEST_VIM_DIR, runtimeDir: TEST_RUNTIME_DIR };
 }
 
 describe('validateInstallation()', function () {

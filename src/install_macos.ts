@@ -80,10 +80,12 @@ async function installVimStable(arch: Arch): Promise<Installed> {
     await ensureHomebrewPythonIsLinked(arch);
     await brewInstall('macvim');
     const prefix = homebrewPrefixDir(arch);
+    const vimDir = prefix + '/opt/macvim/MacVim.app/Contents/Resources/vim';
     return {
         executable: 'vim',
         binDir: prefix + '/bin',
-        vimDir: prefix + '/opt/macvim/MacVim.app/Contents/Resources/vim',
+        vimDir,
+        runtimeDir: vimDir + '/runtime',
     };
 }
 
@@ -91,10 +93,12 @@ async function installNeovimStable(arch: Arch): Promise<Installed> {
     core.debug('Installing stable Neovim on macOS using Homebrew');
     await brewInstall('neovim');
     const prefix = homebrewPrefixDir(arch);
+    const vimDir = prefix + '/opt/neovim/share/nvim';
     return {
         executable: 'nvim',
         binDir: prefix + '/bin',
-        vimDir: prefix + '/opt/neovim/share/nvim',
+        vimDir,
+        runtimeDir: vimDir + '/runtime',
     };
 }
 

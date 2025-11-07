@@ -30,6 +30,7 @@ describe('Installation on Linux', function () {
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/usr/bin');
         A.equal(installed.vimDir, '/usr/share/vim');
+        A.equal(installed.runtimeDir, '/usr/share/vim/runtime');
 
         A.deepEqual(stub.called[0], ['sudo', ['apt-get', 'update', '-y', '-q']]);
         A.deepEqual(stub.called[1], [

@@ -39,6 +39,7 @@ describe('Installation on macOS', function () {
         A.equal(installed.executable, 'nvim');
         A.equal(installed.binDir, '/opt/homebrew/bin');
         A.equal(installed.vimDir, '/opt/homebrew/opt/neovim/share/nvim');
+        A.equal(installed.runtimeDir, '/opt/homebrew/opt/neovim/share/nvim/runtime');
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['install', 'neovim', '--quiet']]);
@@ -58,6 +59,7 @@ describe('Installation on macOS', function () {
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/opt/homebrew/bin');
         A.equal(installed.vimDir, '/opt/homebrew/opt/macvim/MacVim.app/Contents/Resources/vim');
+        A.equal(installed.runtimeDir, '/opt/homebrew/opt/macvim/MacVim.app/Contents/Resources/vim/runtime');
 
         A.deepEqual(stub.called[0], ['brew', ['update', '--quiet']]);
         A.deepEqual(stub.called[1], ['brew', ['install', 'macvim', '--quiet']]);
