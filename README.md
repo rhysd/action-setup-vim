@@ -140,6 +140,24 @@ Here is an example to put the configuration specific to Vim installed by this ac
     cp _vimrc '${{ vim.vim-dir }}/_vimrc'
 ```
 
+### `runtime-dir`
+
+`$VIMRUNTIME` directory path. For more details about the directory, please see `:help $VIMRUNTIME`
+in your Vim or Neovim.
+
+This output is useful when you want to refer the runtime directory where the builtin plugins are
+put.
+
+Here is an example to delete the default configuration not to affect unit tests execution.
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  id: vim
+- name: Remove the default configuration
+  run: |
+    rm '${{ vim.runtime-dir }}/defaults.vim'
+```
+
 ## Supported platforms
 
 |                           | Vim                         | Neovim                                |
