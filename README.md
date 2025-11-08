@@ -103,9 +103,10 @@ For comprehensive lists of inputs and outputs, please refer [action.yml](./actio
 
 This action sets the following outputs which can be used by later steps.
 
-### `executable`
+### `executable` output
 
-Installed executable path. You can use it for running Vim command in the following steps.
+Absolute path to the installed executable. You can use it for running Vim command in the following
+steps.
 
 Here is an example to set Vim executable to run unit tests with [themis.vim][vim-themis].
 
@@ -123,21 +124,31 @@ Here is an example to set Vim executable to run unit tests with [themis.vim][vim
     ./vim-themis/bin/themis ./test
 ```
 
-### `vim-dir`
+### `vim-dir` output
 
-`$VIM` directory path. For more details about the directory, please see `:help $VIM` in your Vim or
-Neovim.
+Absolute path to the installed `$VIM` directory. For more details about the directory, please see
+`:help $VIM` in your Vim or Neovim.
 
 This output is useful when you want to refer the `$VIM` directory in the following steps.
 
-Here is an example to put the configuration specific to Vim installed by this action.
+Here is an example to put a configuration specific to Vim installed by this action.
 
 ```yaml
 - uses: rhysd/action-setup-vim@v1
   id: vim
-- name: Setup vimrc specific to the Vim on Windows
+- name: Setup vimrc specific to the Vim
   run: |
-    cp _vimrc '${{ vim.vim-dir }}/_vimrc'
+    cp vimrc_for_ci.vim '${{ vim.vim-dir }}/vimrc'
+```
+
+And here is another example to remove the default configurations which can affect test execution.
+
+```yaml
+- uses: rhysd/action-setup-vim@v1
+  id: vim
+- name: Remove the default configurations
+  run: |
+    rm -f ${{ vim.vim-dir }}/{vim*,runtime}/defaults.vim
 ```
 
 ## Supported platforms
