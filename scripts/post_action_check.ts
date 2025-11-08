@@ -14,7 +14,6 @@ interface Args {
     version: string;
     executable: string;
     vimdir: string;
-    runtimeDir: string;
 }
 
 function parseArgs(args: string[]): Args {
@@ -24,16 +23,8 @@ function parseArgs(args: string[]): Args {
     const neovim = args[2].toLowerCase() === 'true';
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const outputs = JSON.parse(args[4]);
-    return {
-        neovim,
-        version: args[3],
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        executable: outputs.executable as string,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        vimdir: outputs['vim-dir'] as string,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        runtimeDir: outputs['runtime-dir'] as string,
-    };
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+    return { neovim, version: args[3], executable: outputs.executable, vimdir: outputs['vim-dir'] };
 }
 
 // e.g. ~/vim-stable/vim91
@@ -179,24 +170,12 @@ function main(): void {
         if (vimdir !== args.vimdir) {
             log('vim-dir path is resolved to', vimdir);
         }
-        let expectedVimDir = getVimVariable('$VIM', exe, args.neovim);
+        let expected = getVimVariable('$VIM', exe, args.neovim);
         if (process.platform === 'win32') {
             // Neovim mixes '\' and '/' in $VIM value (\path\to\nvim-nightly\share/nvim)
-            expectedVimDir = path.win32.normalize(expectedVimDir);
+            expected = path.win32.normalize(expected);
         }
-        assert.equal(expectedVimDir, vimdir);
-
-        log('Validating $VIMRUNTIME directory', args.runtimeDir);
-        const runtimeDir = realpathSync(args.runtimeDir);
-        if (runtimeDir !== args.runtimeDir) {
-            log('vim-dir path is resolved to', runtimeDir);
-        }
-        let expectedRuntimeDir = getVimVariable('$VIMRUNTIME', exe, args.neovim);
-        if (process.platform === 'win32') {
-            // Neovim mixes '\' and '/' in $VIM value (\path\to\nvim-nightly\share/nvim)
-            expectedRuntimeDir = path.win32.normalize(expectedRuntimeDir);
-        }
-        assert.equal(expectedRuntimeDir, runtimeDir);
+        assert.equal(expected, vimdir);
     }
 
     log('OK');

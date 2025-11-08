@@ -10,7 +10,6 @@ export interface Installed {
     readonly executable: ExeName;
     readonly binDir: string;
     readonly vimDir: string;
-    readonly runtimeDir: string;
 }
 
 export function install(config: Config): Promise<Installed> {

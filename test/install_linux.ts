@@ -1,5 +1,4 @@
 import { strict as A } from 'node:assert';
-import * as path from 'node:path';
 import { type install } from '../src/install_linux.js';
 import { type Config } from '../src/config.js';
 import { ExecStub } from './helper.js';
@@ -9,13 +8,7 @@ describe('Installation on Linux', function () {
     let installMocked: typeof install;
 
     before(async function () {
-        const { install } = await stub.importWithMock('../src/install_linux.js', {
-            fs: {
-                promises: {
-                    readdir: () => Promise.resolve(['runtime']),
-                },
-            },
-        });
+        const { install } = await stub.importWithMock('../src/install_linux.js');
         installMocked = install;
     });
 
@@ -37,7 +30,6 @@ describe('Installation on Linux', function () {
         A.equal(installed.executable, 'vim');
         A.equal(installed.binDir, '/usr/bin');
         A.equal(installed.vimDir, '/usr/share/vim');
-        A.equal(installed.runtimeDir, path.normalize('/usr/share/vim/runtime'));
 
         A.deepEqual(stub.called[0], ['sudo', ['apt-get', 'update', '-y', '-q']]);
         A.deepEqual(stub.called[1], [

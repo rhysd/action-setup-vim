@@ -41,7 +41,7 @@ async function validateVimDir(path: string): Promise<void> {
 
     const reVimRuntime = /^vim\d+$/;
     for (const entry of entries) {
-        if (reVimRuntime.test(entry) || entry === 'runtime') {
+        if (reVimRuntime.test(entry) || entry === 'runtime' || entry === 'nvim') {
             core.debug(`$VIM directory '${path}' was validated`);
             return; // OK
         }
@@ -50,25 +50,6 @@ async function validateVimDir(path: string): Promise<void> {
     throw new Error(
         `Validation failed! $VIM directory ${path} contains no $VIMRUNTIME directory: ${JSON.stringify(entries)}`,
     );
-}
-
-async function validateRuntimeDir(path: string): Promise<void> {
-    let entries;
-    try {
-        entries = await fs.readdir(path);
-    } catch (e) {
-        throw new Error(
-            `Validation failed! Could not read the installed $VIMRUNTIME directory ${path}: ${ensureError(e)}`,
-        );
-    }
-
-    for (const dir of ['autoload', 'syntax', 'plugin', 'indent', 'ftplugin', 'doc']) {
-        if (!entries.includes(dir)) {
-            throw new Error(
-                `Validation failed! $VIMRUNTIME directory is broken: '${dir}' directory does not exist in ${path}`,
-            );
-        }
-    }
 }
 
 export async function validateInstallation(installed: Installed): Promise<void> {
@@ -85,7 +66,6 @@ export async function validateInstallation(installed: Installed): Promise<void> 
 
     await validateExecutable(join(installed.binDir, installed.executable));
     await validateVimDir(installed.vimDir);
-    await validateRuntimeDir(installed.runtimeDir);
 
     core.debug(`Installation was successfully validated: ${JSON.stringify(installed)}`);
 }

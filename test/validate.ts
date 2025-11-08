@@ -7,11 +7,10 @@ import { TESTDATA_PATH } from './helper.js';
 
 const TEST_DIR = path.join(TESTDATA_PATH, 'validate');
 const TEST_VIM_DIR = path.join(TEST_DIR, 'vim_dir_vimver');
-const TEST_RUNTIME_DIR = path.join(TEST_VIM_DIR, 'vim91');
 
 function getFakedInstallation(): Installed {
     const executable = (process.platform === 'win32' ? 'dummy.exe' : 'dummy.bash') as ExeName;
-    return { executable, binDir: TEST_DIR, vimDir: TEST_VIM_DIR, runtimeDir: TEST_RUNTIME_DIR };
+    return { executable, binDir: TEST_DIR, vimDir: TEST_VIM_DIR };
 }
 
 describe('validateInstallation()', function () {
@@ -56,15 +55,9 @@ describe('validateInstallation()', function () {
         await A.rejects(() => validateInstallation(installed), /Could not get version from executable/);
     });
 
-    it('does nothing when correct $VIM and $VIMRUNTIME directories are found', async function () {
-        for (const [vim, runtime] of [
-            ['vim_dir_vimver', 'vim91'],
-            ['vim_dir_runtime', 'runtime'],
-            ['vim_dir_nvim', 'runtime'],
-        ]) {
-            const vimDir = path.join(TEST_DIR, vim);
-            const runtimeDir = path.join(vimDir, runtime);
-            const installed = { ...getFakedInstallation(), vimDir, runtimeDir };
+    it('does nothing when correct $VIM directory is found', async function () {
+        for (const dir of ['vim_dir_vimver', 'vim_dir_runtime', 'vim_dir_nvim']) {
+            const installed = { ...getFakedInstallation(), vimDir: path.join(TEST_DIR, dir) };
             await validateInstallation(installed);
         }
     });
@@ -80,19 +73,5 @@ describe('validateInstallation()', function () {
     it('throws an error when $VIM directory does not contain $VIMRUNTIME directory', async function () {
         const installed = { ...getFakedInstallation(), vimDir: path.join(TEST_DIR, 'vim_dir_empty') };
         await A.rejects(() => validateInstallation(installed), /contains no \$VIMRUNTIME directory/);
-    });
-
-    it('throws an error when $VIMRUNTIME directory does not exist', async function () {
-        const installed = { ...getFakedInstallation(), runtimeDir: path.join(TEST_DIR, 'this-dir-doesnt-exist') };
-        await A.rejects(
-            () => validateInstallation(installed),
-            /Validation failed! Could not read the installed \$VIMRUNTIME directory /,
-        );
-    });
-
-    it('throws an error when $VIMRUNTIME directory does not contain plugin directories', async function () {
-        const vimDir = path.join(TEST_DIR, 'vim_dir_empty_runtime');
-        const installed = { ...getFakedInstallation(), vimDir, runtimeDir: path.join(vimDir, 'runtime') };
-        await A.rejects(() => validateInstallation(installed), /'autoload' directory does not exist/);
     });
 });

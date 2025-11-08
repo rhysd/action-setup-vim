@@ -86,14 +86,7 @@ describe('buildVim()', function () {
     const savedXcode11Env = process.env['XCODE_11_DEVELOPER_DIR'];
 
     before(async function () {
-        const { buildVim } = await stub.importWithMock('../src/vim.js', {
-            fs: {
-                promises: {
-                    access: () => Promise.resolve(),
-                    readdir: () => Promise.resolve(['runtime']),
-                },
-            },
-        });
+        const { buildVim } = await stub.importWithMock('../src/vim.js');
         buildVimMocked = buildVim;
         process.env['XCODE_11_DEVELOPER_DIR'] = './';
     });
@@ -111,7 +104,6 @@ describe('buildVim()', function () {
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith(path.join('vim-nightly', 'bin')), installed.binDir);
         A.ok(installed.vimDir.endsWith(path.join('vim-nightly', 'share', 'vim')), installed.vimDir);
-        A.ok(installed.runtimeDir.endsWith(path.join('vim-nightly', 'share', 'vim', 'runtime')), installed.runtimeDir);
         A.ok(stub.called.length > 0);
 
         const [cmd, args] = stub.called[0];
@@ -132,10 +124,6 @@ describe('buildVim()', function () {
         A.equal(installed.executable, 'vim');
         A.ok(installed.binDir.endsWith(path.join(`vim-${version}`, 'bin')), installed.binDir);
         A.ok(installed.vimDir.endsWith(path.join(`vim-${version}`, 'share', 'vim')), installed.vimDir);
-        A.ok(
-            installed.runtimeDir.endsWith(path.join(`vim-${version}`, 'share', 'vim', 'runtime')),
-            installed.runtimeDir,
-        );
         A.ok(stub.called.length > 0);
 
         const [cmd, args] = stub.called[0];
