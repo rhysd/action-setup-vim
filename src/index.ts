@@ -9,7 +9,7 @@ async function main(): Promise<void> {
     core.info(`Extracted configuration: ${JSON.stringify(config, null, 2)}`);
 
     const installed = await install(config);
-    await validateInstallation(installed);
+    await validateInstallation(installed, config.os);
 
     core.addPath(installed.binDir);
     core.debug(`'${installed.binDir}' was added to $PATH`);

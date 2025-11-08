@@ -1,23 +1,32 @@
 import { promises as fs, constants as fsconsts } from 'node:fs';
 import { join } from 'node:path';
-import process from 'node:process';
 import * as core from '@actions/core';
 import type { Installed } from './install.js';
 import { exec } from './shell.js';
-import { ensureError } from './system.js';
+import { ensureError, type Os } from './system.js';
 
-async function validateExecutable(path: string): Promise<void> {
-    if (process.platform === 'win32') {
-        if (!path.endsWith('.exe') && !path.endsWith('.EXE')) {
-            throw new Error(`Validation failed! Installed binary is not an executable file: ${path}`);
+async function validateExecutable(binDir: string, executable: string, os: Os): Promise<void> {
+    try {
+        const s = await fs.stat(binDir);
+        if (!s.isDirectory()) {
+            throw new Error(`Validation failed! '${binDir}' is not a directory for executable`);
         }
-    } else {
-        try {
-            await fs.access(path, fsconsts.X_OK);
-        } catch (e) {
-            const err = ensureError(e);
-            throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`);
-        }
+    } catch (e) {
+        const err = ensureError(e);
+        throw new Error(`Validation failed! Could not stat installed directory '${binDir}': ${err.message}`);
+    }
+    core.debug(`Installed directory '${binDir}' was validated`);
+
+    const path = join(binDir, executable);
+    try {
+        await fs.access(path, fsconsts.X_OK);
+    } catch (e) {
+        const err = ensureError(e);
+        throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`);
+    }
+    // `X_OK` check does not work on Windows. Additional check is necessary.
+    if (os === 'windows' && !executable.endsWith('.exe') && !executable.endsWith('.EXE')) {
+        throw new Error(`Validation failed! Installed binary is not an executable file: ${executable}`);
     }
 
     try {
@@ -52,20 +61,9 @@ async function validateVimDir(path: string): Promise<void> {
     );
 }
 
-export async function validateInstallation(installed: Installed): Promise<void> {
-    try {
-        const s = await fs.stat(installed.binDir);
-        if (!s.isDirectory()) {
-            throw new Error(`Validation failed! '${installed.binDir}' is not a directory for executable`);
-        }
-    } catch (e) {
-        const err = ensureError(e);
-        throw new Error(`Validation failed! Could not stat installed directory '${installed.binDir}': ${err.message}`);
-    }
-    core.debug(`Installed directory '${installed.binDir}' was validated`);
-
-    await validateExecutable(join(installed.binDir, installed.executable));
+export async function validateInstallation(installed: Installed, os: Os): Promise<void> {
+    core.debug(`Validating installation for ${os}: ${JSON.stringify(installed)}`);
+    await validateExecutable(installed.binDir, installed.executable, os);
     await validateVimDir(installed.vimDir);
-
-    core.debug(`Installation was successfully validated: ${JSON.stringify(installed)}`);
+    core.debug('Installation was successfully validated');
 }
