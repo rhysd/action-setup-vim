@@ -83,7 +83,7 @@ async function installVimStable(arch: Arch): Promise<Installed> {
     return {
         executable: 'vim',
         binDir: prefix + '/bin',
-        vimDir: prefix + '/opt/macvim/MacVim.app/Contents/Resources/vim',
+        vimDir: await fs.realpath(prefix + '/opt/macvim/MacVim.app/Contents/Resources/vim'),
     };
 }
 
@@ -94,7 +94,7 @@ async function installNeovimStable(arch: Arch): Promise<Installed> {
     return {
         executable: 'nvim',
         binDir: prefix + '/bin',
-        vimDir: prefix + '/opt/neovim/share/nvim',
+        vimDir: await fs.realpath(prefix + '/opt/neovim/share/nvim'),
     };
 }
 

@@ -11,7 +11,12 @@ describe('Installation on macOS', function () {
     before(async function () {
         const { install } = await stub.importWithMock('../src/install_macos.js', {
             'fs/promises': {
-                realpath: (): Promise<string> => Promise.resolve(dummyRealPath),
+                realpath(path: string): Promise<string> {
+                    // When using realpath() for $VIM directory, just pass through the path. Otherwise
+                    // it is used for resolving Python symlinks so return the dummy path.
+                    const ret = path.endsWith('/vim') || path.endsWith('/nvim') ? path : dummyRealPath;
+                    return Promise.resolve(ret);
+                },
             },
             '@actions/io': {
                 rmRF: (): Promise<void> => Promise.resolve(),

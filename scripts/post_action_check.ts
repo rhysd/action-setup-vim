@@ -2,7 +2,7 @@ import { homedir } from 'node:os';
 import * as path from 'node:path';
 import { strict as assert } from 'node:assert';
 import { spawnSync } from 'node:child_process';
-import { existsSync, readdirSync, readFileSync, realpathSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import process from 'node:process';
 
 function log(...args: unknown[]): void {
@@ -96,15 +96,15 @@ function expectedExecutable(neovim: boolean, ver: string): string {
 }
 
 function getVimVariable(variable: string, exe: string, neovim: boolean): string {
-    const args = ['-c', 'redir! > tmp_command_output.txt', '-c', `echon ${variable}`, '-c', 'redir END', '-c', 'qa!'];
+    const args = [`+put=${variable}|print|q!`];
     if (neovim) {
         args.unshift('--headless', '--clean');
     } else {
         args.unshift('--not-a-term', '-u', 'NONE', '-i', 'NONE', '-N', '-n', '-e', '-s', '--noplugin');
     }
-    const proc = spawnSync(exe, args, { timeout: 5000 });
-    assert.equal(proc.error, undefined, `stderr=${proc.stderr.toString()}`);
-    return readFileSync('tmp_command_output.txt', 'utf-8').trim();
+    const proc = spawnSync(exe, args, { timeout: 5000, encoding: 'utf-8' });
+    assert.equal(proc.error, undefined, `stderr=${proc.stderr}`);
+    return proc.stdout.trim();
 }
 
 function main(): void {
@@ -126,18 +126,16 @@ function main(): void {
     assert.ok(paths.includes(bin), `'${bin}' is not included in '${process.env['PATH']}'`);
 
     log('Validating executable');
-    const proc = spawnSync(exe, ['-N', '-c', 'quit'], { timeout: 5000 });
-    let stderr = proc.stderr.toString();
+    const proc = spawnSync(exe, ['-N', '-c', 'quit'], { timeout: 5000, encoding: 'utf-8' });
     assert.equal(proc.error, undefined);
-    assert.equal(proc.status, 0, `stderr: ${stderr}`);
-    assert.equal(proc.signal, null, `stderr: ${stderr}`);
+    assert.equal(proc.status, 0, `stderr: ${proc.stderr}`);
+    assert.equal(proc.signal, null, `stderr: ${proc.stderr}`);
 
     log('Validating version');
-    const ver = spawnSync(exe, ['--version'], { timeout: 5000 });
-    stderr = ver.stderr.toString();
+    const ver = spawnSync(exe, ['--version'], { timeout: 5000, encoding: 'utf-8' });
     assert.equal(ver.error, undefined);
-    assert.equal(ver.status, 0, `stderr: ${stderr}`);
-    assert.equal(ver.signal, null, `stderr: ${stderr}`);
+    assert.equal(ver.status, 0, `stderr: ${ver.stderr}`);
+    assert.equal(ver.signal, null, `stderr: ${ver.stderr}`);
     const stdout = ver.stdout.toString();
     if (args.version !== 'stable' && args.version !== 'nightly') {
         if (args.neovim) {
@@ -166,16 +164,12 @@ function main(): void {
     // TODO: Remove this `if` condition after the next release.
     if (process.env['GITHUB_WORKFLOW'] !== 'Post-release check') {
         log('Validating $VIM directory', args.vimdir);
-        const vimdir = realpathSync(args.vimdir);
-        if (vimdir !== args.vimdir) {
-            log('vim-dir path is resolved to', vimdir);
-        }
         let expected = getVimVariable('$VIM', exe, args.neovim);
         if (process.platform === 'win32') {
             // Neovim mixes '\' and '/' in $VIM value (\path\to\nvim-nightly\share/nvim)
             expected = path.win32.normalize(expected);
         }
-        assert.equal(expected, vimdir);
+        assert.equal(expected, args.vimdir);
     }
 
     log('OK');
