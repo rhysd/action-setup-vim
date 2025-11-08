@@ -35,8 +35,12 @@ outputs:
       Absolute file path to the installed executable.
   vim-dir:
     description: >
-      Absolute file path to the $VIM directory of the installation. Please see `:help $VIM` for
-      more details.
+      Absolute path to the $VIM directory of the installation. Please see `:help $VIM` for more
+      details.
+  runtime-dir:
+    description: >
+      Absolute path to the $VIMRUNTIME directory of the installation. Please see `:help $VIMRUNTIME`
+      for more details.
 
 runs:
   using: 'node24'

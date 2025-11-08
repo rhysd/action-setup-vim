@@ -21,6 +21,9 @@ async function main(): Promise<void> {
     core.setOutput('vim-dir', installed.vimDir);
     core.info(`Installed $VIM directory: ${installed.vimDir}`);
 
+    core.setOutput('runtime-dir', installed.runtimeDir);
+    core.info(`Installed $VIMRUNTIME directory: ${installed.runtimeDir}`);
+
     core.info(`Installation successfully done: ${JSON.stringify(installed, null, 2)}`);
 }
 

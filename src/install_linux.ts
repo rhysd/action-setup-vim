@@ -2,17 +2,19 @@ import * as core from '@actions/core';
 import type { Installed } from './install.js';
 import type { Config } from './config.js';
 import { exec } from './shell.js';
-import { buildVim } from './vim.js';
+import { buildVim, getRuntimeDirInVimDir } from './vim.js';
 import { buildNightlyNeovim, downloadNeovim, downloadStableNeovim } from './neovim.js';
 
 async function installVimStable(): Promise<Installed> {
     core.debug('Installing stable Vim on Linux using apt');
     await exec('sudo', ['apt-get', 'update', '-y', '-q']);
     await exec('sudo', ['apt-get', 'install', '-y', '--no-install-recommends', '-q', 'vim-gtk3']);
+    const runtimeDir = await getRuntimeDirInVimDir('/usr/share/vim');
     return {
         executable: 'vim',
         binDir: '/usr/bin',
         vimDir: '/usr/share/vim',
+        runtimeDir,
     };
 }
 

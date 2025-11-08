@@ -122,10 +122,13 @@ export async function buildVim(version: string, os: Os, configureArgs: string | 
         await tmpDir.cleanup();
     }
 
+    const vimDir = path.join(installDir, 'share', 'vim');
+    const runtimeDir = await getRuntimeDirInVimDir(vimDir);
     return {
         executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
-        vimDir: path.join(installDir, 'share', 'vim'),
+        vimDir,
+        runtimeDir,
     };
 }
 
@@ -257,7 +260,7 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
     }
 
     // vim.exe and gvim.exe are put in the runtime directory (e.g. `vim/vim91/vim.exe`)
-    return { executable, binDir: runtimeDir, vimDir };
+    return { executable, binDir: runtimeDir, vimDir, runtimeDir };
 }
 
 export async function installNightlyVimOnWindows(version: string, arch: Arch): Promise<Installed> {

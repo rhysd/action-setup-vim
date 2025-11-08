@@ -179,10 +179,12 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         await io.mv(unarchived, destDir);
         core.debug(`Installed Neovim ${version} on ${os} to ${destDir}`);
 
+        const vimDir = path.join(destDir, 'share', 'nvim');
         return {
             executable: exeName(os),
             binDir: path.join(destDir, 'bin'),
-            vimDir: path.join(destDir, 'share', 'nvim'),
+            vimDir,
+            runtimeDir: path.join(vimDir, 'runtime'),
         };
     } catch (e) {
         const err = ensureError(e);
@@ -309,9 +311,11 @@ export async function buildNightlyNeovim(os: Os): Promise<Installed> {
         await tmpDir.cleanup();
     }
 
+    const vimDir = path.join(installDir, 'share', 'nvim');
     return {
         executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
-        vimDir: path.join(installDir, 'share', 'nvim'),
+        vimDir,
+        runtimeDir: path.join(vimDir, 'runtime'),
     };
 }
