@@ -1,7 +1,27 @@
+<a id="v1.6.0"></a>
+# [v1.6.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.6.0) - 2025-11-09
+
+- Add new `vim-dir` output which stores the `$VIM` directory absolute path of the installation. This output is useful to locate where the Vim/Neovim is installed by the following steps. Here is an example of setting the installation-specific `vimrc` configuration:
+  ```yaml
+  - uses: rhysd/action-setup-vim@v1
+    id: vim
+  - name: Setup vimrc specific to the Vim installation
+    run: |
+      cp vimrc_for_ci.vim '${{ vim.vim-dir }}/vimrc'
+  ```
+- Fix the Vim installation directory structure on Windows. It did not conform the standard directory layout which Vim assumes. Previously the runtime directory was wrongly squashed. The paths before/after this release when installing `stable` version are:
+  - Previous wrong path: `~/vim-stable/vim.exe`
+  - New correct path: `~/vim-stable/vim91/vim.exe`
+- Clean up temporary directories created by this action after installation completes. Temporary directories containing downloaded assets were not removed previously but they could cause troubles when installing multiple Vim/Neovim instances.
+- Report logs via [`core.info()`](https://github.com/actions/toolkit/tree/main/packages/core#logging) instead of directly calling `console.log()`.
+
+[Changes][v1.6.0]
+
+
 <a id="v1.5.1"></a>
 # [v1.5.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.5.1) - 2025-11-02
 
-- Fix installing stable Vim on `macos-15-intel` runner. It was broken again due to the change in the upstream runner. ([#52](https://github.com/rhysd/action-setup-vim/issues/52))
+- Fix installing stable Vim on `macos-15-intel` runner. It was broken again after v1.4.5 release due to the change in the upstream runner. ([#52](https://github.com/rhysd/action-setup-vim/issues/52))
 - Update `@actions/io` to v2.0.0 for better Node.js v24 support.
 
 [Changes][v1.5.1]
@@ -355,6 +375,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.6.0]: https://github.com/rhysd/action-setup-vim/compare/v1.5.1...v1.6.0
 [v1.5.1]: https://github.com/rhysd/action-setup-vim/compare/v1.5.0...v1.5.1
 [v1.5.0]: https://github.com/rhysd/action-setup-vim/compare/v1.4.5...v1.5.0
 [v1.4.5]: https://github.com/rhysd/action-setup-vim/compare/v1.4.4...v1.4.5
