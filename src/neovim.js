@@ -6,7 +6,7 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
-import { makeTmpdir, ensureError, getSystemHttpsProxyAgent } from './system.js';
+import { TmpDir, ensureError, getSystemHttpsProxyAgent } from './system.js';
 import { exec, unzip } from './shell.js';
 function exeName(os) {
     return os === 'windows' ? 'nvim.exe' : 'nvim';
@@ -145,9 +145,9 @@ export async function downloadNeovim(version, os, arch) {
     const file = assetFileName(version, os, arch);
     const destDir = path.join(homedir(), `nvim-${version}`);
     const url = `https://github.com/neovim/neovim/releases/download/${version}/${file}`;
-    console.log(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
-    const dlDir = await makeTmpdir();
-    const asset = path.join(dlDir, file);
+    core.info(`Downloading Neovim ${version} on ${os} from ${url} to ${destDir}`);
+    const tmpDir = await TmpDir.create();
+    const asset = path.join(tmpDir.path, file);
     try {
         core.debug(`Downloading asset ${asset}`);
         const response = await fetch(url, { agent: getSystemHttpsProxyAgent(url) });
@@ -164,6 +164,7 @@ export async function downloadNeovim(version, os, arch) {
         return {
             executable: exeName(os),
             binDir: path.join(destDir, 'bin'),
+            vimDir: path.join(destDir, 'share', 'nvim'),
         };
     }
     catch (e) {
@@ -171,13 +172,16 @@ export async function downloadNeovim(version, os, arch) {
         core.debug(err.stack ?? err.message);
         if (os === 'windows' && arch === 'arm64') {
             core.warning(`Fall back to x86_64 build because downloading Neovim for arm64 windows from ${url} failed: ${err}`);
-            return downloadNeovim(version, os, 'x86_64');
+            return await downloadNeovim(version, os, 'x86_64');
         }
         let msg = `Could not download Neovim release from ${url}: ${err.message}. Please visit https://github.com/neovim/neovim/releases/tag/${version} to check the asset for ${os} was really uploaded`;
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
         }
         throw new Error(msg);
+    }
+    finally {
+        await tmpDir.cleanup();
     }
 }
 async function fetchLatestVersion(token) {
@@ -259,17 +263,28 @@ export async function buildNightlyNeovim(os) {
     // Add -nightly suffix since building stable Neovim from source may be supported in the future
     const installDir = path.join(homedir(), 'nvim-nightly');
     core.debug(`Building and installing Neovim to ${installDir}`);
-    const dir = path.join(await makeTmpdir(), 'build-nightly-neovim');
-    await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim.git', dir]);
-    const opts = { cwd: dir };
-    const makeArgs = ['-j', `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`, 'CMAKE_BUILD_TYPE=RelWithDebug'];
-    await exec('make', makeArgs, opts);
-    core.debug(`Built Neovim in ${opts.cwd}. Installing it via 'make install'`);
-    await exec('make', ['install'], opts);
-    core.debug(`Installed Neovim to ${installDir}`);
+    const tmpDir = await TmpDir.create();
+    try {
+        const dir = path.join(tmpDir.path, 'build-nightly-neovim');
+        await exec('git', ['clone', '--depth=1', 'https://github.com/neovim/neovim.git', dir]);
+        const opts = { cwd: dir };
+        const makeArgs = [
+            '-j',
+            `CMAKE_EXTRA_FLAGS=-DCMAKE_INSTALL_PREFIX=${installDir}`,
+            'CMAKE_BUILD_TYPE=RelWithDebug',
+        ];
+        await exec('make', makeArgs, opts);
+        core.debug(`Built Neovim in ${opts.cwd}. Installing it via 'make install'`);
+        await exec('make', ['install'], opts);
+        core.debug(`Installed Neovim to ${installDir}`);
+    }
+    finally {
+        await tmpDir.cleanup();
+    }
     return {
         executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
+        vimDir: path.join(installDir, 'share', 'nvim'),
     };
 }
 //# sourceMappingURL=neovim.js.map

@@ -5,7 +5,7 @@ import { ensureError } from './system.js';
 import { exec } from './shell.js';
 import { buildVim } from './vim.js';
 import { buildNightlyNeovim, downloadNeovim } from './neovim.js';
-function homebrewRootDir(arch) {
+function homebrewPrefixDir(arch) {
     switch (arch) {
         case 'arm64':
             return '/opt/homebrew';
@@ -14,9 +14,6 @@ function homebrewRootDir(arch) {
         default:
             throw new Error(`CPU arch ${arch} is not supported by Homebrew`);
     }
-}
-function homebrewBinDir(arch) {
-    return homebrewRootDir(arch) + '/bin';
 }
 async function removePreinstalledPythonSymlink(bin) {
     const path = `/usr/local/bin/${bin}`;
@@ -71,17 +68,21 @@ async function installVimStable(arch) {
     core.debug('Installing stable Vim on macOS using Homebrew');
     await ensureHomebrewPythonIsLinked(arch);
     await brewInstall('macvim');
+    const prefix = homebrewPrefixDir(arch);
     return {
         executable: 'vim',
-        binDir: homebrewBinDir(arch),
+        binDir: prefix + '/bin',
+        vimDir: await fs.realpath(prefix + '/opt/macvim/MacVim.app/Contents/Resources/vim'),
     };
 }
 async function installNeovimStable(arch) {
     core.debug('Installing stable Neovim on macOS using Homebrew');
     await brewInstall('neovim');
+    const prefix = homebrewPrefixDir(arch);
     return {
         executable: 'nvim',
-        binDir: homebrewBinDir(arch),
+        binDir: prefix + '/bin',
+        vimDir: await fs.realpath(prefix + '/opt/neovim/share/nvim'),
     };
 }
 export async function install(config) {

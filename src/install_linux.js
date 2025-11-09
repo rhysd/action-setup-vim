@@ -9,6 +9,7 @@ async function installVimStable() {
     return {
         executable: 'vim',
         binDir: '/usr/bin',
+        vimDir: '/usr/share/vim',
     };
 }
 export async function install(config) {

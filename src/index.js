@@ -5,15 +5,17 @@ import { install } from './install.js';
 import { validateInstallation } from './validate.js';
 async function main() {
     const config = loadConfigFromInputs();
-    console.log('Extracted configuration:', config);
+    core.info(`Extracted configuration: ${JSON.stringify(config, null, 2)}`);
     const installed = await install(config);
-    await validateInstallation(installed);
+    await validateInstallation(installed, config.os);
     core.addPath(installed.binDir);
     core.debug(`'${installed.binDir}' was added to $PATH`);
     const fullPath = join(installed.binDir, installed.executable);
     core.setOutput('executable', fullPath);
-    console.log('Installed executable:', fullPath);
-    console.log('Installation successfully done:', installed);
+    core.info(`Installed executable: ${fullPath}`);
+    core.setOutput('vim-dir', installed.vimDir);
+    core.info(`Installed $VIM directory: ${installed.vimDir}`);
+    core.info(`Installation successfully done: ${JSON.stringify(installed, null, 2)}`);
 }
 main().catch((e) => {
     if (e.stack) {

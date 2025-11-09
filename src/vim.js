@@ -9,7 +9,7 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
 import { exec, unzip } from './shell.js';
-import { makeTmpdir, ensureError, getSystemHttpsProxyAgent } from './system.js';
+import { TmpDir, ensureError, getSystemHttpsProxyAgent } from './system.js';
 function exeName(os) {
     return os === 'windows' ? 'vim.exe' : 'vim';
 }
@@ -52,77 +52,93 @@ export async function buildVim(version, os, configureArgs) {
     assert.notEqual(version, 'stable');
     const installDir = path.join(homedir(), `vim-${version}`);
     core.debug(`Building and installing Vim to ${installDir} (version=${version ?? 'HEAD'})`);
-    const dir = path.join(await makeTmpdir(), 'vim');
-    {
-        const args = ['clone', '--depth=1', '--single-branch'];
-        if (version === 'nightly') {
-            args.push('--no-tags');
-        }
-        else {
-            args.push('--branch', version);
-        }
-        args.push('https://github.com/vim/vim', dir);
-        await exec('git', args);
-    }
-    const env = {};
-    if (os === 'macos' && versionIsOlderThan(version, 8, 2, 1119)) {
-        const dir = await getXcode11DevDir();
-        if (dir !== null) {
-            // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
-            //   ref: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
-            // By setting $DEVELOPER_DIR environment variable, Xcode11 is used to build Vim.
-            //   ref: https://www.jessesquires.com/blog/2020/01/06/selecting-an-xcode-version-on-github-ci/
-            // Note that xcode-select command is not available since it changes Xcode version in system global.
-            env['DEVELOPER_DIR'] = dir;
-            core.debug(`Building Vim older than 8.2.1119 on macOS with Xcode11 at ${dir} instead of the latest Xcode`);
-        }
-        else {
-            core.warning(`Building Vim older than 8.2.1119 on macOS needs Xcode11 but proper Xcode is not found at ${dir}. Using the latest Xcode as fallback. If you're using macos-latest or macos-12 runner and see some build error, try macos-11 runner`);
-        }
-    }
-    const opts = { cwd: dir, env };
-    {
-        const args = [`--prefix=${installDir}`];
-        if (configureArgs === null) {
-            args.push('--with-features=huge', '--enable-fail-if-missing');
-        }
-        else {
-            args.push(...shlexSplit(configureArgs));
-        }
-        try {
-            await exec('./configure', args, opts);
-        }
-        catch (err) {
-            if (os === 'macos' && versionIsOlderThan(version, 8, 2, 5135)) {
-                core.warning('This version of Vim has a bug where ./configure cannot find a terminal library correctly. See the following issue for more details: https://github.com/rhysd/action-setup-vim/issues/38');
+    const tmpDir = await TmpDir.create();
+    const dir = path.join(tmpDir.path, 'vim');
+    try {
+        {
+            const args = ['clone', '--depth=1', '--single-branch'];
+            if (version === 'nightly') {
+                args.push('--no-tags');
             }
-            throw err;
+            else {
+                args.push('--branch', version);
+            }
+            args.push('https://github.com/vim/vim', dir);
+            await exec('git', args);
         }
+        const env = {};
+        if (os === 'macos' && versionIsOlderThan(version, 8, 2, 1119)) {
+            const dir = await getXcode11DevDir();
+            if (dir !== null) {
+                // Vim before v8.2.1119 cannot be built with Xcode 12 or later. It requires Xcode 11.
+                //   ref: https://github.com/vim/vim/commit/5289783e0b07cfc3f92ee933261ca4c4acdca007
+                // By setting $DEVELOPER_DIR environment variable, Xcode11 is used to build Vim.
+                //   ref: https://www.jessesquires.com/blog/2020/01/06/selecting-an-xcode-version-on-github-ci/
+                // Note that xcode-select command is not available since it changes Xcode version in system global.
+                env['DEVELOPER_DIR'] = dir;
+                core.debug(`Building Vim older than 8.2.1119 on macOS with Xcode11 at ${dir} instead of the latest Xcode`);
+            }
+            else {
+                core.warning(`Building Vim older than 8.2.1119 on macOS needs Xcode11 but proper Xcode is not found at ${dir}. Using the latest Xcode as fallback. If you're using macos-latest or macos-12 runner and see some build error, try macos-11 runner`);
+            }
+        }
+        const opts = { cwd: dir, env };
+        {
+            const args = [`--prefix=${installDir}`];
+            if (configureArgs === null) {
+                args.push('--with-features=huge', '--enable-fail-if-missing');
+            }
+            else {
+                args.push(...shlexSplit(configureArgs));
+            }
+            try {
+                await exec('./configure', args, opts);
+            }
+            catch (err) {
+                if (os === 'macos' && versionIsOlderThan(version, 8, 2, 5135)) {
+                    core.warning('This version of Vim has a bug where ./configure cannot find a terminal library correctly. See the following issue for more details: https://github.com/rhysd/action-setup-vim/issues/38');
+                }
+                throw err;
+            }
+        }
+        await exec('make', ['-j'], opts);
+        await exec('make', ['install'], opts);
+        core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
     }
-    await exec('make', ['-j'], opts);
-    await exec('make', ['install'], opts);
-    core.debug(`Built and installed Vim to ${installDir} (version=${version})`);
+    finally {
+        await tmpDir.cleanup();
+    }
     return {
         executable: exeName(os),
         binDir: path.join(installDir, 'bin'),
+        vimDir: path.join(installDir, 'share', 'vim'),
     };
 }
-async function getVimRootDirAt(dir) {
+// See `:help $VIMRUNTIME` for the detail of rules of Vim runtime directory
+export async function getRuntimeDirInVimDir(dir) {
     // Search root Vim directory such as 'vim82' in unarchived directory
-    const entries = await fs.readdir(dir);
+    let entries;
+    try {
+        entries = await fs.readdir(dir);
+    }
+    catch (e) {
+        const err = ensureError(e);
+        throw new Error(`Could not read $VIMDIR directory to detect vim executable: ${err}`);
+    }
     const re = /^vim\d+$/;
     for (const entry of entries) {
-        if (!re.test(entry)) {
-            continue;
+        if (re.test(entry)) {
+            const p = path.join(dir, entry);
+            const s = await fs.stat(p);
+            if (s.isDirectory()) {
+                return p;
+            }
         }
-        const p = path.join(dir, entry);
-        const s = await fs.stat(p);
-        if (!s.isDirectory()) {
-            continue;
+        else if (entry === 'runtime') {
+            return path.join(dir, entry);
         }
-        return p;
     }
-    throw new Error(`Vim directory such as 'vim82' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
+    throw new Error(`Vim directory such as 'vim82' or 'runtime' was not found in ${JSON.stringify(entries)} in unarchived directory '${dir}'`);
 }
 export async function detectLatestWindowsReleaseTag() {
     const url = 'https://github.com/vim/vim-win32-installer/releases/latest';
@@ -153,10 +169,11 @@ export async function detectLatestWindowsReleaseTag() {
     }
 }
 async function installVimAssetOnWindows(file, url, dirSuffix) {
-    const tmpdir = await makeTmpdir();
-    const dlDir = path.join(tmpdir, 'vim-installer');
+    const tmpDir = await TmpDir.create();
+    const dlDir = path.join(tmpDir.path, 'vim-installer');
     await io.mkdirP(dlDir);
     const assetFile = path.join(dlDir, file);
+    const destDir = path.join(homedir(), `vim-${dirSuffix}`);
     try {
         core.debug(`Downloading asset at ${url} to ${dlDir}`);
         const response = await fetch(url, { agent: getSystemHttpsProxyAgent(url) });
@@ -167,18 +184,19 @@ async function installVimAssetOnWindows(file, url, dirSuffix) {
         await fs.writeFile(assetFile, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
         await unzip(assetFile, dlDir);
+        const vimDir = path.join(dlDir, 'vim'); // Unarchived to 'vim' directory
+        core.debug(`Unzipped installer from ${url} to ${vimDir}`);
+        await io.mv(vimDir, destDir);
+        core.debug(`Vim was installed to ${destDir}`);
     }
     catch (e) {
         const err = ensureError(e);
         core.debug(err.stack ?? err.message);
         throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
     }
-    const unzippedDir = path.join(dlDir, 'vim'); // Unarchived to 'vim' directory
-    const vimDir = await getVimRootDirAt(unzippedDir);
-    core.debug(`Unzipped installer from ${url} and found Vim directory ${vimDir}`);
-    const destDir = path.join(homedir(), `vim-${dirSuffix}`);
-    await io.mv(vimDir, destDir);
-    core.debug(`Vim was installed to ${destDir}`);
+    finally {
+        await tmpDir.cleanup();
+    }
     return destDir;
 }
 export async function installVimOnWindows(tag, version, arch) {
@@ -188,9 +206,9 @@ export async function installVimOnWindows(tag, version, arch) {
     const a = arch === 'x86_64' ? 'x64' : 'arm64';
     const url = `https://github.com/vim/vim-win32-installer/releases/download/${tag}/gvim_${ver}_${a}.zip`;
     const file = `gvim_${ver}_${a}.zip`;
-    let binDir;
+    let vimDir;
     try {
-        binDir = await installVimAssetOnWindows(file, url, version);
+        vimDir = await installVimAssetOnWindows(file, url, version);
     }
     catch (e) {
         if (arch !== 'arm64') {
@@ -201,17 +219,19 @@ export async function installVimOnWindows(tag, version, arch) {
         return installVimOnWindows(tag, version, 'x86_64');
     }
     const executable = exeName('windows');
+    const runtimeDir = await getRuntimeDirInVimDir(vimDir);
     // From v9.1.0631, vim.exe and gvim.exe share the same core, so OLE is enabled even in vim.exe.
     // This command registers the vim64.dll as a type library. Without the command, vim.exe will
     // ask the registration with GUI dialog and the process looks hanging. (#37)
     //
     // See: https://github.com/vim/vim/issues/15372
     if (version === 'stable' || version === 'nightly' || !versionIsOlderThan(version, 9, 1, 631)) {
-        const bin = path.join(binDir, executable);
+        const bin = path.join(runtimeDir, executable);
         await exec(bin, ['-silent', '-register']);
         core.debug('Registered vim.exe as a type library');
     }
-    return { executable, binDir };
+    // vim.exe and gvim.exe are put in the runtime directory (e.g. `vim/vim91/vim.exe`)
+    return { executable, binDir: runtimeDir, vimDir };
 }
 export async function installNightlyVimOnWindows(version, arch) {
     const latestTag = await detectLatestWindowsReleaseTag();
