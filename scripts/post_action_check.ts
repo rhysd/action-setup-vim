@@ -35,12 +35,6 @@ function getRuntimeDirOnWindows(version: string): string {
             return path.join(vimdir, entry);
         }
     }
-    // The $VIMDIR change on Windows is not released on CI. Not to break the weekly post-release check,
-    // this script allows the old directory structure.
-    // TODO: Remove this `if` statement after the next release.
-    if (process.env['GITHUB_WORKFLOW'] === 'Post-release check' && existsSync(path.join(vimdir, 'vim.exe'))) {
-        return vimdir;
-    }
     throw new Error(`vim{ver} directory for version ${version} is not found in $VIMDIR ${vimdir}`);
 }
 
@@ -161,16 +155,13 @@ function main(): void {
         assert.ok(stdout.includes(editorName), `Editor name '${editorName}' should be included in stdout: ${stdout}`);
     }
 
-    // TODO: Remove this `if` condition after the next release.
-    if (process.env['GITHUB_WORKFLOW'] !== 'Post-release check') {
-        log('Validating $VIM directory', args.vimdir);
-        let expected = getVimVariable('$VIM', exe, args.neovim);
-        if (process.platform === 'win32') {
-            // Neovim mixes '\' and '/' in $VIM value (\path\to\nvim-nightly\share/nvim)
-            expected = path.win32.normalize(expected);
-        }
-        assert.equal(expected, args.vimdir);
+    log('Validating $VIM directory', args.vimdir);
+    let expected = getVimVariable('$VIM', exe, args.neovim);
+    if (process.platform === 'win32') {
+        // Neovim mixes '\' and '/' in $VIM value (\path\to\nvim-nightly\share/nvim)
+        expected = path.win32.normalize(expected);
     }
+    assert.equal(expected, args.vimdir);
 
     log('OK');
 }
