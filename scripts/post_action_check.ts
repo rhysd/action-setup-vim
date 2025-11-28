@@ -109,6 +109,7 @@ function main(): void {
 
     const exe = expectedExecutable(args.neovim, args.version);
     log('Validating executable path. Expected executable:', exe);
+    assert.ok(path.isAbsolute(exe));
     assert.equal(exe, args.executable);
     assert.ok(existsSync(exe));
 
@@ -156,6 +157,7 @@ function main(): void {
     }
 
     log('Validating $VIM directory', args.vimdir);
+    assert.ok(path.isAbsolute(args.vimdir));
     let expected = getVimVariable('$VIM', exe, args.neovim);
     if (process.platform === 'win32') {
         // Neovim mixes '\' and '/' in $VIM value (\path\to\nvim-nightly\share/nvim)
