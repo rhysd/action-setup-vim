@@ -199,7 +199,7 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         if (version === 'nightly') {
             msg += ". Note that some assets are sometimes missing on nightly build due to Neovim's CI failure";
         }
-        throw new Error(msg);
+        throw new Error(msg, { cause: e });
     } finally {
         await tmpDir.cleanup();
     }

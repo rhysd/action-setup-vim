@@ -13,7 +13,9 @@ async function validateExecutable(binDir: string, executable: string, os: Os): P
         }
     } catch (e) {
         const err = ensureError(e);
-        throw new Error(`Validation failed! Could not stat installed directory '${binDir}': ${err.message}`);
+        throw new Error(`Validation failed! Could not stat installed directory '${binDir}': ${err.message}`, {
+            cause: e,
+        });
     }
     core.debug(`Installed directory '${binDir}' was validated`);
 
@@ -22,7 +24,9 @@ async function validateExecutable(binDir: string, executable: string, os: Os): P
         await fs.access(path, fsconsts.X_OK);
     } catch (e) {
         const err = ensureError(e);
-        throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`);
+        throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`, {
+            cause: e,
+        });
     }
     // `X_OK` check does not work on Windows. Additional check is necessary.
     if (os === 'windows' && !executable.endsWith('.exe') && !executable.endsWith('.EXE')) {
@@ -34,7 +38,9 @@ async function validateExecutable(binDir: string, executable: string, os: Os): P
         core.info(`Installed version:\n${ver}`);
     } catch (e) {
         const err = ensureError(e);
-        throw new Error(`Validation failed! Could not get version from executable '${path}': ${err.message}`);
+        throw new Error(`Validation failed! Could not get version from executable '${path}': ${err.message}`, {
+            cause: e,
+        });
     }
 
     core.debug(`Installed executable '${path}' was validated`);
@@ -45,7 +51,9 @@ async function validateVimDir(path: string): Promise<void> {
     try {
         entries = await fs.readdir(path);
     } catch (e) {
-        throw new Error(`Validation failed! Could not read the installed $VIM directory ${path}: ${ensureError(e)}`);
+        throw new Error(`Validation failed! Could not read the installed $VIM directory ${path}: ${ensureError(e)}`, {
+            cause: e,
+        });
     }
 
     const reVimRuntime = /^vim\d+$/;
