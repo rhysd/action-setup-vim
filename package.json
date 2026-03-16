@@ -46,13 +46,13 @@
   },
   "homepage": "https://github.com/rhysd/action-setup-vim#readme",
   "dependencies": {
-    "@actions/core": "^2.0.2",
-    "@actions/exec": "^2.0.0",
-    "@actions/github": "^7.0.0",
-    "@actions/io": "^2.0.0",
-    "https-proxy-agent": "^7.0.6",
+    "@actions/core": "^3.0.0",
+    "@actions/exec": "^3.0.0",
+    "@actions/github": "^9.0.0",
+    "@actions/io": "^3.0.2",
+    "https-proxy-agent": "^8.0.0",
     "node-fetch": "^3.3.2",
-    "proxy-from-env": "^1.1.0",
+    "proxy-from-env": "^2.1.0",
     "shlex": "^3.0.0"
   },
   "devDependencies": {
