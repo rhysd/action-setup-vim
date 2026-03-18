@@ -1,7 +1,20 @@
+<a id="v1.6.1"></a>
+# [v1.6.1](https://github.com/rhysd/action-setup-vim/releases/tag/v1.6.1) - 2026-03-18
+
+This is a small patch update for security fixes.
+
+- Update major versions of `@actions/*` packages including some security fixes in HTTP client.
+- Update `js-yaml` indirect dependency for security fix.
+- Update `glob` indirect dependency for security fix.
+- Update the major version of `proxy-from-env` that disables the support for the legacy `npm_config_`-prefixed environment variables.
+
+[Changes][v1.6.1]
+
+
 <a id="v1.6.0"></a>
 # [v1.6.0](https://github.com/rhysd/action-setup-vim/releases/tag/v1.6.0) - 2025-11-09
 
-- Add new `vim-dir` output which stores the `$VIM` directory absolute path of the installation. This output is useful to locate where the Vim/Neovim is installed by the following steps. Here is an example of setting the installation-specific `vimrc` configuration:
+- Add new `vim-dir` output which stores the `$VIM` directory absolute path of the installation. See `:help $VIM` for more details about the directory. This output is useful to locate where the Vim/Neovim is installed by the following steps. Here is an example of setting the installation-specific `vimrc` configuration:
   ```yaml
   - uses: rhysd/action-setup-vim@v1
     id: vim
@@ -9,7 +22,7 @@
     run: |
       cp vimrc_for_ci.vim '${{ vim.vim-dir }}/vimrc'
   ```
-- Fix the Vim installation directory structure on Windows. It did not conform the standard directory layout which Vim assumes. Previously the runtime directory was wrongly squashed. The paths before/after this release when installing `stable` version are:
+- Fix the Vim installation directory structure on Windows. It did not conform the standard directory layout which Vim assumes (though it worked fine for compatibility reasons). Previously the runtime directory was wrongly squashed. The paths before/after this release when installing `stable` version are:
   - Previous wrong path: `~/vim-stable/vim.exe`
   - New correct path: `~/vim-stable/vim91/vim.exe`
 - Clean up temporary directories created by this action after installation completes. Temporary directories containing downloaded assets were not removed previously but they could cause troubles when installing multiple Vim/Neovim instances.
@@ -375,6 +388,7 @@ Please read [README.md](https://github.com/rhysd/action-setup-vim#readme) for us
 [Changes][v1.0.0]
 
 
+[v1.6.1]: https://github.com/rhysd/action-setup-vim/compare/v1.6.0...v1.6.1
 [v1.6.0]: https://github.com/rhysd/action-setup-vim/compare/v1.5.1...v1.6.0
 [v1.5.1]: https://github.com/rhysd/action-setup-vim/compare/v1.5.0...v1.5.1
 [v1.5.0]: https://github.com/rhysd/action-setup-vim/compare/v1.4.5...v1.5.0
