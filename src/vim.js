@@ -123,7 +123,7 @@ export async function getRuntimeDirInVimDir(dir) {
     }
     catch (e) {
         const err = ensureError(e);
-        throw new Error(`Could not read $VIMDIR directory to detect vim executable: ${err}`);
+        throw new Error(`Could not read $VIMDIR directory to detect vim executable: ${err}`, { cause: e });
     }
     const re = /^vim\d+$/;
     for (const entry of entries) {
@@ -165,7 +165,7 @@ export async function detectLatestWindowsReleaseTag() {
     catch (e) {
         const err = ensureError(e);
         core.debug(err.stack ?? err.message);
-        throw new Error(`${err.message}: Could not get latest release tag from ${url}`);
+        throw new Error(`${err.message}: Could not get latest release tag from ${url}`, { cause: e });
     }
 }
 async function installVimAssetOnWindows(file, url, dirSuffix) {
@@ -192,7 +192,7 @@ async function installVimAssetOnWindows(file, url, dirSuffix) {
     catch (e) {
         const err = ensureError(e);
         core.debug(err.stack ?? err.message);
-        throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`);
+        throw new Error(`Could not download and unarchive asset ${url} at ${dlDir}: ${err.message}`, { cause: e });
     }
     finally {
         await tmpDir.cleanup();

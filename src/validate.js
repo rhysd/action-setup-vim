@@ -12,7 +12,9 @@ async function validateExecutable(binDir, executable, os) {
     }
     catch (e) {
         const err = ensureError(e);
-        throw new Error(`Validation failed! Could not stat installed directory '${binDir}': ${err.message}`);
+        throw new Error(`Validation failed! Could not stat installed directory '${binDir}': ${err.message}`, {
+            cause: e,
+        });
     }
     core.debug(`Installed directory '${binDir}' was validated`);
     const path = join(binDir, executable);
@@ -21,7 +23,9 @@ async function validateExecutable(binDir, executable, os) {
     }
     catch (e) {
         const err = ensureError(e);
-        throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`);
+        throw new Error(`Validation failed! Could not access the installed executable '${path}': ${err.message}`, {
+            cause: e,
+        });
     }
     // `X_OK` check does not work on Windows. Additional check is necessary.
     if (os === 'windows' && !executable.endsWith('.exe') && !executable.endsWith('.EXE')) {
@@ -33,7 +37,9 @@ async function validateExecutable(binDir, executable, os) {
     }
     catch (e) {
         const err = ensureError(e);
-        throw new Error(`Validation failed! Could not get version from executable '${path}': ${err.message}`);
+        throw new Error(`Validation failed! Could not get version from executable '${path}': ${err.message}`, {
+            cause: e,
+        });
     }
     core.debug(`Installed executable '${path}' was validated`);
 }
@@ -43,7 +49,9 @@ async function validateVimDir(path) {
         entries = await fs.readdir(path);
     }
     catch (e) {
-        throw new Error(`Validation failed! Could not read the installed $VIM directory ${path}: ${ensureError(e)}`);
+        throw new Error(`Validation failed! Could not read the installed $VIM directory ${path}: ${ensureError(e)}`, {
+            cause: e,
+        });
     }
     const reVimRuntime = /^vim\d+$/;
     for (const entry of entries) {
