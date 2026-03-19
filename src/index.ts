@@ -6,7 +6,11 @@ import { validateInstallation } from './validate.js';
 
 async function main(): Promise<void> {
     const config = loadConfigFromInputs();
-    core.info(`Extracted configuration: ${JSON.stringify(config, null, 2)}`);
+    if (config.token) {
+        core.setSecret(config.token);
+    }
+    const concealed = JSON.stringify({ ...config, token: config.token ? '***' : null }, null, 2);
+    core.info(`Extracted configuration: ${concealed}`);
 
     const installed = await install(config);
     await validateInstallation(installed, config.os);
