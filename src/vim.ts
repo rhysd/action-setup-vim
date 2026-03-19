@@ -9,6 +9,7 @@ import * as core from '@actions/core';
 import * as io from '@actions/io';
 import { split as shlexSplit } from 'shlex';
 import { exec, unzip, Env } from './shell.js';
+import { verifySha256IfAvailable } from './checksum.js';
 import { TmpDir, type Os, type Arch, ensureError, getSystemHttpsProxyAgent } from './system.js';
 import type { Installed, ExeName } from './install.js';
 
@@ -188,7 +189,7 @@ export async function detectLatestWindowsReleaseTag(): Promise<string> {
     }
 }
 
-async function installVimAssetOnWindows(file: string, url: string, dirSuffix: string): Promise<string> {
+async function installVimAssetOnWindows(file: string, url: string, dirSuffix: string, tag: string): Promise<string> {
     const tmpDir = await TmpDir.create();
     const dlDir = path.join(tmpDir.path, 'vim-installer');
     await io.mkdirP(dlDir);
@@ -204,6 +205,7 @@ async function installVimAssetOnWindows(file: string, url: string, dirSuffix: st
         const buffer = await response.arrayBuffer();
         await fs.writeFile(assetFile, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded installer from ${url} to ${assetFile}`);
+        await verifySha256IfAvailable(assetFile, 'vim/vim-win32-installer', tag, file);
 
         await unzip(assetFile, dlDir);
 
@@ -233,7 +235,7 @@ export async function installVimOnWindows(tag: string, version: string, arch: Ar
     const file = `gvim_${ver}_${a}.zip`;
     let vimDir;
     try {
-        vimDir = await installVimAssetOnWindows(file, url, version);
+        vimDir = await installVimAssetOnWindows(file, url, version, tag);
     } catch (e) {
         if (arch !== 'arm64') {
             throw e;

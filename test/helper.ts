@@ -31,18 +31,38 @@ export class ExecStub {
 
 export class FetchStub {
     fetchedUrls: string[] = [];
+    lastAssetName: string | null = null;
 
     reset(): void {
         this.fetchedUrls = [];
+        this.lastAssetName = null;
     }
 
     mockedFetch(url: string): Promise<Response> {
         this.fetchedUrls.push(url);
+        if (url.startsWith('https://api.github.com/repos/')) {
+            const ok = { status: 200, statusText: 'OK' };
+            const body = JSON.stringify({
+                assets: [
+                    {
+                        name: this.lastAssetName ?? 'dummy',
+                        digest: 'deadbeef',
+                    },
+                ],
+            });
+            return Promise.resolve(new Response(body, ok));
+        }
+        if (url.includes('/releases/download/')) {
+            this.lastAssetName = url.split('/').slice(-1)[0] ?? null;
+            const ok = { status: 200, statusText: 'OK' };
+            return Promise.resolve(new Response('dummy asset response', ok));
+        }
         const notFound = { status: 404, statusText: 'Not found for dummy' };
         return Promise.resolve(new Response(`dummy response for ${url}`, notFound));
     }
 
-    importFetchMocked(path: string): Promise<any> {
-        return esmock(path, {}, { 'node-fetch': { default: this.mockedFetch.bind(this) } });
+    importFetchMocked(path: string, otherMocks: object = {}): Promise<any> {
+        return esmock(path, {}, { ...otherMocks, 'node-fetch': { default: this.mockedFetch.bind(this) } });
     }
+
 }

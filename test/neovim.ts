@@ -27,6 +27,18 @@ describe('Neovim installation', function () {
             }
         });
 
+        it('verifies checksum for downloaded asset', async function () {
+            const version = 'nightly';
+            const os = 'linux';
+            const arch = 'x86_64';
+            const file = 'nvim-linux-x86_64.tar.gz';
+            const fetchStub = new FetchStub();
+            const { downloadNeovim } = await fetchStub.importFetchMocked('../src/neovim.js');
+
+            await A.rejects(() => downloadNeovim(version, os, arch), /SHA256 mismatch/);
+            A.equal(fetchStub.lastAssetName, file);
+        });
+
         context('with mocking fetch()', function () {
             let downloadNeovimMocked: typeof downloadNeovim;
             let downloadStableNeovimMocked: typeof downloadStableNeovim;
@@ -78,7 +90,9 @@ describe('Neovim installation', function () {
                 );
                 const expected = [
                     'https://github.com/neovim/neovim/releases/download/nightly/nvim-win-arm64.zip',
+                    'https://api.github.com/repos/neovim/neovim/releases/tags/nightly',
                     'https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip',
+                    'https://api.github.com/repos/neovim/neovim/releases/tags/nightly',
                 ];
                 A.deepStrictEqual(fetchStub.fetchedUrls, expected, `${fetchStub.fetchedUrls}`);
             });

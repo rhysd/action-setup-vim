@@ -46,6 +46,18 @@ describe('installVimOnWindows()', function () {
         }
     });
 
+    it('verifies checksum for downloaded asset', async function () {
+        const tag = 'v9.0.0';
+        const version = 'nightly';
+        const arch: Arch = 'x86_64';
+        const file = `gvim_${tag.slice(1)}_x64.zip`;
+        const fetchStub = new FetchStub();
+        const { installVimOnWindows } = await fetchStub.importFetchMocked('../src/vim.js');
+
+        await A.rejects(() => installVimOnWindows(tag, version, arch), /SHA256 mismatch/);
+        A.equal(fetchStub.lastAssetName, file);
+    });
+
     context('with mocking fetch()', function () {
         let installVimOnWindowsMocked: typeof installVimOnWindows;
         const fetchStub = new FetchStub();
@@ -73,7 +85,9 @@ describe('installVimOnWindows()', function () {
             );
             const expected = [
                 'https://github.com/vim/vim-win32-installer/releases/download/v9.0.0/gvim_9.0.0_arm64.zip',
+                'https://api.github.com/repos/vim/vim-win32-installer/releases/tags/v9.0.0',
                 'https://github.com/vim/vim-win32-installer/releases/download/v9.0.0/gvim_9.0.0_x64.zip',
+                'https://api.github.com/repos/vim/vim-win32-installer/releases/tags/v9.0.0',
             ];
             A.deepStrictEqual(fetchStub.fetchedUrls, expected, `${fetchStub.fetchedUrls}`);
         });

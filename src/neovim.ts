@@ -6,6 +6,7 @@ import fetch from 'node-fetch';
 import * as core from '@actions/core';
 import * as io from '@actions/io';
 import * as github from '@actions/github';
+import { verifySha256IfAvailable } from './checksum.js';
 import { TmpDir, type Os, type Arch, ensureError, getSystemHttpsProxyAgent } from './system.js';
 import { exec, unzip } from './shell.js';
 import type { Installed, ExeName } from './install.js';
@@ -172,6 +173,7 @@ export async function downloadNeovim(version: string, os: Os, arch: Arch): Promi
         const buffer = await response.arrayBuffer();
         await fs.writeFile(asset, Buffer.from(buffer), { encoding: null });
         core.debug(`Downloaded asset ${asset}`);
+        await verifySha256IfAvailable(asset, 'neovim/neovim', version, file);
 
         const unarchived = await unarchiveAsset(asset, assetDirName(version, os, arch));
         core.debug(`Unarchived asset ${unarchived}`);
