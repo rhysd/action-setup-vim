@@ -5,6 +5,10 @@
     "lib": [
       "es2023"
     ],
+    "types": [
+      "node",
+      "mocha"
+    ],
     "preserveConstEnums": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
