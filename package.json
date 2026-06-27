@@ -64,6 +64,7 @@
     "c8": "^11.0.0",
     "concurrently": "^10.0.3",
     "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-mocha": "^11.3.0",
     "eslint-plugin-n": "^18.2.1",
     "esmock": "^2.7.6",

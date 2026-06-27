@@ -5,6 +5,7 @@ import { defineConfig } from 'eslint/config';
 import ts from 'typescript-eslint';
 import mocha from 'eslint-plugin-mocha';
 import n from 'eslint-plugin-n';
+import prettier from 'eslint-config-prettier/flat';
 
 export default defineConfig(
     eslint.configs.recommended,
@@ -120,4 +121,5 @@ export default defineConfig(
             'n/no-extraneous-import': 'off',
         },
     },
+    prettier,
 );
