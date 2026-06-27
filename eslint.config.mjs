@@ -85,8 +85,7 @@ export default defineConfig(
     },
     {
         files: ['test/*.ts'],
-        // The cast is workaround for https://github.com/lo1tuma/eslint-plugin-mocha/issues/392
-        .../** @type {{recommended: import('eslint').Linter.Config}} */ (mocha.configs).recommended,
+        ...mocha.configs.recommended,
     },
     {
         files: ['test/*.ts'],
