@@ -62,7 +62,7 @@
     "@types/node": "^24",
     "@types/proxy-from-env": "^1.0.4",
     "c8": "^11.0.0",
-    "concurrently": "^10.0.3",
+    "concurrently": "^10.0.4",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-mocha": "^11.3.0",
